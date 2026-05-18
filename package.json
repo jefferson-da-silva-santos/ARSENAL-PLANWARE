@@ -1,0 +1,29 @@
+{
+  "name": "arsenal-planware",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "server": "cd planware-server && npm run dev",
+    "admin": "wait-on tcp:3000 && cd planware-admin && npm run dev",
+    "hub": "wait-on tcp:5173 && cd planware-hub && npm run dev",
+    "base_cliente": "wait-on tcp:5174 && cd base_cliente && npm run dev",
+    "controle_estoque": "wait-on tcp:5175 && cd controle_de_estoque && npm run dev",
+    "controle_financeiro": "wait-on tcp:5176 && cd controle_financeiro && npm run dev",
+    "financas_503020": "wait-on tcp:5177 && cd finanancas_503020 && npm run dev",
+    "financeiro_personalizavel": "wait-on tcp:5178 && cd financeiro_personalizavel && npm run dev",
+    "ordem_servicos": "wait-on tcp:5179 && cd ordem_servicos && npm run dev",
+    "projeto_tarefas": "wait-on tcp:5180 && cd projeto_tarefas && npm run dev",
+    "sistema_clinica": "wait-on tcp:5181 && cd sistema_clinica && npm run dev",
+    "sistema_contas": "wait-on tcp:5182 && cd sistema_contas && npm run dev",
+    "dev": "concurrently \"npm run server\" \"npm run admin\" \"npm run hub\" \"npm run base_cliente\" \"npm run controle_estoque\" \"npm run controle_financeiro\" \"npm run financas_503020\" \"npm run financeiro_personalizavel\" \"npm run ordem_servicos\" \"npm run projeto_tarefas\" \"npm run sistema_clinica\" \"npm run sistema_contas\"",
+    "install:all": "concurrently \"cd planware-server && npm install\" \"cd planware-admin && npm install\" \"cd planware-hub && npm install\" \"cd base_cliente && npm install\" \"cd controle_de_estoque && npm install\" \"cd controle_financeiro && npm install\" \"cd finanancas_503020 && npm install\" \"cd financeiro_personalizavel && npm install\" \"cd ordem_servicos && npm install\" \"cd projeto_tarefas && npm install\" \"cd sistema_clinica && npm install\" \"cd sistema_contas && npm install\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "wait-on": "^9.0.10"
+  }
+}

@@ -1,0 +1,898 @@
+// =============================================================
+//  PlanwareServer — prisma/schema.prisma
+//  Banco: PostgreSQL (Neon)
+//  Multi-tenant: toda tabela de negócio tem tenantId
+// =============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+
+// ─────────────────────────────────────────────────────────────
+//  INFRAESTRUTURA — tenants, usuários, permissões
+// ─────────────────────────────────────────────────────────────
+
+model Tenant {
+  id        String   @id @default(uuid())
+  name      String
+  slug      String   @unique
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users         User[]
+
+  // ClientPro
+  clients       Client[]
+  contacts      Contact[]
+  schedules     Schedule[]
+  reminders     Reminder[]
+
+  // StockPro
+  products      Product[]
+  movements     Movement[]
+
+  // FinVault
+  finTransactions FinTransaction[]
+
+  // FinFlow (50/30/20)
+  flowMonths    FlowMonth[]
+
+  // FinanceFlow (personalizável)
+  fcMonths      FcMonth[]
+
+  // Feedback
+  feedbacks     Feedback[]
+
+  // KanbanFlow
+  kanbanMembers KanbanMember[]
+  kanbanColumns KanbanColumn[]
+  kanbanTasks   KanbanTask[]
+
+  // ClinicaDesk
+  clinicaPacientes    ClinicaPaciente[]
+  clinicaAgendamentos ClinicaAgendamento[]
+  clinicaAtendimentos ClinicaAtendimento[]
+  clinicaAlertas      ClinicaAlerta[]
+  clinicaLogs         ClinicaLog[]
+
+  // OrdemTech
+  ordemClientes OrdemCliente[]
+  ordens        Ordem[]
+
+  // Fiado
+  fiadoClientes FiadoCliente[]
+
+  // Error Tracking
+  systemErrors  SystemError[]
+
+  @@map("tenants")
+}
+
+model User {
+  id           String   @id @default(uuid())
+  tenantId     String
+  email        String   @unique
+  passwordHash String
+  name         String
+  role         Role     @default(USER)
+  active       Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  tenant      Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  permissions UserPermission[]
+  feedbacks   Feedback[]
+  replies     FeedbackReply[]
+
+  @@index([tenantId])
+  @@map("users")
+}
+
+enum Role {
+  SUPERADMIN
+  USER
+}
+
+model UserPermission {
+  id      String  @id @default(uuid())
+  userId  String
+  system  System
+  granted Boolean @default(true)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, system])
+  @@map("user_permissions")
+}
+
+enum System {
+  CLIENTPRO
+  STOCKPRO
+  FINVAULT
+  FINFLOW
+  FINANCEFLOW
+  KANBAN
+  CLINICA
+  ORDEMTECH
+  FIADO
+}
+
+// ─────────────────────────────────────────────────────────────
+//  ERROR TRACKING — log centralizado de erros da API
+// ─────────────────────────────────────────────────────────────
+
+model SystemError {
+  id          String   @id @default(uuid())
+
+  // Contexto do tenant/usuário
+  tenantId    String?           // null = erro em rota pública (auth, health)
+  tenantName  String?           // desnormalizado para evitar JOIN na listagem
+  userId      String?           // quem estava logado
+  userEmail   String?           // desnormalizado para exibir sem JOIN
+
+  // Contexto da requisição
+  module      String            // "CLIENTPRO" | "STOCKPRO" | "AUTH" | "ADMIN" | ...
+  route       String            // "/clientpro/clientes/123"
+  method      String            // "GET" | "POST" | "PUT" | "PATCH" | "DELETE"
+  statusCode  Int               // 400 | 401 | 403 | 404 | 409 | 500 | ...
+
+  // Informações do erro
+  errorType   String            // "ValidationError" | "NotFoundError" | "PrismaClientKnownRequestError" | ...
+  message     String            // mensagem legível do erro
+  stack       String?           // stack trace completo — só capturado para 5xx
+
+  // Dados da requisição (para reproduzir o erro)
+  requestBody String?           // JSON sanitizado (senhas e tokens removidos)
+  queryParams String?           // query string serializada
+  ip          String?
+  userAgent   String?
+
+  // Gestão pelo admin
+  resolved    Boolean  @default(false)
+  resolvedAt  DateTime?
+  resolvedBy  String?           // email do superadmin que marcou como resolvido
+  resolution  String?           // nota explicando o que foi feito
+
+  // Fingerprint para agrupar ocorrências do mesmo erro
+  // hash de: module + route + method + errorType + primeiros 120 chars da message
+  fingerprint String?
+
+  createdAt   DateTime @default(now())
+
+  tenant Tenant? @relation(fields: [tenantId], references: [id], onDelete: SetNull)
+
+  // Índices para as queries mais comuns na tela de admin
+  @@index([tenantId])
+  @@index([module])
+  @@index([statusCode])
+  @@index([resolved])
+  @@index([fingerprint])
+  @@index([createdAt])
+  @@index([resolved, createdAt])     // filtro "não resolvidos, mais recentes"
+  @@index([tenantId, resolved])      // filtro "erros de um tenant específico"
+
+  @@map("system_errors")
+}
+
+// ─────────────────────────────────────────────────────────────
+//  CLIENTPRO
+// ─────────────────────────────────────────────────────────────
+
+model Client {
+  id           String   @id @default(uuid())
+  tenantId     String
+  nome         String
+  telefone     String?
+  email        String?
+  endereco     String?
+  observacoes  String?
+  criadoEm    DateTime @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  tenant       Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  atendimentos Attendance[]
+  schedules    Schedule[]
+
+  @@index([tenantId])
+  @@map("clients")
+}
+
+model Attendance {
+  id        String   @id @default(uuid())
+  clientId  String
+  descricao String
+  data      DateTime @default(now())
+  criadoEm DateTime @default(now())
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([clientId])
+  @@map("attendances")
+}
+
+model Schedule {
+  id           String         @id @default(uuid())
+  tenantId     String
+  clientId     String?
+  titulo       String
+  dataHora     DateTime
+  duracaoMin   Int            @default(60)
+  status       ScheduleStatus @default(PENDENTE)
+  notas        String?
+  criadoEm    DateTime       @default(now())
+  atualizadoEm DateTime      @updatedAt
+
+  tenant Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  client Client? @relation(fields: [clientId], references: [id], onDelete: SetNull)
+
+  @@index([tenantId])
+  @@index([dataHora])
+  @@map("schedules")
+}
+
+enum ScheduleStatus {
+  PENDENTE
+  CONFIRMADO
+  CANCELADO
+  CONCLUIDO
+}
+
+model Contact {
+  id           String     @id @default(uuid())
+  tenantId     String
+  nome         String
+  empresa      String?
+  telefone     String?
+  email        String?
+  cargo        String?
+  statusLead   LeadStatus @default(NOVO)
+  observacoes  String?
+  criadoEm    DateTime   @default(now())
+  atualizadoEm DateTime  @updatedAt
+
+  tenant     Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  interacoes Interaction[]
+
+  @@index([tenantId])
+  @@map("contacts")
+}
+
+enum LeadStatus {
+  NOVO
+  EM_CONTATO
+  NEGOCIANDO
+  FECHADO
+  PERDIDO
+}
+
+model Interaction {
+  id        String          @id @default(uuid())
+  contactId String
+  tipo      InteractionType @default(NOTA)
+  descricao String
+  data      DateTime        @default(now())
+  criadoEm DateTime        @default(now())
+
+  contact Contact @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  @@index([contactId])
+  @@map("interactions")
+}
+
+enum InteractionType {
+  NOTA
+  LIGACAO
+  EMAIL
+  REUNIAO
+  WHATSAPP
+}
+
+model Reminder {
+  id        String       @id @default(uuid())
+  tenantId  String
+  titulo    String
+  descricao String?
+  dataHora  DateTime
+  tipo      ReminderType @default(GERAL)
+  refId     String?
+  concluido Boolean      @default(false)
+  criadoEm DateTime     @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([dataHora])
+  @@map("reminders")
+}
+
+enum ReminderType {
+  GERAL
+  CONTATO
+  AGENDAMENTO
+}
+
+// ─────────────────────────────────────────────────────────────
+//  STOCKPRO
+// ─────────────────────────────────────────────────────────────
+
+model Product {
+  id                String   @id @default(uuid())
+  tenantId          String
+  nome              String
+  sku               String?
+  precoCusto        Float    @default(0)
+  precoVenda        Float    @default(0)
+  quantidadeEstoque Int      @default(0)
+  estoqueMinimo     Int      @default(5)
+  unidadeMedida     String   @default("un")
+  marca             String?
+  ncm               String?
+  categoria         String?
+  ativo             Boolean  @default(true)
+  criadoEm          DateTime @default(now())
+
+  tenant    Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  movements Movement[]
+
+  @@unique([tenantId, sku])
+  @@index([tenantId])
+  @@map("products")
+}
+
+model Movement {
+  id        String       @id @default(uuid())
+  tenantId  String
+  productId String
+  type      MovementType
+  quantity  Int
+  date      DateTime     @default(now())
+  reason    String?
+
+  tenant  Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  product Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([productId])
+  @@map("movements")
+}
+
+enum MovementType {
+  IN
+  OUT
+}
+
+// ─────────────────────────────────────────────────────────────
+//  FINVAULT
+// ─────────────────────────────────────────────────────────────
+
+model FinTransaction {
+  id          String   @id @default(uuid())
+  tenantId    String
+  type        FinType
+  amount      Float
+  category    String?
+  description String?
+  date        DateTime
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([date])
+  @@map("fin_transactions")
+}
+
+enum FinType {
+  INCOME
+  EXPENSE
+}
+
+// ─────────────────────────────────────────────────────────────
+//  FINFLOW — 50/30/20
+// ─────────────────────────────────────────────────────────────
+
+model FlowMonth {
+  id           String @id @default(uuid())
+  tenantId     String
+  year         Int
+  month        Int
+  income       Float  @default(0)
+  pctEssential Float  @default(50)
+  pctPersonal  Float  @default(30)
+  pctSavings   Float  @default(20)
+
+  tenant       Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  transactions FlowTransaction[]
+  incomes      FlowIncome[]
+
+  @@unique([tenantId, year, month])
+  @@index([tenantId])
+  @@map("flow_months")
+}
+
+model FlowTransaction {
+  id                 String       @id @default(uuid())
+  flowMonthId        String
+  description        String
+  amount             Float
+  paymentMethod      String       @default("money")
+  paymentType        String       @default("cash")
+  category           FlowCategory
+  dueDate            DateTime?
+  paid               Boolean      @default(false)
+  isInstallment      Boolean      @default(false)
+  installmentGroupId String?
+  installmentNumber  Int?
+  installmentTotal   Int?
+  createdAt          DateTime     @default(now())
+
+  flowMonth FlowMonth @relation(fields: [flowMonthId], references: [id], onDelete: Cascade)
+
+  @@index([flowMonthId])
+  @@index([installmentGroupId])
+  @@map("flow_transactions")
+}
+
+enum FlowCategory {
+  ESSENTIAL
+  PERSONAL
+  SAVINGS
+}
+
+model FlowIncome {
+  id          String   @id @default(uuid())
+  flowMonthId String
+  description String
+  amount      Float
+  received    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  flowMonth FlowMonth @relation(fields: [flowMonthId], references: [id], onDelete: Cascade)
+
+  @@index([flowMonthId])
+  @@map("flow_incomes")
+}
+
+// ─────────────────────────────────────────────────────────────
+//  FINANCEFLOW — personalizável
+// ─────────────────────────────────────────────────────────────
+
+model FcMonth {
+  id       String @id @default(uuid())
+  tenantId String
+  year     Int
+  month    Int
+
+  tenant       Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  categories   FcCategory[]
+  transactions FcTransaction[]
+  incomes      FcIncome[]
+
+  @@unique([tenantId, year, month])
+  @@index([tenantId])
+  @@map("fc_months")
+}
+
+model FcCategory {
+  id         String @id @default(uuid())
+  fcMonthId  String
+  name       String
+  percentage Float  @default(0)
+
+  fcMonth      FcMonth         @relation(fields: [fcMonthId], references: [id], onDelete: Cascade)
+  transactions FcTransaction[]
+
+  @@index([fcMonthId])
+  @@map("fc_categories")
+}
+
+model FcTransaction {
+  id                 String  @id @default(uuid())
+  fcMonthId          String
+  categoryId         String?
+  description        String
+  amount             Float
+  paymentMethod      String  @default("")
+  paymentType        String  @default("avista")
+  dueDate            String?
+  paid               Boolean @default(false)
+  isInstallment      Boolean @default(false)
+  installmentGroupId String?
+  installmentNumber  Int     @default(1)
+  totalInstallments  Int     @default(1)
+
+  fcMonth  FcMonth     @relation(fields: [fcMonthId], references: [id], onDelete: Cascade)
+  category FcCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@index([fcMonthId])
+  @@index([installmentGroupId])
+  @@map("fc_transactions")
+}
+
+model FcIncome {
+  id          String  @id @default(uuid())
+  fcMonthId   String
+  description String
+  amount      Float
+  received    Boolean @default(false)
+
+  fcMonth FcMonth @relation(fields: [fcMonthId], references: [id], onDelete: Cascade)
+
+  @@index([fcMonthId])
+  @@map("fc_incomes")
+}
+
+// ─────────────────────────────────────────────────────────────
+//  FEEDBACK
+// ─────────────────────────────────────────────────────────────
+
+model Feedback {
+  id          String         @id @default(uuid())
+  tenantId    String
+  userId      String
+  type        FeedbackType
+  title       String
+  description String
+  status      FeedbackStatus @default(ABERTO)
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  tenant  Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  user    User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  replies FeedbackReply[]
+
+  @@index([tenantId])
+  @@index([status])
+  @@map("feedbacks")
+}
+
+model FeedbackReply {
+  id         String   @id @default(uuid())
+  feedbackId String
+  userId     String
+  message    String
+  createdAt  DateTime @default(now())
+
+  feedback Feedback @relation(fields: [feedbackId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([feedbackId])
+  @@map("feedback_replies")
+}
+
+enum FeedbackType {
+  BUG
+  FEATURE
+  REQUISITO
+  OUTRO
+}
+
+enum FeedbackStatus {
+  ABERTO
+  EM_ANALISE
+  RESOLVIDO
+  RECUSADO
+}
+
+// ─────────────────────────────────────────────────────────────
+//  KANBANFLOW
+// ─────────────────────────────────────────────────────────────
+
+model KanbanMember {
+  id        String   @id @default(uuid())
+  tenantId  String
+  name      String
+  color     String   @default("#4A90D9")
+  createdAt DateTime @default(now())
+
+  tenant Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tasks  KanbanTask[]
+
+  @@unique([tenantId, name])
+  @@index([tenantId])
+  @@map("kanban_members")
+}
+
+model KanbanColumn {
+  id        String   @id @default(uuid())
+  tenantId  String
+  title     String
+  position  Int      @default(0)
+  color     String   @default("#4A90D9")
+  createdAt DateTime @default(now())
+
+  tenant Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  tasks  KanbanTask[]
+
+  @@index([tenantId])
+  @@map("kanban_columns")
+}
+
+model KanbanTask {
+  id          String       @id @default(uuid())
+  tenantId    String
+  columnId    String
+  memberId    String?
+  title       String
+  description String?
+  position    Int          @default(0)
+  priority    TaskPriority @default(MEDIUM)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  tenant Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  column KanbanColumn  @relation(fields: [columnId], references: [id], onDelete: Cascade)
+  member KanbanMember? @relation(fields: [memberId], references: [id], onDelete: SetNull)
+
+  @@index([tenantId])
+  @@index([columnId])
+  @@map("kanban_tasks")
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+// ─────────────────────────────────────────────────────────────
+//  CLINICADESK
+// ─────────────────────────────────────────────────────────────
+
+model ClinicaPaciente {
+  id             String   @id @default(uuid())
+  tenantId       String
+  nome           String
+  cpf            String
+  telefone       String?
+  email          String?
+  dataNascimento String?
+  sexo           String?
+  endereco       String?
+  convenio       String?
+  observacoes    String?
+  ativo          Boolean  @default(true)
+  criadoEm      DateTime @default(now())
+  atualizadoEm  DateTime @updatedAt
+
+  tenant       Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  agendamentos ClinicaAgendamento[]
+  atendimentos ClinicaAtendimento[]
+  alertas      ClinicaAlerta[]
+
+  @@unique([tenantId, cpf])
+  @@index([tenantId])
+  @@map("clinica_pacientes")
+}
+
+model ClinicaAgendamento {
+  id              String             @id @default(uuid())
+  tenantId        String
+  pacienteId      String
+  profissionalId  String
+  dataHora        DateTime
+  duracaoMin      Int                @default(30)
+  tipo            String
+  status          ClinicaAgendStatus @default(AGENDADO)
+  observacoes     String?
+  lembreteEnviado Boolean            @default(false)
+  criadoEm       DateTime           @default(now())
+  atualizadoEm   DateTime           @updatedAt
+
+  tenant       Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  paciente     ClinicaPaciente      @relation(fields: [pacienteId], references: [id])
+  atendimentos ClinicaAtendimento[]
+  alertas      ClinicaAlerta[]
+
+  @@index([tenantId])
+  @@index([dataHora])
+  @@map("clinica_agendamentos")
+}
+
+enum ClinicaAgendStatus {
+  AGENDADO
+  CONFIRMADO
+  EM_ATENDIMENTO
+  FINALIZADO
+  CANCELADO
+  FALTOU
+}
+
+model ClinicaAtendimento {
+  id             String             @id @default(uuid())
+  tenantId       String
+  pacienteId     String
+  profissionalId String
+  agendamentoId  String?
+  dataHora       DateTime           @default(now())
+  tipo           String
+  motivo         String
+  anamnese       String?
+  diagnostico    String?
+  conduta        String?
+  observacoes    String?
+  retornoEm     String?
+  status         ClinicaAtendStatus @default(EM_ATENDIMENTO)
+  criadoEm      DateTime           @default(now())
+  atualizadoEm  DateTime           @updatedAt
+
+  tenant      Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  paciente    ClinicaPaciente     @relation(fields: [pacienteId], references: [id])
+  agendamento ClinicaAgendamento? @relation(fields: [agendamentoId], references: [id])
+  anexos      ClinicaAnexo[]
+
+  @@index([tenantId])
+  @@index([pacienteId])
+  @@map("clinica_atendimentos")
+}
+
+enum ClinicaAtendStatus {
+  EM_ATENDIMENTO
+  FINALIZADO
+  CANCELADO
+}
+
+model ClinicaAnexo {
+  id            String   @id @default(uuid())
+  atendimentoId String
+  nomeOriginal  String
+  nomeArquivo   String
+  tipoMime      String?
+  tamanhoBytes  Int?
+  descricao     String?
+  criadoEm     DateTime @default(now())
+
+  atendimento ClinicaAtendimento @relation(fields: [atendimentoId], references: [id], onDelete: Cascade)
+
+  @@index([atendimentoId])
+  @@map("clinica_anexos")
+}
+
+model ClinicaAlerta {
+  id            String            @id @default(uuid())
+  tenantId      String
+  tipo          ClinicaAlertaTipo
+  titulo        String
+  mensagem      String?
+  pacienteId    String?
+  agendamentoId String?
+  usuarioId     String?
+  lido          Boolean           @default(false)
+  criadoEm     DateTime          @default(now())
+
+  tenant      Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  paciente    ClinicaPaciente?    @relation(fields: [pacienteId], references: [id])
+  agendamento ClinicaAgendamento? @relation(fields: [agendamentoId], references: [id])
+
+  @@index([tenantId])
+  @@map("clinica_alertas")
+}
+
+enum ClinicaAlertaTipo {
+  RETORNO
+  CONSULTA
+  SISTEMA
+}
+
+model ClinicaLog {
+  id          String   @id @default(uuid())
+  tenantId    String
+  usuarioId   String?
+  usuarioNome String?
+  acao        String
+  entidade    String
+  entidadeId  String?
+  detalhes    String?
+  ip          String?
+  criadoEm  DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([criadoEm])
+  @@map("clinica_logs")
+}
+
+// ─────────────────────────────────────────────────────────────
+//  ORDEMTECH
+// ─────────────────────────────────────────────────────────────
+
+model OrdemCliente {
+  id        String   @id @default(uuid())
+  tenantId  String
+  nome      String
+  telefone  String?
+  criadoEm DateTime @default(now())
+
+  tenant Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  ordens Ordem[]
+
+  @@index([tenantId])
+  @@map("ordem_clientes")
+}
+
+model Ordem {
+  id           String      @id @default(uuid())
+  tenantId     String
+  clienteId    String
+  numero       String
+  equipamento  String
+  problema     String
+  observacoes  String?     @default("")
+  valor        Float       @default(0)
+  status       OrdemStatus @default(EM_ANDAMENTO)
+  criadoEm    DateTime    @default(now())
+  atualizadoEm DateTime   @updatedAt
+
+  tenant  Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  cliente OrdemCliente @relation(fields: [clienteId], references: [id])
+
+  @@unique([tenantId, numero])
+  @@index([tenantId])
+  @@index([status])
+  @@map("ordens")
+}
+
+enum OrdemStatus {
+  EM_ANDAMENTO
+  PRONTO
+  CANCELADO
+}
+
+// ─────────────────────────────────────────────────────────────
+//  FIADO — contas a pagar/receber
+// ─────────────────────────────────────────────────────────────
+
+model FiadoCliente {
+  id         String   @id @default(uuid())
+  tenantId   String
+  nome       String
+  telefone   String?
+  email      String?
+  observacao String?
+  criadoEm  DateTime @default(now())
+
+  tenant Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  contas FiadoConta[]
+
+  @@index([tenantId])
+  @@map("fiado_clientes")
+}
+
+model FiadoConta {
+  id           String   @id @default(uuid())
+  clienteId    String
+  descricao    String
+  valorTotal   Float
+  numParcelas  Int      @default(1)
+  dataPrimeira String
+  observacao   String?
+  criadoEm    DateTime @default(now())
+
+  cliente  FiadoCliente   @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  parcelas FiadoParcela[]
+
+  @@index([clienteId])
+  @@map("fiado_contas")
+}
+
+model FiadoParcela {
+  id            String  @id @default(uuid())
+  contaId       String
+  numero        Int
+  valor         Float
+  vencimento    String
+  pago          Boolean @default(false)
+  dataPagamento String?
+  observacao    String?
+
+  conta FiadoConta @relation(fields: [contaId], references: [id], onDelete: Cascade)
+
+  @@index([contaId])
+  @@map("fiado_parcelas")
+}
