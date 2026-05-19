@@ -23,6 +23,7 @@ const kanbanRoutes = require('./modules/kanban/KanbanRoutes');
 const clinicaRoutes = require('./modules/clinica/ClinicaRoutes');
 const ordemtechRoutes = require('./modules/ordemtech/OrdemTechRoutes');
 const fiadoRoutes = require('./modules/fiado/FiadoRoutes');
+const billingRoutes = require('./modules/billing/BillingRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -57,6 +58,7 @@ app.use('/kanban', auth, requireSystem('KANBAN'), kanbanRoutes);
 app.use('/clinica', auth, requireSystem('CLINICA'), clinicaRoutes);
 app.use('/ordemtech', auth, requireSystem('ORDEMTECH'), ordemtechRoutes);
 app.use('/fiado', auth, requireSystem('FIADO'), fiadoRoutes);
+app.use('/billing', auth, billingRoutes);
 
 // ── Health check ─────────────────────────────────────────────
 app.get('/health', (_req, res) => {
@@ -102,6 +104,7 @@ app.listen(PORT, () => {
   route('/clinica', 'pacientes · agendamentos · atendimentos · alertas');
   route('/ordemtech', 'clientes · ordens de serviço · dashboard');
   route('/fiado', 'clientes · contas · parcelas · inadimplência');
+  route('/billing', 'clientes · contas · parcelas · inadimplência');
 
   console.log(chalk.gray('  ──────────────────────────────────────────\n'));
 });

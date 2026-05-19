@@ -10,7 +10,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -70,6 +70,10 @@ model Tenant {
 
   // Error Tracking
   systemErrors  SystemError[]
+
+  // Billing
+  tenantPlan    TenantPlan?
+  charges       Charge[]
 
   @@map("tenants")
 }
@@ -895,4 +899,116 @@ model FiadoParcela {
 
   @@index([contaId])
   @@map("fiado_parcelas")
+}
+
+// ─────────────────────────────────────────────────────────────
+//  BILLING — planos, assinaturas, cobranças e pagamentos
+// ─────────────────────────────────────────────────────────────
+
+// Plano comercial — define o que está incluso e o valor base
+model Plan {
+  id          String   @id @default(uuid())
+  name        String   // "Básico", "Profissional", "Enterprise"
+  description String?
+  price       Float    // valor mensal de referência
+  systems     String[] // ex: ["CLIENTPRO","STOCKPRO"]
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tenantPlans TenantPlan[]
+
+  @@map("plans")
+}
+
+// Assinatura — vínculo entre tenant e plano vigente
+model TenantPlan {
+  id          String          @id @default(uuid())
+  tenantId    String          @unique
+  planId      String
+  type        BillingType     @default(MONTHLY)   // MONTHLY | ANNUAL | LIFETIME
+  startedAt   DateTime        @default(now())
+  renewsAt    DateTime?       // null = vitalício
+  cancelledAt DateTime?
+  notes       String?         // observações internas
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  plan   Plan   @relation(fields: [planId], references: [id])
+
+  @@index([tenantId])
+  @@index([planId])
+  @@map("tenant_plans")
+}
+
+enum BillingType {
+  MONTHLY
+  ANNUAL
+  LIFETIME
+  CUSTOM
+}
+
+// Cobrança — fatura gerada para um tenant
+model Charge {
+  id          String       @id @default(uuid())
+  tenantId    String
+  description String       // "Mensalidade Março/2025", "Taxa de setup", etc.
+  amount      Float        // valor total da cobrança
+  dueDate     DateTime     // data de vencimento
+  status      ChargeStatus @default(PENDING)
+  type        ChargeType   @default(SUBSCRIPTION)
+  notes       String?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  tenant   Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  payments Payment[]
+
+  @@index([tenantId])
+  @@index([status])
+  @@index([dueDate])
+  @@index([tenantId, status])
+  @@map("charges")
+}
+
+enum ChargeStatus {
+  PENDING    // aguardando pagamento
+  PARTIAL    // pago parcialmente
+  PAID       // pago integralmente
+  OVERDUE    // vencido sem pagamento
+  CANCELLED  // cancelado
+}
+
+enum ChargeType {
+  SUBSCRIPTION  // mensalidade / anuidade
+  SETUP         // taxa de implantação
+  EXTRA         // cobrança avulsa / extra
+  CUSTOM        // personalização sob demanda
+}
+
+// Pagamento — registro de recebimento (pode ser parcial)
+model Payment {
+  id        String        @id @default(uuid())
+  chargeId  String
+  amount    Float         // valor pago nesta transação
+  method    PaymentMethod
+  paidAt    DateTime      @default(now())
+  reference String?       // chave Pix, comprovante, nº transferência
+  notes     String?
+  createdAt DateTime      @default(now())
+
+  charge Charge @relation(fields: [chargeId], references: [id], onDelete: Cascade)
+
+  @@index([chargeId])
+  @@map("payments")
+}
+
+enum PaymentMethod {
+  PIX
+  TRANSFER    // transferência bancária
+  CASH        // dinheiro
+  CREDIT_CARD // cartão de crédito presencial
+  DEBIT_CARD  // cartão de débito presencial
+  OTHER
 }
