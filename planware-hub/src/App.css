@@ -1455,3 +1455,255 @@ input, select, textarea { font-family: inherit; }
   .apps-grid { grid-template-columns: 1fr; }
   .login-form-inner { padding: 36px 24px; }
 }
+
+
+/* ═══════════════════════════════════════════════════════════════
+   PLANWARE HUB — Adições ao App.css
+   Cole esses blocos no final do App.css existente
+═══════════════════════════════════════════════════════════════ */
+
+/* ─── TIPO: CARDS de seleção ─────────────────────────────── */
+.type-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+@media (max-width: 768px) {
+  .type-cards { grid-template-columns: repeat(2, 1fr); }
+}
+
+.type-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 10px;
+  border-radius: var(--radius);
+  border: 1.5px solid var(--border-hover);
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition);
+  text-align: center;
+}
+
+.type-card:hover {
+  border-color: var(--blue-border);
+  background: var(--bg-card-hover);
+  color: var(--text-primary);
+}
+
+.type-card--active {
+  border-color: var(--blue);
+  background: var(--blue-dim);
+  color: var(--blue);
+  box-shadow: 0 0 0 3px var(--blue-glow);
+}
+
+.type-card-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.type-card-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.type-card-desc {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.type-card--active .type-card-desc { color: var(--blue); opacity: 0.7; }
+
+/* ─── TAB DOT (indicador de resposta nova) ───────────────── */
+.stab {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stab-dot {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--blue);
+  box-shadow: 0 0 8px var(--blue-glow);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.6; transform: scale(0.8); }
+}
+
+/* ─── NOTICE: feedbacks com resposta ─────────────────────── */
+.mine-replied-notice {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  background: var(--blue-dim);
+  border: 1px solid var(--blue-border);
+  border-radius: var(--radius);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--blue);
+  margin-bottom: 16px;
+  animation: fadeUp 0.3s var(--ease) both;
+}
+
+/* ─── SUGGESTION CARD melhorado ──────────────────────────── */
+.suggestion-card--replied {
+  border-color: var(--blue-border) !important;
+  box-shadow: 0 0 0 1px var(--blue-border), var(--shadow-blue);
+}
+
+.scard-type-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-hover);
+  color: var(--text-secondary);
+}
+
+.scard-has-reply {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: var(--blue-dim);
+  border: 1px solid var(--blue-border);
+  color: var(--blue);
+}
+
+/* ─── RESPOSTAS DO ADMIN ─────────────────────────────────── */
+.scard-replies {
+  margin-top: 12px;
+  border-top: 1px solid var(--border);
+  padding-top: 12px;
+}
+
+.scard-replies-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--blue-dim);
+  border: 1px solid var(--blue-border);
+  color: var(--blue);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition);
+  text-align: left;
+}
+
+.scard-replies-toggle:hover {
+  background: color-mix(in srgb, var(--blue) 15%, transparent);
+}
+
+.scard-replies-icon { font-size: 0.9rem; flex-shrink: 0; }
+
+.scard-replies-arrow { margin-left: auto; font-size: 0.9rem; }
+
+.scard-replies-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+  animation: fadeUp 0.2s var(--ease) both;
+}
+
+.scard-reply {
+  background: var(--bg-elevated);
+  border: 1px solid var(--blue-border);
+  border-left: 3px solid var(--blue);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+}
+
+.scard-reply-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.scard-reply-author {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.scard-reply-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  background: var(--blue);
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.scard-reply-date {
+  font-size: 0.68rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.scard-reply-text {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+/* ─── DELETE button no card ──────────────────────────────── */
+.scard-delete {
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-hover);
+  color: var(--text-muted);
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all var(--transition);
+  background: transparent;
+  flex-shrink: 0;
+}
+
+.scard-delete:hover:not(:disabled) {
+  background: var(--red-dim);
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.scard-delete:disabled { opacity: 0.4; cursor: not-allowed; }

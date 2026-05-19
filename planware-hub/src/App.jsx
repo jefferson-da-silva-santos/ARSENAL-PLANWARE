@@ -235,16 +235,11 @@ function LoginPage({ toast }) {
 
   return (
     <div className="login-scene">
-      {/* Ambient orbs */}
       <div className="orb orb-1" />
       <div className="orb orb-2" />
       <div className="orb orb-3" />
-
-      {/* Grid texture */}
       <div className="login-grid" />
-
       <div className="login-split">
-        {/* Left panel — brand */}
         <div className="login-brand-panel">
           <div className="login-brand-inner">
             <div className="brand-mark">
@@ -265,15 +260,12 @@ function LoginPage({ toast }) {
             </div>
           </div>
         </div>
-
-        {/* Right panel — form */}
         <div className="login-form-panel">
           <div className="login-form-inner">
             <div className="login-form-header">
               <h2>Bem-vindo de volta</h2>
               <p>Entre com suas credenciais Planware</p>
             </div>
-
             <form className="login-form" onSubmit={handleSubmit}>
               <div className="field-group">
                 <label>E-mail</label>
@@ -291,7 +283,6 @@ function LoginPage({ toast }) {
                   />
                 </div>
               </div>
-
               <div className="field-group">
                 <label>Senha</label>
                 <div className="field-wrap">
@@ -315,7 +306,6 @@ function LoginPage({ toast }) {
                   </button>
                 </div>
               </div>
-
               <button type="submit" className="login-btn" disabled={loading}>
                 {loading ? (
                   <span className="spin-ring" />
@@ -327,7 +317,6 @@ function LoginPage({ toast }) {
                 )}
               </button>
             </form>
-
             <p className="login-footer-text">
               Planware © {new Date().getFullYear()} · Todos os direitos
               reservados
@@ -343,15 +332,12 @@ function LoginPage({ toast }) {
 // APP CARD
 // ─────────────────────────────────────────────
 function AppCard({ app, hasAccess }) {
-  function handleOpen() {
-    if (!hasAccess) return;
-    window.open(app.url, "_blank", "noopener");
-  }
-
   return (
     <div
       className={`app-card ${hasAccess ? "app-card--active" : "app-card--locked"}`}
-      onClick={handleOpen}
+      onClick={() => {
+        if (hasAccess) window.open(app.url, "_blank", "noopener");
+      }}
       style={{ "--app-color": app.color }}
     >
       <div className="app-card-glow" />
@@ -383,21 +369,18 @@ function AppCard({ app, hasAccess }) {
 function Dashboard({ user }) {
   const permissions = user?.permissions || [];
   const isSuperAdmin = user?.role === "SUPERADMIN";
-
   const userApps = ALL_APPS.filter(
     (a) => isSuperAdmin || permissions.includes(a.id),
   );
   const lockedApps = ALL_APPS.filter(
     (a) => !isSuperAdmin && !permissions.includes(a.id),
   );
-
   const hour = new Date().getHours();
   const greeting =
     hour < 12 ? "Bom dia" : hour < 18 ? "Boa tarde" : "Boa noite";
 
   return (
     <div className="dashboard">
-      {/* Hero */}
       <div className="dash-hero">
         <div className="dash-hero-text">
           <span className="dash-greeting">{greeting},</span>
@@ -426,7 +409,6 @@ function Dashboard({ user }) {
         </div>
       </div>
 
-      {/* Apps ativos */}
       {userApps.length > 0 && (
         <section className="dash-section">
           <div className="section-head">
@@ -441,7 +423,6 @@ function Dashboard({ user }) {
         </section>
       )}
 
-      {/* Apps bloqueados */}
       {lockedApps.length > 0 && (
         <section className="dash-section">
           <div className="section-head">
@@ -457,7 +438,6 @@ function Dashboard({ user }) {
         </section>
       )}
 
-      {/* Admin shortcut */}
       {isSuperAdmin && (
         <section className="dash-section">
           <div
@@ -482,52 +462,184 @@ function Dashboard({ user }) {
 }
 
 // ─────────────────────────────────────────────
-// SUGESTÕES
+// SUGESTÕES — alinhado com a API
 // ─────────────────────────────────────────────
-const SUGGESTION_TYPES = [
-  { value: "FEATURE", label: "Nova funcionalidade" },
-  { value: "REQUISITO", label: "Melhoria existente" },
-  { value: "BUG", label: "Reportar problema" },
-  { value: "OUTRO", label: "Outro" },
+
+// Tipos exatamente como a API espera
+const FEEDBACK_TYPES = [
+  {
+    value: "FEATURE",
+    label: "Nova funcionalidade",
+    icon: "◇",
+    desc: "Algo que ainda não existe na plataforma",
+  },
+  {
+    value: "REQUISITO",
+    label: "Melhoria",
+    icon: "⬡",
+    desc: "Aprimorar algo que já existe",
+  },
+  {
+    value: "BUG",
+    label: "Reportar problema",
+    icon: "◈",
+    desc: "Algo que não está funcionando corretamente",
+  },
+  {
+    value: "OUTRO",
+    label: "Outro",
+    icon: "○",
+    desc: "Qualquer outra mensagem ou dúvida",
+  },
 ];
 
-const PRIORITY_OPTIONS = [
-  { value: "low", label: "Baixa", color: "#10b981" },
-  { value: "medium", label: "Média", color: "#f59e0b" },
-  { value: "high", label: "Alta", color: "#ef4444" },
-];
+// Status como a API retorna → label legível para o usuário
+const STATUS_CONFIG = {
+  ABERTO: { label: "Aguardando análise", cls: "status-pending", icon: "○" },
+  EM_ANALISE: { label: "Em análise", cls: "status-reviewing", icon: "◑" },
+  RESOLVIDO: { label: "Resolvido", cls: "status-done", icon: "●" },
+  RECUSADO: { label: "Recusado", cls: "status-rejected", icon: "✕" },
+};
+
+// Componente de card de feedback com thread de respostas
+function FeedbackCard({ feedback, onDelete }) {
+  const [expanded, setExpanded] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const st = STATUS_CONFIG[feedback.status] || STATUS_CONFIG.ABERTO;
+  const typ = FEEDBACK_TYPES.find((t) => t.value === feedback.type);
+
+  const adminReplies = (feedback.replies || []).filter(
+    (r) => r.user?.role === "SUPERADMIN",
+  );
+  const hasReply = adminReplies.length > 0;
+
+  async function handleDelete() {
+    if (!window.confirm("Excluir este feedback?")) return;
+    setDeleting(true);
+    try {
+      await apiFetch(`/feedback/${feedback.id}`, { method: "DELETE" });
+      onDelete(feedback.id);
+    } catch {
+      setDeleting(false);
+    }
+  }
+
+  return (
+    <div
+      className={`suggestion-card ${hasReply ? "suggestion-card--replied" : ""}`}
+    >
+      {/* Header */}
+      <div className="scard-header">
+        <span className={`scard-status ${st.cls}`}>
+          {st.icon} {st.label}
+        </span>
+        {typ && (
+          <span className="scard-type-badge">
+            {typ.icon} {typ.label}
+          </span>
+        )}
+        {hasReply && (
+          <span className="scard-has-reply">✓ Respondido pela equipe</span>
+        )}
+      </div>
+
+      {/* Conteúdo */}
+      <h3 className="scard-title">{feedback.title}</h3>
+      <p className="scard-desc">{feedback.description}</p>
+
+      {/* Respostas do admin */}
+      {hasReply && (
+        <div className="scard-replies">
+          <button
+            className="scard-replies-toggle"
+            onClick={() => setExpanded((s) => !s)}
+          >
+            <span className="scard-replies-icon">◈</span>
+            {expanded
+              ? "Ocultar resposta da equipe"
+              : `Ver resposta da equipe Planware (${adminReplies.length})`}
+            <span className="scard-replies-arrow">{expanded ? "↑" : "↓"}</span>
+          </button>
+
+          {expanded && (
+            <div className="scard-replies-list">
+              {adminReplies.map((r) => (
+                <div key={r.id} className="scard-reply">
+                  <div className="scard-reply-header">
+                    <span className="scard-reply-author">
+                      <span className="scard-reply-badge">Equipe Planware</span>
+                      {r.user?.name}
+                    </span>
+                    <span className="scard-reply-date">
+                      {new Date(r.createdAt).toLocaleDateString("pt-BR", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "2-digit",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
+                  </div>
+                  <p className="scard-reply-text">{r.message}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Footer */}
+      <div className="scard-footer">
+        <span className="scard-date">
+          {new Date(feedback.createdAt).toLocaleDateString("pt-BR")}
+        </span>
+        {feedback.status !== "RESOLVIDO" && (
+          <button
+            className="scard-delete"
+            onClick={handleDelete}
+            disabled={deleting}
+            title="Excluir feedback"
+          >
+            {deleting ? "..." : "✕"}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
 
 function SuggestionsPage({ user, toast }) {
-  const [tab, setTab] = useState("new"); // "new" | "mine"
-  const [suggestions, setSuggestions] = useState([]);
+  const [tab, setTab] = useState("new");
+  const [feedbacks, setFeedbacks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [sending, setSending] = useState(false);
   const [form, setForm] = useState({
     title: "",
     description: "",
-    type: "feature",
-    priority: "medium",
-    app_id: "",
+    type: "FEATURE",
   });
 
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }));
 
+  // ── Carrega feedbacks do tenant ──────────────────────────
   const loadMine = useCallback(async () => {
     setLoading(true);
     try {
       const data = await apiFetch("/feedback");
-      setSuggestions(Array.isArray(data) ? data : []);
+      // A API retorna array formatado pelo formatFeedback
+      setFeedbacks(Array.isArray(data) ? data : []);
     } catch (e) {
       toast("Erro ao carregar sugestões", "error");
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [toast]);
 
   useEffect(() => {
     if (tab === "mine") loadMine();
   }, [tab, loadMine]);
 
+  // ── Envia novo feedback ──────────────────────────────────
   async function handleSubmit(e) {
     e.preventDefault();
     if (!form.title.trim() || !form.description.trim()) {
@@ -538,16 +650,14 @@ function SuggestionsPage({ user, toast }) {
     try {
       await apiFetch("/feedback", {
         method: "POST",
-        body: { ...form, user_id: user?.id, user_name: user?.name },
+        body: {
+          type: form.type,
+          title: form.title.trim(),
+          description: form.description.trim(),
+        },
       });
       toast("Sugestão enviada! Obrigado pelo feedback 🙌");
-      setForm({
-        title: "",
-        description: "",
-        type: "feature",
-        priority: "medium",
-        app_id: "",
-      });
+      setForm({ title: "", description: "", type: "FEATURE" });
       setTab("mine");
     } catch (e) {
       toast(e.message || "Erro ao enviar", "error");
@@ -556,13 +666,12 @@ function SuggestionsPage({ user, toast }) {
     }
   }
 
-  const STATUS_LABEL = {
-    pending: { label: "Aguardando", cls: "status-pending" },
-    reviewing: { label: "Em análise", cls: "status-reviewing" },
-    planned: { label: "Planejado", cls: "status-planned" },
-    done: { label: "Implementado", cls: "status-done" },
-    rejected: { label: "Recusado", cls: "status-rejected" },
-  };
+  function handleDelete(id) {
+    setFeedbacks((prev) => prev.filter((f) => f.id !== id));
+    toast("Feedback excluído");
+  }
+
+  const selectedType = FEEDBACK_TYPES.find((t) => t.value === form.type);
 
   return (
     <div className="suggestions-page">
@@ -586,63 +695,36 @@ function SuggestionsPage({ user, toast }) {
           onClick={() => setTab("mine")}
         >
           Minhas sugestões
+          {feedbacks.filter((f) =>
+            (f.replies || []).some((r) => r.user?.role === "SUPERADMIN"),
+          ).length > 0 && <span className="stab-dot" />}
         </button>
       </div>
 
+      {/* ── ABA: NOVA SUGESTÃO ── */}
       {tab === "new" && (
         <div className="suggestion-form-wrap">
           <form className="suggestion-form" onSubmit={handleSubmit}>
-            <div className="sform-row">
-              <div className="sfield">
-                <label>Tipo de solicitação</label>
-                <div className="type-pills">
-                  {SUGGESTION_TYPES.map((t) => (
-                    <button
-                      key={t.value}
-                      type="button"
-                      className={`type-pill ${form.type === t.value ? "type-pill--active" : ""}`}
-                      onClick={() => set("type", t.value)}
-                    >
-                      {t.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div className="sfield">
-                <label>Prioridade</label>
-                <div className="priority-pills">
-                  {PRIORITY_OPTIONS.map((p) => (
-                    <button
-                      key={p.value}
-                      type="button"
-                      className={`priority-pill ${form.priority === p.value ? "priority-pill--active" : ""}`}
-                      style={{ "--p-color": p.color }}
-                      onClick={() => set("priority", p.value)}
-                    >
-                      {p.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </div>
-
+            {/* Tipo */}
             <div className="sfield">
-              <label>Aplicativo relacionado (opcional)</label>
-              <select
-                className="sselect"
-                value={form.app_id}
-                onChange={(e) => set("app_id", e.target.value)}
-              >
-                <option value="">Plataforma geral</option>
-                {ALL_APPS.map((a) => (
-                  <option key={a.id} value={a.id}>
-                    {a.name}
-                  </option>
+              <label>Tipo de solicitação</label>
+              <div className="type-cards">
+                {FEEDBACK_TYPES.map((t) => (
+                  <button
+                    key={t.value}
+                    type="button"
+                    className={`type-card ${form.type === t.value ? "type-card--active" : ""}`}
+                    onClick={() => set("type", t.value)}
+                  >
+                    <span className="type-card-icon">{t.icon}</span>
+                    <span className="type-card-label">{t.label}</span>
+                    <span className="type-card-desc">{t.desc}</span>
+                  </button>
                 ))}
-              </select>
+              </div>
             </div>
 
+            {/* Título */}
             <div className="sfield">
               <label>
                 Título <span className="required">*</span>
@@ -651,13 +733,22 @@ function SuggestionsPage({ user, toast }) {
                 className="sinput"
                 value={form.title}
                 onChange={(e) => set("title", e.target.value)}
-                placeholder="Resuma sua sugestão em uma linha"
+                placeholder={
+                  form.type === "BUG"
+                    ? "Ex: Não consigo salvar um novo cliente"
+                    : form.type === "FEATURE"
+                      ? "Ex: Exportar relatório em Excel"
+                      : form.type === "REQUISITO"
+                        ? "Ex: Melhorar filtro da agenda"
+                        : "Descreva brevemente sua mensagem"
+                }
                 maxLength={120}
                 required
               />
               <span className="char-count">{form.title.length}/120</span>
             </div>
 
+            {/* Descrição */}
             <div className="sfield">
               <label>
                 Descrição detalhada <span className="required">*</span>
@@ -666,7 +757,11 @@ function SuggestionsPage({ user, toast }) {
                 className="sinput stextarea"
                 value={form.description}
                 onChange={(e) => set("description", e.target.value)}
-                placeholder="Descreva com detalhes: o problema, o impacto, o que você espera como solução..."
+                placeholder={
+                  form.type === "BUG"
+                    ? "Descreva o que estava fazendo quando o erro ocorreu, qual o comportamento esperado e o que aconteceu de fato..."
+                    : "Explique com detalhes o que você precisa e por que seria útil..."
+                }
                 rows={5}
                 maxLength={2000}
                 required
@@ -676,8 +771,9 @@ function SuggestionsPage({ user, toast }) {
 
             <div className="sform-footer">
               <p className="sform-note">
-                Todas as sugestões são lidas pela equipe Planware. Respondemos
-                em até 48h úteis.
+                {selectedType?.value === "BUG"
+                  ? "Bugs são priorizados. Nossa equipe irá investigar e responder em breve."
+                  : "Todas as sugestões são lidas pela equipe Planware. Respondemos em até 48h úteis."}
               </p>
               <button
                 type="submit"
@@ -690,7 +786,7 @@ function SuggestionsPage({ user, toast }) {
                   </>
                 ) : (
                   <>
-                    <span>Enviar sugestão</span>
+                    <span>Enviar {selectedType?.label || "sugestão"}</span>
                     <span>→</span>
                   </>
                 )}
@@ -700,13 +796,14 @@ function SuggestionsPage({ user, toast }) {
         </div>
       )}
 
+      {/* ── ABA: MINHAS SUGESTÕES ── */}
       {tab === "mine" && (
         <div className="mine-list">
           {loading ? (
             <div className="mine-loading">
               <span className="spin-ring" />
             </div>
-          ) : suggestions.length === 0 ? (
+          ) : feedbacks.length === 0 ? (
             <div className="mine-empty">
               <span className="mine-empty-icon">◎</span>
               <h3>Nenhuma sugestão ainda</h3>
@@ -716,47 +813,24 @@ function SuggestionsPage({ user, toast }) {
               </p>
             </div>
           ) : (
-            suggestions.map((s) => {
-              const st = STATUS_LABEL[s.status] || STATUS_LABEL.pending;
-              const pr =
-                PRIORITY_OPTIONS.find((p) => p.value === s.priority) ||
-                PRIORITY_OPTIONS[1];
-              const app = ALL_APPS.find((a) => a.id === s.app_id);
-              return (
-                <div key={s.id} className="suggestion-card">
-                  <div className="scard-header">
-                    <span className={`scard-status ${st.cls}`}>{st.label}</span>
-                    <span
-                      className="scard-priority"
-                      style={{ color: pr.color }}
-                    >
-                      ● {pr.label}
-                    </span>
-                    {app && (
-                      <span
-                        className="scard-app"
-                        style={{ "--app-color": app.color }}
-                      >
-                        {app.icon} {app.name}
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="scard-title">{s.title}</h3>
-                  <p className="scard-desc">{s.description}</p>
-                  <div className="scard-footer">
-                    <span className="scard-type">
-                      {SUGGESTION_TYPES.find((t) => t.value === s.type)
-                        ?.label || s.type}
-                    </span>
-                    <span className="scard-date">
-                      {new Date(s.created_at || Date.now()).toLocaleDateString(
-                        "pt-BR",
-                      )}
-                    </span>
-                  </div>
+            <>
+              {/* Destaque: feedbacks com resposta do admin */}
+              {feedbacks.some((f) =>
+                (f.replies || []).some((r) => r.user?.role === "SUPERADMIN"),
+              ) && (
+                <div className="mine-replied-notice">
+                  <span>◈</span> A equipe Planware respondeu alguns dos seus
+                  feedbacks. Confira abaixo!
                 </div>
-              );
-            })
+              )}
+              {feedbacks.map((fb) => (
+                <FeedbackCard
+                  key={fb.id}
+                  feedback={fb}
+                  onDelete={handleDelete}
+                />
+              ))}
+            </>
           )}
         </div>
       )}
@@ -778,7 +852,6 @@ function Sidebar({ page, setPage, user, theme, setTheme }) {
 
   return (
     <aside className="sidebar">
-      {/* Brand */}
       <div className="sidebar-brand">
         <span className="sidebar-brand-mark">⬡</span>
         <div className="sidebar-brand-text">
@@ -787,7 +860,6 @@ function Sidebar({ page, setPage, user, theme, setTheme }) {
         </div>
       </div>
 
-      {/* Nav */}
       <nav className="sidebar-nav">
         {NAV_ITEMS.map((item) => (
           <button
@@ -804,7 +876,6 @@ function Sidebar({ page, setPage, user, theme, setTheme }) {
 
       <div className="sidebar-spacer" />
 
-      {/* Theme toggle — 3 temas */}
       <div className="sidebar-theme">
         <button
           className={`theme-btn ${theme === "midnight" ? "theme-btn--active" : ""}`}
@@ -829,7 +900,6 @@ function Sidebar({ page, setPage, user, theme, setTheme }) {
         </button>
       </div>
 
-      {/* User */}
       <div className="sidebar-user">
         <div className="sidebar-user-avatar">{initial}</div>
         <div className="sidebar-user-info">
@@ -879,14 +949,12 @@ export default function App() {
         theme={theme}
         setTheme={setTheme}
       />
-
       <main className="hub-main">
         {page === "dashboard" && <Dashboard user={user} />}
         {page === "suggestions" && (
           <SuggestionsPage user={user} toast={toast} />
         )}
       </main>
-
       <ToastStack toasts={toasts} />
     </div>
   );
