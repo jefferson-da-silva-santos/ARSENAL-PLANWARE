@@ -10,7 +10,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  // url      = env("DATABASE_URL")
+  url      = env("DATABASE_URL")
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -75,6 +75,19 @@ model Tenant {
   tenantPlan    TenantPlan?
   charges       Charge[]
 
+  // BarberShop
+  barberConfig        BarberConfig?
+  barberServicos      BarberServico[]
+  barberBarbeiros     BarberBarbeiro[]
+  barberClientes      BarberCliente[]
+  barberAgendamentos  BarberAgendamento[]
+  barberFila          BarberFila[]
+  barberProdutos      BarberProduto[]
+  barberAssinaturas   BarberAssinatura[]
+  barberRecompensas   BarberRecompensa[]
+  barberDespesas      BarberDespesa[]
+  barberFechamentos   BarberFechamento[]
+
   @@map("tenants")
 }
 
@@ -125,6 +138,7 @@ enum System {
   CLINICA
   ORDEMTECH
   FIADO
+  BARBERSHOP
 }
 
 // ─────────────────────────────────────────────────────────────
@@ -1011,4 +1025,439 @@ enum PaymentMethod {
   CREDIT_CARD // cartão de crédito presencial
   DEBIT_CARD  // cartão de débito presencial
   OTHER
+}
+
+// ─────────────────────────────────────────────────────────────
+//  BARBERSHOP — gestão completa de barbearia
+// ─────────────────────────────────────────────────────────────
+
+// Relações adicionadas ao Tenant (adicionar manualmente no model Tenant):
+// barberServicos      BarberServico[]
+// barberBarbeiros     BarberBarbeiro[]
+// barberClientes      BarberCliente[]
+// barberAgendamentos  BarberAgendamento[]
+// barberFila          BarberFila[]
+// barberProdutos      BarberProduto[]
+// barberAssinaturas   BarberAssinatura[]
+// barberRecompensas   BarberRecompensa[]
+// barberDespesas      BarberDespesa[]
+// barberFechamentos   BarberFechamento[]
+// barberConfig        BarberConfig?
+
+// ── Configurações da barbearia ─────────────────────────────
+
+model BarberConfig {
+  id                 String   @id @default(uuid())
+  tenantId           String   @unique
+  nomeFantasia       String?
+  telefone           String?
+  endereco           String?
+  horarioAbertura    String   @default("08:00")  // HH:mm
+  horarioFechamento  String   @default("20:00")  // HH:mm
+  diasFuncionamento  Int[]    @default([1,2,3,4,5,6]) // 0=Dom..6=Sáb
+  intervaloSlot      Int      @default(30)        // minutos entre slots
+  limiteDiario       Int?     // max agendamentos/dia (null = ilimitado)
+  modoFila           Boolean  @default(false)     // habilita fila presencial
+  pontosCorte        Int      @default(10)        // pontos por serviço concluído
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@map("barber_config")
+}
+
+// ── Serviços oferecidos ────────────────────────────────────
+
+model BarberServico {
+  id             String   @id @default(uuid())
+  tenantId       String
+  nome           String                        // "Corte", "Barba", "Combo"
+  descricao      String?
+  preco          Float
+  duracaoMin     Int                           // duração em minutos
+  comissaoPct    Float    @default(50)         // % de comissão do barbeiro
+  nivelMinimo    BarberNivel @default(JUNIOR)  // nível mínimo para executar
+  ativo          Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  tenant       Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  agendamentos BarberAgendamento[]
+
+  @@index([tenantId])
+  @@map("barber_servicos")
+}
+
+enum BarberNivel {
+  JUNIOR
+  PLENO
+  SENIOR
+  MASTER
+}
+
+// ── Barbeiros ──────────────────────────────────────────────
+
+model BarberBarbeiro {
+  id            String      @id @default(uuid())
+  tenantId      String
+  nome          String
+  telefone      String?
+  email         String?
+  foto          String?                        // URL/path da foto
+  nivel         BarberNivel @default(JUNIOR)
+  comissaoPct   Float?                         // override da comissão padrão do serviço
+  ativo         Boolean     @default(true)
+  metaMensal    Float?                         // meta de faturamento mensal (R$)
+  metaCortes    Int?                           // meta de cortes/mês
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  tenant          Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  agendamentos    BarberAgendamento[]
+  bloqueios       BarberBloqueio[]
+  avaliacoes      BarberAvaliacao[]
+  comissoes       BarberComissao[]
+  filaAtual       BarberFila[]
+
+  @@index([tenantId])
+  @@map("barber_barbeiros")
+}
+
+// ── Bloqueios de agenda (férias, folga, pausa) ─────────────
+
+model BarberBloqueio {
+  id          String           @id @default(uuid())
+  barbeiroId  String
+  tipo        BarberBloqueioTipo
+  inicio      DateTime
+  fim         DateTime
+  motivo      String?
+  createdAt   DateTime         @default(now())
+
+  barbeiro BarberBarbeiro @relation(fields: [barbeiroId], references: [id], onDelete: Cascade)
+
+  @@index([barbeiroId])
+  @@index([inicio, fim])
+  @@map("barber_bloqueios")
+}
+
+enum BarberBloqueioTipo {
+  FERIAS
+  FOLGA
+  PAUSA        // intervalo/almoço
+  OUTRO
+}
+
+// ── Clientes da barbearia ──────────────────────────────────
+
+model BarberCliente {
+  id              String   @id @default(uuid())
+  tenantId        String
+  nome            String
+  telefone        String?
+  email           String?
+  dataNascimento  String?
+  pontosFidelidade Int     @default(0)
+  totalVisitas    Int      @default(0)
+  ultimaVisita    DateTime?
+  observacoes     String?
+  ativo           Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  tenant       Tenant               @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  agendamentos BarberAgendamento[]
+  assinaturas  BarberAssinatura[]
+  avaliacoes   BarberAvaliacao[]
+  resgates     BarberResgate[]
+  fila         BarberFila[]
+
+  @@index([tenantId])
+  @@map("barber_clientes")
+}
+
+// ── Agendamentos ───────────────────────────────────────────
+
+model BarberAgendamento {
+  id          String              @id @default(uuid())
+  tenantId    String
+  barbeiroId  String
+  clienteId   String?             // null = cliente eventual (sem cadastro)
+  servicoId   String
+  nomeCliente String?             // desnormalizado para clientes eventuais
+  telefoneCliente String?
+  dataHora    DateTime
+  duracaoMin  Int                 // desnormalizado do serviço (pode variar)
+  valorCobrado Float              // desnormalizado — preço no momento do agendamento
+  status      BarberAgendStatus   @default(AGENDADO)
+  origem      BarberAgendOrigem   @default(PRESENCIAL)
+  observacoes String?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  tenant    Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  barbeiro  BarberBarbeiro  @relation(fields: [barbeiroId], references: [id])
+  cliente   BarberCliente?  @relation(fields: [clienteId], references: [id], onDelete: SetNull)
+  servico   BarberServico   @relation(fields: [servicoId], references: [id])
+  avaliacao BarberAvaliacao?
+  comissao  BarberComissao?
+
+  @@index([tenantId])
+  @@index([barbeiroId])
+  @@index([clienteId])
+  @@index([dataHora])
+  @@index([status])
+  @@index([tenantId, dataHora])       // query mais comum: agenda do dia
+  @@index([barbeiroId, dataHora])     // disponibilidade por barbeiro
+  @@map("barber_agendamentos")
+}
+
+enum BarberAgendStatus {
+  AGENDADO
+  CONFIRMADO
+  EM_ATENDIMENTO
+  CONCLUIDO
+  CANCELADO
+  FALTOU
+}
+
+enum BarberAgendOrigem {
+  PRESENCIAL
+  ONLINE
+  WHATSAPP
+  TELEFONE
+}
+
+// ── Fila presencial ────────────────────────────────────────
+
+model BarberFila {
+  id          String         @id @default(uuid())
+  tenantId    String
+  clienteId   String?        // null = cliente não cadastrado
+  barbeiroId  String?        // null = primeiro disponível
+  nomeCliente String?        // para clientes não cadastrados
+  telefone    String?
+  servicoId   String?
+  posicao     Int            // posição atual na fila
+  status      BarberFilaStatus @default(AGUARDANDO)
+  entradaEm   DateTime       @default(now())
+  chamadoEm   DateTime?
+  atendidoEm  DateTime?
+
+  tenant   Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  cliente  BarberCliente?  @relation(fields: [clienteId], references: [id], onDelete: SetNull)
+  barbeiro BarberBarbeiro? @relation(fields: [barbeiroId], references: [id], onDelete: SetNull)
+
+  @@index([tenantId, status])
+  @@index([tenantId, posicao])
+  @@map("barber_fila")
+}
+
+enum BarberFilaStatus {
+  AGUARDANDO
+  CHAMADO
+  EM_ATENDIMENTO
+  CONCLUIDO
+  DESISTIU
+}
+
+// ── Avaliações ─────────────────────────────────────────────
+
+model BarberAvaliacao {
+  id             String   @id @default(uuid())
+  tenantId       String   // desnormalizado para facilitar queries
+  agendamentoId  String   @unique
+  barbeiroId     String
+  clienteId      String?
+  notaGeral      Int                          // 1-5
+  notaCorte      Int?                         // 1-5
+  notaAtendimento Int?                        // 1-5
+  notaPontualidade Int?                       // 1-5
+  comentario     String?
+  createdAt      DateTime @default(now())
+
+  agendamento BarberAgendamento @relation(fields: [agendamentoId], references: [id], onDelete: Cascade)
+  barbeiro    BarberBarbeiro    @relation(fields: [barbeiroId],   references: [id])
+  cliente     BarberCliente?    @relation(fields: [clienteId],    references: [id], onDelete: SetNull)
+
+  @@index([barbeiroId])
+  @@index([tenantId])
+  @@map("barber_avaliacoes")
+}
+
+// ── Comissões ──────────────────────────────────────────────
+
+model BarberComissao {
+  id             String   @id @default(uuid())
+  tenantId       String   // desnormalizado
+  barbeiroId     String
+  agendamentoId  String   @unique
+  valorServico   Float    // valor cobrado no agendamento
+  percentual     Float    // % aplicada
+  valorComissao  Float    // valor calculado
+  repassado      Boolean  @default(false)
+  repassadoEm   DateTime?
+  createdAt      DateTime @default(now())
+
+  barbeiro    BarberBarbeiro    @relation(fields: [barbeiroId],   references: [id])
+  agendamento BarberAgendamento @relation(fields: [agendamentoId], references: [id], onDelete: Cascade)
+
+  @@index([barbeiroId])
+  @@index([tenantId])
+  @@index([repassado])
+  @@map("barber_comissoes")
+}
+
+// ── Estoque de produtos ────────────────────────────────────
+
+model BarberProduto {
+  id              String   @id @default(uuid())
+  tenantId        String
+  nome            String
+  categoria       String?  // "pomada", "shampoo", "navalha"
+  fornecedor      String?
+  unidade         String   @default("un")
+  precoUnitario   Float    @default(0)
+  quantidadeAtual Int      @default(0)
+  quantidadeMin   Int      @default(5)   // alerta abaixo deste valor
+  validade        String?                // YYYY-MM-DD
+  ativo           Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  tenant         Tenant                    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  movimentacoes  BarberMovEstoque[]
+
+  @@index([tenantId])
+  @@map("barber_produtos")
+}
+
+model BarberMovEstoque {
+  id         String               @id @default(uuid())
+  produtoId  String
+  tipo       BarberMovEstoqueTipo
+  quantidade Int
+  motivo     String?
+  createdAt  DateTime             @default(now())
+
+  produto BarberProduto @relation(fields: [produtoId], references: [id], onDelete: Cascade)
+
+  @@index([produtoId])
+  @@map("barber_mov_estoque")
+}
+
+enum BarberMovEstoqueTipo {
+  ENTRADA
+  SAIDA
+  AJUSTE
+}
+
+// ── Assinaturas de clientes (plano recorrente) ─────────────
+
+model BarberAssinatura {
+  id                String                @id @default(uuid())
+  tenantId          String
+  clienteId         String
+  nome              String                // "Plano Mensal — 4 cortes"
+  creditosTotal     Int                   // ex: 4 (cortes/mês)
+  creditosRestantes Int                   // decrementado a cada uso
+  valorMensal       Float
+  servicosIncluidos String[]              // IDs dos serviços cobertos
+  status            BarberAssinaturaStatus @default(ATIVA)
+  inicioEm          DateTime              @default(now())
+  renovaEm          DateTime              // próxima cobrança/renovação
+  canceladoEm      DateTime?
+  observacoes       String?
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
+
+  tenant  Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  cliente BarberCliente @relation(fields: [clienteId], references: [id])
+
+  @@index([tenantId])
+  @@index([clienteId])
+  @@index([status])
+  @@index([renovaEm])
+  @@map("barber_assinaturas")
+}
+
+enum BarberAssinaturaStatus {
+  ATIVA
+  SUSPENSA
+  CANCELADA
+  VENCIDA
+}
+
+// ── Programa de fidelidade — recompensas disponíveis ───────
+
+model BarberRecompensa {
+  id            String   @id @default(uuid())
+  tenantId      String
+  nome          String   // "Hidratação grátis"
+  descricao     String?
+  pontosNecessarios Int  // pontos para resgatar
+  ativa         Boolean  @default(true)
+  createdAt     DateTime @default(now())
+
+  tenant   Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  resgates BarberResgate[]
+
+  @@index([tenantId])
+  @@map("barber_recompensas")
+}
+
+model BarberResgate {
+  id           String   @id @default(uuid())
+  clienteId    String
+  recompensaId String
+  pontosUsados Int
+  createdAt    DateTime @default(now())
+
+  cliente    BarberCliente    @relation(fields: [clienteId],    references: [id])
+  recompensa BarberRecompensa @relation(fields: [recompensaId], references: [id])
+
+  @@index([clienteId])
+  @@map("barber_resgates")
+}
+
+// ── Despesas operacionais ──────────────────────────────────
+
+model BarberDespesa {
+  id          String   @id @default(uuid())
+  tenantId    String
+  descricao   String
+  valor       Float
+  categoria   String?  // "aluguel", "produto", "energia"
+  data        DateTime @default(now())
+  observacoes String?
+  createdAt   DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([data])
+  @@map("barber_despesas")
+}
+
+// ── Fechamento de caixa diário ──────────────────────────────
+
+model BarberFechamento {
+  id               String   @id @default(uuid())
+  tenantId         String
+  data             DateTime                      // data do fechamento
+  totalFaturado    Float                         // soma dos agendamentos concluídos
+  totalComissoes   Float                         // soma das comissões do dia
+  totalDespesas    Float                         // despesas lançadas no dia
+  totalLiquido     Float                         // faturado - comissões - despesas
+  qtdAtendimentos  Int                           // total de atendimentos
+  observacoes      String?
+  createdAt        DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, data])
+  @@index([tenantId])
+  @@index([data])
+  @@map("barber_fechamentos")
 }

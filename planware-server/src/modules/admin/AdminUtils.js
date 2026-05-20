@@ -1,6 +1,19 @@
 'use strict';
 
-const VALID_SYSTEMS = ['CLIENTPRO', 'STOCKPRO', 'FINVAULT', 'FINFLOW', 'FINANCEFLOW', 'KANBAN', 'CLINICA', 'ORDEMTECH', 'FIADO'];
+// FIX: lista completa — estava faltando KANBAN, CLINICA, ORDEMTECH, FIADO
+const VALID_SYSTEMS = [
+  'CLIENTPRO',
+  'STOCKPRO',
+  'FINVAULT',
+  'FINFLOW',
+  'FINANCEFLOW',
+  'KANBAN',
+  'CLINICA',
+  'ORDEMTECH',
+  'FIADO',
+  'BARBERSHOP',
+];
+
 const VALID_ROLES = ['USER', 'SUPERADMIN'];
 
 // Gera slug a partir do nome do tenant
@@ -16,12 +29,11 @@ function slugify(name) {
 }
 
 // Valida se um array de sistemas é válido
-// Aceita: ['CLIENTPRO', 'STOCKPRO'] etc.
 function validateSystems(systems) {
   if (!Array.isArray(systems) || systems.length === 0) {
     return 'permissions deve ser um array não vazio';
   }
-  const invalid = systems.filter((s) => !VALID_SYSTEMS.includes(s));
+  const invalid = systems.filter(s => !VALID_SYSTEMS.includes(s));
   if (invalid.length > 0) {
     return `Sistemas inválidos: ${invalid.join(', ')}. Válidos: ${VALID_SYSTEMS.join(', ')}`;
   }

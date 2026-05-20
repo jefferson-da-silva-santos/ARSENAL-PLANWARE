@@ -24,6 +24,7 @@ const clinicaRoutes = require('./modules/clinica/ClinicaRoutes');
 const ordemtechRoutes = require('./modules/ordemtech/OrdemTechRoutes');
 const fiadoRoutes = require('./modules/fiado/FiadoRoutes');
 const billingRoutes = require('./modules/billing/BillingRoutes');
+const barbershopRoutes = require('./modules/barbershop/BarbershopRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -59,6 +60,7 @@ app.use('/clinica', auth, requireSystem('CLINICA'), clinicaRoutes);
 app.use('/ordemtech', auth, requireSystem('ORDEMTECH'), ordemtechRoutes);
 app.use('/fiado', auth, requireSystem('FIADO'), fiadoRoutes);
 app.use('/billing', auth, billingRoutes);
+app.use('/barbershop', auth, requireSystem('BARBERSHOP'), barbershopRoutes);
 
 // ── Health check ─────────────────────────────────────────────
 app.get('/health', (_req, res) => {
@@ -105,6 +107,7 @@ app.listen(PORT, () => {
   route('/ordemtech', 'clientes · ordens de serviço · dashboard');
   route('/fiado', 'clientes · contas · parcelas · inadimplência');
   route('/billing', 'clientes · contas · parcelas · inadimplência');
+  route('/barbershop', 'barbeiros · serviços · agendamentos · clientes');
 
   console.log(chalk.gray('  ──────────────────────────────────────────\n'));
 });
