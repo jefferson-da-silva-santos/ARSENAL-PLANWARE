@@ -1,0 +1,265 @@
+// ════════════════════════════════════════════════════════════
+//  Button.module.scss — Navalha 22
+//
+//  Variantes: primary | dark | ghost | soft | danger
+//  Tamanhos : sm | md | lg
+//  Estados  : hover, active, disabled, loading, full-width
+// ════════════════════════════════════════════════════════════
+
+// ── Base ──────────────────────────────────────────────────────
+.btn {
+  display        : inline-flex;
+  align-items    : center;
+  justify-content: center;
+  gap            : 8px;
+  border         : 1px solid transparent;
+  border-radius  : $r-pill;
+  font-family    : $font-primary;
+  font-weight    : 600;
+  line-height    : 1;
+  white-space    : nowrap;
+  cursor         : pointer;
+  text-decoration: none;
+  transition     :
+    background   $transition-fast,
+    border-color $transition-fast,
+    box-shadow   $transition-fast,
+    transform    0.1s ease,
+    color        $transition-fast;
+
+  // Evita encolher em layouts flex
+  flex-shrink: 0;
+
+  &:focus-visible {
+    outline       : 2px solid $orange-500;
+    outline-offset: 3px;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+}
+
+// ── Tamanhos ──────────────────────────────────────────────────
+
+.btn--sm {
+  padding  : 7px 12px;
+  font-size: 12px;
+
+  .icon,
+  .iconRight { font-size: 13px; }
+}
+
+.btn--md {
+  padding  : 10px 16px;
+  font-size: 13px;
+
+  .icon,
+  .iconRight { font-size: 14px; }
+}
+
+.btn--lg {
+  padding  : 14px 22px;
+  font-size: 15px;
+
+  .icon,
+  .iconRight { font-size: 16px; }
+}
+
+// ── Full width ────────────────────────────────────────────────
+
+.btn--full {
+  width          : 100%;
+  justify-content: center;
+}
+
+// ── Variante: primary (laranja) ───────────────────────────────
+// Uso restrito — 1 por seção, nunca ao lado de outro primário
+
+.btn--primary {
+  background: $orange-500;
+  color     : #fff;
+  box-shadow: 0 4px 14px rgba(255, 107, 44, 0.28);
+
+  &:hover:not(:disabled) {
+    background: $orange-600;
+    box-shadow: $shadow-orange;
+    transform : translateY(-1px);
+  }
+
+  &:active:not(:disabled) {
+    background: $orange-700;
+    box-shadow: none;
+    transform : scale(0.97);
+  }
+}
+
+// ── Variante: dark (marrom) ───────────────────────────────────
+
+.btn--dark {
+  background: $brown-600;
+  color     : $brown-50;
+  box-shadow: $shadow-sm;
+
+  &:hover:not(:disabled) {
+    background: $brown-500;
+    box-shadow: $shadow-md;
+    transform : translateY(-1px);
+  }
+
+  &:active:not(:disabled) {
+    background: $brown-700;
+    transform : scale(0.97);
+  }
+}
+
+// ── Variante: ghost (borda creme) ─────────────────────────────
+// Nunca usar bordas cinzas — sempre creme/marrom
+
+.btn--ghost {
+  background  : transparent;
+  border-color: $border;
+  color       : $ink-2;
+
+  &:hover:not(:disabled) {
+    background  : $surface-warm;
+    border-color: $border-strong;
+    color       : $ink;
+  }
+
+  &:active:not(:disabled) {
+    background: $surface-2;
+    transform : scale(0.97);
+  }
+}
+
+// ── Variante: soft (laranja suave) ────────────────────────────
+
+.btn--soft {
+  background  : $orange-50;
+  border-color: $orange-100;
+  color       : $orange-700;
+
+  &:hover:not(:disabled) {
+    background  : $orange-100;
+    border-color: $orange-200;
+    color       : darken($orange-700, 8%);
+    transform   : translateY(-1px);
+  }
+
+  &:active:not(:disabled) {
+    background: $orange-200;
+    transform : scale(0.97);
+  }
+}
+
+// ── Variante: danger (vermelho) ───────────────────────────────
+
+.btn--danger {
+  background: $danger-bg;
+  color     : $danger;
+  border-color: rgba($danger, 0.25);
+
+  &:hover:not(:disabled) {
+    background  : $danger;
+    color       : #fff;
+    border-color: $danger;
+    transform   : translateY(-1px);
+    box-shadow  : 0 4px 14px rgba(193, 56, 56, 0.3);
+  }
+
+  &:active:not(:disabled) {
+    background: darken($danger, 8%);
+    transform : scale(0.97);
+  }
+}
+
+// ── Estado: disabled ──────────────────────────────────────────
+
+.btn:disabled {
+  opacity: 0.45;
+  cursor : not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+// ── Estado: loading ───────────────────────────────────────────
+
+.btn--loading {
+  // Mantém a largura original ao trocar conteúdo por spinner
+  pointer-events: none;
+  opacity       : 0.8;
+}
+
+// ── Spinner ───────────────────────────────────────────────────
+
+.spinner {
+  display      : block;
+  width        : 14px;
+  height       : 14px;
+  border       : 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation    : spin 0.65s linear infinite;
+  flex-shrink  : 0;
+}
+
+// Spinner para variantes claras
+.btn--ghost .spinner,
+.btn--soft  .spinner {
+  border-color    : rgba(0, 0, 0, 0.15);
+  border-top-color: $orange-500;
+}
+
+.btn--danger .spinner {
+  border-color    : rgba(193, 56, 56, 0.25);
+  border-top-color: $danger;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// ── Ícones ────────────────────────────────────────────────────
+
+.icon {
+  display    : flex;
+  align-items: center;
+  flex-shrink: 0;
+  // O tamanho é definido por .btn--sm / md / lg acima
+}
+
+.iconRight {
+  @extend .icon;
+  // Pequena margem para separar visualmente do label
+  margin-left: 2px;
+}
+
+// ── Responsividade ────────────────────────────────────────────
+// Em telas muito pequenas, botões lg viram md automaticamente
+
+@media (max-width: 400px) {
+  .btn--lg {
+    padding  : 11px 18px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 320px) {
+  .btn--lg {
+    padding  : 10px 14px;
+    font-size: 13px;
+  }
+
+  .btn--md {
+    padding  : 9px 12px;
+    font-size: 12px;
+  }
+
+  // Label pode quebrar em 2 linhas em telas 320px
+  .label {
+    white-space: normal;
+    text-align : center;
+    line-height: 1.3;
+  }
+}

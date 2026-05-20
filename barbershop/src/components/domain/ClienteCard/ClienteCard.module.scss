@@ -1,0 +1,156 @@
+// ════════════════════════════════════════════════════════════
+//  ClienteCard.module.scss — Navalha 22
+// ════════════════════════════════════════════════════════════
+
+.card {
+  display      : flex;
+  align-items  : center;
+  gap          : 14px;
+  padding      : 16px 18px;
+  background   : $surface;
+  border-radius: $r-lg;
+  border       : 1px solid $border-soft;
+  box-shadow   : $shadow-sm;
+  transition   : box-shadow $transition-fast, transform $transition-fast;
+}
+
+.card--clickable {
+  cursor: pointer;
+
+  &:hover {
+    box-shadow  : $shadow-md;
+    border-color: $border-strong;
+    transform   : translateY(-1px);
+  }
+
+  &:focus-visible {
+    outline       : 2px solid $orange-500;
+    outline-offset: 3px;
+  }
+}
+
+// ── Avatar ────────────────────────────────────────────────────
+
+.avatar {
+  width        : 44px;
+  height       : 44px;
+  border-radius: 50%;
+  flex-shrink  : 0;
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+}
+
+.initials {
+  font-family: $font-secondary;
+  font-size  : 16px;
+  font-weight: 700;
+  color      : #fff;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  line-height: 1;
+}
+
+// ── Info ──────────────────────────────────────────────────────
+
+.info {
+  flex     : 1;
+  min-width: 0;
+  display  : flex;
+  flex-direction: column;
+  gap      : 5px;
+}
+
+.nameRow {
+  display    : flex;
+  align-items: center;
+  gap        : 7px;
+  flex-wrap  : wrap;
+}
+
+.name {
+  font-family   : $font-secondary;
+  font-size     : 15px;
+  font-weight   : 700;
+  color         : $ink;
+  letter-spacing: -0.02em;
+  white-space   : nowrap;
+  overflow      : hidden;
+  text-overflow : ellipsis;
+}
+
+// Tag "Em risco" — cliente sumido > 20 dias
+.riskTag {
+  display    : inline-flex;
+  align-items: center;
+  gap        : 3px;
+  padding    : 2px 7px;
+  border-radius: $r-pill;
+  background : $warn-bg;
+  color      : $warn;
+  font-size  : 10px;
+  font-weight: 700;
+  border     : 1px solid rgba($warn, .25);
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  i { font-size: 10px; }
+}
+
+// ── Meta ──────────────────────────────────────────────────────
+
+.meta {
+  display : flex;
+  gap     : 10px;
+  flex-wrap: wrap;
+}
+
+.metaItem {
+  display    : flex;
+  align-items: center;
+  gap        : 4px;
+  font-size  : 12px;
+  color      : $muted;
+
+  i { font-size: 13px; }
+}
+
+.metaItem--risk { color: $warn; }
+
+// ── Pontos ────────────────────────────────────────────────────
+
+.points {
+  display    : flex;
+  align-items: center;
+  gap        : 4px;
+  font-size  : 12px;
+  font-weight: 600;
+  color      : $orange-700;
+
+  i { font-size: 13px; color: $orange-500; }
+}
+
+// ── Arrow ─────────────────────────────────────────────────────
+
+.arrow {
+  font-size  : 20px;
+  color      : $muted-2;
+  flex-shrink: 0;
+  transition : transform $transition-fast;
+
+  .card:hover & { transform: translateX(2px); }
+}
+
+// ── Responsividade ────────────────────────────────────────────
+
+@media (max-width: 400px) {
+  .card    { padding: 13px 14px; gap: 10px; }
+  .meta    { gap: 7px; }
+  .arrow   { display: none; }
+}
+
+@media (max-width: 320px) {
+  .avatar  { width: 36px; height: 36px; }
+  .name    { font-size: 14px; }
+  .initials{ font-size: 14px; }
+  .metaItem{ font-size: 11px; }
+}

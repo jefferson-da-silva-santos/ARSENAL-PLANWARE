@@ -1,0 +1,108 @@
+// ════════════════════════════════════════════════════════════
+//  Skeleton.module.scss — Navalha 22
+//  Shimmer em tons creme/marrom — nunca cinza neutro
+// ════════════════════════════════════════════════════════════
+
+// ── Animação shimmer ──────────────────────────────────────────
+// Usa a paleta creme/marrom para manter coerência visual
+
+@keyframes shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position:  600px 0; }
+}
+
+// ── Base ──────────────────────────────────────────────────────
+
+.skeleton {
+  display   : block;
+  background: linear-gradient(
+    90deg,
+    $surface-2     0%,
+    $border-soft   35%,
+    $surface-2    50%,
+    $border-soft   65%,
+    $surface-2    100%
+  );
+  background-size: 600px 100%;
+  animation      : shimmer 1.6s ease-in-out infinite;
+  flex-shrink    : 0;
+}
+
+// ── Skeleton de texto ─────────────────────────────────────────
+
+.textGroup {
+  display       : flex;
+  flex-direction: column;
+  gap           : 8px;
+  width         : 100%;
+}
+
+// ── Skeleton de KPI card ──────────────────────────────────────
+
+.statCard {
+  display       : flex;
+  flex-direction: column;
+  gap           : 12px;
+  padding       : 20px;
+  background    : $surface;
+  border-radius : $r-lg;
+  border        : 1px solid $border-soft;
+  box-shadow    : $shadow-sm;
+}
+
+.statCardTop {
+  display        : flex;
+  align-items    : flex-start;
+  justify-content: space-between;
+}
+
+// ── Skeleton de linha de tabela ───────────────────────────────
+
+.tableRow {
+  display    : flex;
+  align-items: center;
+  gap        : 14px;
+  padding    : 12px 14px;
+  border-bottom: 1px solid $border-soft;
+
+  &:last-child { border-bottom: none; }
+}
+
+// ── Skeleton de card ──────────────────────────────────────────
+
+.card {
+  background   : $surface;
+  border-radius: $r-lg;
+  border       : 1px solid $border-soft;
+  box-shadow   : $shadow-sm;
+  overflow     : hidden;
+  padding      : 20px;
+}
+
+.cardHead {
+  display    : flex;
+  align-items: center;
+  gap        : 14px;
+  margin-bottom: 16px;
+}
+
+.cardHeadText {
+  display       : flex;
+  flex-direction: column;
+  gap           : 8px;
+  flex          : 1;
+}
+
+.divider {
+  width        : 100%;
+  height       : 1px !important;
+  margin-bottom: 16px;
+  background   : $border-soft !important;
+  animation    : none !important;
+}
+
+.cardBody {
+  display       : flex;
+  flex-direction: column;
+  gap           : 8px;
+}

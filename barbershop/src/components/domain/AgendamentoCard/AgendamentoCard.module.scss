@@ -1,0 +1,214 @@
+// ════════════════════════════════════════════════════════════
+//  AgendamentoCard.module.scss — Navalha 22
+// ════════════════════════════════════════════════════════════
+
+.card {
+  position     : relative;
+  background   : $surface;
+  border-radius: $r-lg;
+  border       : 1px solid $border-soft;
+  box-shadow   : $shadow-sm;
+  overflow     : hidden;
+  transition   : box-shadow $transition-fast, transform $transition-fast;
+
+  &:hover {
+    box-shadow: $shadow-md;
+    transform : translateY(-1px);
+  }
+}
+
+// ── Barra de status (esquerda) ────────────────────────────────
+
+.statusBar {
+  position: absolute;
+  top     : 0;
+  left    : 0;
+  bottom  : 0;
+  width   : 4px;
+}
+
+.card--agendado      .statusBar { background: $info; }
+.card--confirmado    .statusBar { background: $success; }
+.card--em_atendimento .statusBar {
+  background: $orange-500;
+  box-shadow: 0 0 8px rgba(255,107,44,.4);
+}
+.card--concluido     .statusBar { background: $brown-300; }
+.card--cancelado     .statusBar { background: $danger; }
+.card--faltou        .statusBar { background: $warn; }
+
+// ── Cards com status finalizado — opacidade reduzida ─────────
+
+.card--concluido,
+.card--cancelado,
+.card--faltou {
+  opacity: 0.72;
+}
+
+// ── Compact ───────────────────────────────────────────────────
+
+.card--compact {
+  .inner   { padding: 12px 14px 12px 18px; }
+  .avatar  { width: 32px; height: 32px; }
+  .initials{ font-size: 12px; }
+}
+
+// ── Inner ─────────────────────────────────────────────────────
+
+.inner {
+  display    : flex;
+  align-items: center;
+  gap        : 14px;
+  padding    : 16px 18px 16px 22px; // 22px para folga da barra de status
+}
+
+// ── Avatar ────────────────────────────────────────────────────
+
+.avatar {
+  width        : 42px;
+  height       : 42px;
+  border-radius: 50%;
+  flex-shrink  : 0;
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+}
+
+.initials {
+  font-family: $font-secondary;
+  font-size  : 15px;
+  font-weight: 700;
+  color      : #fff;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  line-height: 1;
+}
+
+// ── Conteúdo ──────────────────────────────────────────────────
+
+.content {
+  flex     : 1;
+  min-width: 0;
+  display  : flex;
+  flex-direction: column;
+  gap      : 6px;
+}
+
+.topRow {
+  display    : flex;
+  align-items: center;
+  gap        : 8px;
+  flex-wrap  : wrap;
+}
+
+.clienteName {
+  font-weight  : 600;
+  font-size    : 14px;
+  color        : $ink;
+  white-space  : nowrap;
+  overflow     : hidden;
+  text-overflow: ellipsis;
+  flex-shrink  : 0;
+}
+
+.details {
+  display  : flex;
+  gap      : 12px;
+  flex-wrap: wrap;
+}
+
+.detail {
+  display    : flex;
+  align-items: center;
+  gap        : 4px;
+  font-size  : 12px;
+  color      : $muted;
+
+  i { font-size: 13px; }
+}
+
+.time {
+  font-family: $font-mono;
+  font-weight: 600;
+  color      : $ink-2;
+}
+
+.date {
+  color: $muted;
+}
+
+// ── Direita: valor + ações ────────────────────────────────────
+
+.right {
+  display       : flex;
+  flex-direction: column;
+  align-items   : flex-end;
+  gap           : 8px;
+  flex-shrink   : 0;
+}
+
+.valor {
+  font-family: $font-mono;
+  font-size  : 14px;
+  font-weight: 700;
+  color      : $ink;
+}
+
+.actions {
+  display: flex;
+  gap    : 4px;
+}
+
+// Botões de ação 28×28 (padrão Navalha 22 §5.8 tabelas)
+.actionBtn {
+  width        : 28px;
+  height       : 28px;
+  border-radius: $r-sm;
+  border       : 1px solid $border;
+  background   : $surface;
+  color        : $muted;
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+  cursor       : pointer;
+  transition   : background $transition-fast, color $transition-fast, border-color $transition-fast;
+
+  i { font-size: 14px; }
+
+  &:hover { background: $surface-warm; color: $ink; border-color: $border-strong; }
+  &:focus-visible { outline: 2px solid $orange-500; outline-offset: 2px; }
+}
+
+.actionBtn--success:hover {
+  background  : $success-bg;
+  color       : $success;
+  border-color: rgba($success, .3);
+}
+
+.actionBtn--danger:hover {
+  background  : $danger-bg;
+  color       : $danger;
+  border-color: rgba($danger, .3);
+}
+
+// ── Responsividade ────────────────────────────────────────────
+
+@media (max-width: 480px) {
+  .inner    { padding: 12px 14px 12px 18px; gap: 10px; }
+  .details  { gap: 8px; }
+  .valor    { font-size: 13px; }
+}
+
+@media (max-width: 360px) {
+  .avatar   { width: 36px; height: 36px; }
+  .initials { font-size: 13px; }
+  .clienteName { font-size: 13px; }
+
+  // Esconde duração em telas pequenas
+  .detail:nth-child(3) { display: none; }
+}
+
+@media (max-width: 320px) {
+  .inner   { padding: 10px 12px 10px 16px; gap: 8px; }
+  .actions { display: none; } // ações via swipe/detalhe
+  .details { gap: 6px; }
+}

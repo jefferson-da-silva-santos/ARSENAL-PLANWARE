@@ -1,0 +1,213 @@
+// ════════════════════════════════════════════════════════════
+//  FilaItem.module.scss — Navalha 22
+// ════════════════════════════════════════════════════════════
+
+.item {
+  display      : flex;
+  align-items  : center;
+  gap          : 14px;
+  padding      : 14px 18px;
+  background   : $surface;
+  border-bottom: 1px solid $border-soft;
+  transition   : background $transition-fast;
+
+  &:last-child { border-bottom: none; }
+}
+
+// ── Estados por status ────────────────────────────────────────
+
+.item--chamado {
+  background: $orange-50;
+  border-color: $orange-100;
+}
+
+.item--em_atendimento {
+  background: $success-bg;
+  border-color: rgba($success, .2);
+}
+
+.item--concluido,
+.item--desistiu { opacity: 0.55; }
+
+// ── Número de posição ─────────────────────────────────────────
+
+.position {
+  width        : 36px;
+  height       : 36px;
+  border-radius: $r-sm;
+  background   : $surface-2;
+  border       : 1px solid $border;
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+  font-family  : $font-mono;
+  font-size    : 15px;
+  font-weight  : 700;
+  color        : $ink-2;
+  flex-shrink  : 0;
+}
+
+// Posição ativa (chamado)
+.position--active {
+  background: $orange-500;
+  border-color: $orange-600;
+  color      : #fff;
+  box-shadow : 0 4px 12px rgba(255,107,44,.3);
+  animation  : positionPulse 2s ease-in-out infinite;
+}
+
+@keyframes positionPulse {
+  0%, 100% { box-shadow: 0 4px 12px rgba(255,107,44,.3); }
+  50%       { box-shadow: 0 4px 20px rgba(255,107,44,.55); }
+}
+
+// ── Avatar ────────────────────────────────────────────────────
+
+.avatar {
+  width        : 40px;
+  height       : 40px;
+  border-radius: 50%;
+  flex-shrink  : 0;
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+}
+
+.initials {
+  font-family: $font-secondary;
+  font-size  : 14px;
+  font-weight: 700;
+  color      : #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  line-height: 1;
+}
+
+// ── Info ──────────────────────────────────────────────────────
+
+.info {
+  flex     : 1;
+  min-width: 0;
+  display  : flex;
+  flex-direction: column;
+  gap      : 4px;
+}
+
+.nameRow {
+  display    : flex;
+  align-items: center;
+  gap        : 7px;
+  flex-wrap  : wrap;
+}
+
+.name {
+  font-weight  : 600;
+  font-size    : 14px;
+  color        : $ink;
+  white-space  : nowrap;
+  overflow     : hidden;
+  text-overflow: ellipsis;
+}
+
+.meta {
+  display : flex;
+  gap     : 10px;
+  flex-wrap: wrap;
+}
+
+.metaItem {
+  display    : flex;
+  align-items: center;
+  gap        : 4px;
+  font-size  : 12px;
+  color      : $muted;
+
+  i { font-size: 13px; }
+}
+
+.metaItem--wait {
+  color: $warn;
+  font-weight: 600;
+}
+
+// ── Ações ─────────────────────────────────────────────────────
+
+.actions {
+  display    : flex;
+  align-items: center;
+  gap        : 6px;
+  flex-shrink: 0;
+}
+
+.actionBtn {
+  display      : flex;
+  align-items  : center;
+  gap          : 4px;
+  padding      : 7px 12px;
+  border-radius: $r-pill;
+  border       : 1px solid transparent;
+  font-family  : $font-primary;
+  font-size    : 12px;
+  font-weight  : 600;
+  cursor       : pointer;
+  transition   : background $transition-fast, border-color $transition-fast, transform 0.1s;
+
+  i { font-size: 15px; }
+
+  &:focus-visible { outline: 2px solid $orange-500; outline-offset: 2px; }
+  &:active { transform: scale(0.96); }
+
+  span { white-space: nowrap; }
+}
+
+.actionBtn--call {
+  background  : $orange-500;
+  color       : #fff;
+  box-shadow  : 0 3px 10px rgba(255,107,44,.3);
+
+  &:hover {
+    background: $orange-600;
+    box-shadow: $shadow-orange;
+  }
+}
+
+.actionBtn--remove {
+  width        : 32px;
+  height       : 32px;
+  padding      : 0;
+  justify-content: center;
+  background   : transparent;
+  border-color : $border;
+  color        : $muted;
+
+  &:hover {
+    background  : $danger-bg;
+    border-color: rgba($danger, .3);
+    color       : $danger;
+  }
+}
+
+// ── Responsividade ────────────────────────────────────────────
+
+@media (max-width: 480px) {
+  .item   { padding: 12px 14px; gap: 10px; }
+  .meta   { gap: 6px; }
+
+  // Label "Chamar" some, fica só o ícone
+  .actionBtn--call span { display: none; }
+  .actionBtn--call {
+    width  : 32px;
+    height : 32px;
+    padding: 0;
+  }
+}
+
+@media (max-width: 360px) {
+  .position { width: 30px; height: 30px; font-size: 13px; }
+  .avatar   { width: 34px; height: 34px; }
+  .name     { font-size: 13px; }
+}
+
+@media (max-width: 320px) {
+  .item   { padding: 10px 12px; gap: 8px; }
+  .meta   { display: none; } // muito apertado — esconde meta
+}

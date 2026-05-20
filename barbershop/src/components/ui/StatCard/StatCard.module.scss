@@ -1,0 +1,216 @@
+// ════════════════════════════════════════════════════════════
+//  StatCard.module.scss — Navalha 22
+//
+//  Estrutura (Navalha 22 §5.3):
+//   1. Ícone 38×38 no canto superior direito — pill orange-50
+//   2. Label 12px muted
+//   3. Valor 32px display peso 700 letter-spacing -0.03em
+//   4. Delta 12px peso 600 com seta ↑/↓
+//
+//  Variantes: light | dark | orange | danger
+// ════════════════════════════════════════════════════════════
+
+// ── Base ──────────────────────────────────────────────────────
+
+.card {
+  position     : relative;
+  display      : flex;
+  flex-direction: column;
+  gap          : 10px;
+  padding      : 20px;
+  border-radius: $r-lg;
+  overflow     : hidden;
+  transition   : box-shadow $transition-fast, transform $transition-fast;
+
+  &:hover {
+    transform : translateY(-2px);
+    box-shadow: $shadow-md;
+  }
+}
+
+// ── Variante: light (padrão) ──────────────────────────────────
+
+.card--light {
+  background  : $surface;
+  border      : 1px solid $border-soft;
+  box-shadow  : $shadow-sm;
+
+  .label    { color: $muted; }
+  .value    { color: $ink; }
+  .iconWrap { background: $orange-50; border-color: $orange-100; }
+  .icon     { color: $orange-600; }
+  .sub      { color: $muted; }
+}
+
+// ── Variante: dark — card hero (1 por tela máximo) ────────────
+
+.card--dark {
+  background: $brown-600;
+  border    : none;
+  box-shadow: $shadow-lg;
+
+  .label    { color: rgba($brown-50, 0.65); }
+  .value    { color: $brown-50; }
+  .iconWrap { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.15); }
+  .icon     { color: $orange-300; }
+  .sub      { color: rgba($brown-50, 0.55); }
+
+  // Delta em fundo escuro
+  .delta--up   { color: #7ee8a2; }
+  .delta--down { color: #ff9a9a; }
+  .delta--neutral { color: rgba($brown-50, 0.6); }
+}
+
+// ── Variante: orange ──────────────────────────────────────────
+
+.card--orange {
+  background: $orange-500;
+  border    : none;
+  box-shadow: $shadow-orange;
+
+  .label    { color: rgba(255,255,255,.75); }
+  .value    { color: #fff; }
+  .iconWrap { background: rgba(255,255,255,.2); border-color: rgba(255,255,255,.25); }
+  .icon     { color: #fff; }
+  .sub      { color: rgba(255,255,255,.65); }
+  .delta--up   { color: rgba(255,255,255,.9); }
+  .delta--down { color: rgba(255,255,255,.7); }
+}
+
+// ── Variante: danger — alertas críticos (estoque zerado, etc.) ─
+
+.card--danger {
+  background  : $danger-bg;
+  border      : 1px solid rgba($danger, .2);
+  box-shadow  : $shadow-sm;
+
+  .label    { color: $danger; }
+  .value    { color: $danger; }
+  .iconWrap { background: rgba($danger,.12); border-color: rgba($danger,.2); }
+  .icon     { color: $danger; }
+  .sub      { color: rgba($danger,.7); }
+}
+
+// ── Overlay radial (card dark) ────────────────────────────────
+// Navalha 22: "adicione overlay radial laranja sutil"
+
+.radialOverlay {
+  position  : absolute;
+  inset     : 0;
+  background: radial-gradient(
+    circle at 110% -20%,
+    rgba(255, 107, 44, 0.35),
+    transparent 60%
+  );
+  pointer-events: none;
+  z-index   : 0;
+}
+
+// ── Topo: label + ícone ───────────────────────────────────────
+
+.top {
+  display        : flex;
+  align-items    : flex-start;
+  justify-content: space-between;
+  gap            : 12px;
+  position       : relative;
+  z-index        : 1;
+}
+
+.label {
+  font-size  : 12px;
+  font-weight: 500;
+  line-height: 1.4;
+  // Cor definida por variante
+}
+
+// ── Ícone ─────────────────────────────────────────────────────
+
+.iconWrap {
+  width        : 38px;
+  height       : 38px;
+  border-radius: $r-sm;
+  border       : 1px solid transparent;
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+  flex-shrink  : 0;
+}
+
+.icon {
+  font-size: 18px;
+}
+
+// ── Valor ─────────────────────────────────────────────────────
+// Navalha 22: 32px display peso 700 letter-spacing -0.03em mono
+
+.value {
+  font-family   : $font-mono;
+  font-size     : 32px;
+  font-weight   : 700;
+  letter-spacing: -0.03em;
+  line-height   : 1;
+  position      : relative;
+  z-index       : 1;
+}
+
+// ── Footer: delta + sub ───────────────────────────────────────
+
+.footer {
+  display    : flex;
+  align-items: center;
+  gap        : 8px;
+  flex-wrap  : wrap;
+  position   : relative;
+  z-index    : 1;
+}
+
+.delta {
+  display    : inline-flex;
+  align-items: center;
+  gap        : 3px;
+  font-size  : 12px;
+  font-weight: 600;
+
+  i { font-size: 13px; }
+}
+
+// Delta em variante light
+.card--light {
+  .delta--up      { color: $success; }
+  .delta--down    { color: $danger;  }
+  .delta--neutral { color: $muted;   }
+}
+
+.sub {
+  font-size  : 12px;
+  font-weight: 400;
+  // Cor definida por variante
+}
+
+// ── Slot extra ────────────────────────────────────────────────
+
+.extra {
+  margin-top: 4px;
+  position  : relative;
+  z-index   : 1;
+}
+
+// ── Responsividade ────────────────────────────────────────────
+
+@media (max-width: 480px) {
+  .card { padding: 16px; }
+  .value { font-size: 26px; }
+}
+
+@media (max-width: 360px) {
+  .card { padding: 14px; gap: 8px; }
+  .value { font-size: 22px; }
+  .iconWrap { width: 32px; height: 32px; }
+  .icon { font-size: 15px; }
+}
+
+@media (max-width: 320px) {
+  .value { font-size: 20px; }
+  .label { font-size: 11px; }
+}

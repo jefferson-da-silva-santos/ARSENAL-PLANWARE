@@ -1,0 +1,594 @@
+// ════════════════════════════════════════════════════════════
+//  Dashboard.module.scss — Navalha 22
+// ════════════════════════════════════════════════════════════
+
+.page {
+  min-height: 100%;
+  display   : flex;
+  flex-direction: column;
+}
+
+// ── Body (área abaixo do PageHeader) ─────────────────────────
+
+.body {
+  padding: 24px $content-px 40px;
+  display: flex;
+  flex-direction: column;
+  gap    : 20px;
+  flex   : 1;
+} 
+
+// ── KPI Row ───────────────────────────────────────────────────
+
+.kpiRow {
+  display              : grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap                  : $gap-md;
+}
+
+// ── Grid principal: 2 colunas ─────────────────────────────────
+
+.grid {
+  display              : grid;
+  grid-template-columns: 1fr 340px;
+  gap                  : $gap-lg;
+  align-items          : start;
+}
+
+.mainCol {
+  display       : flex;
+  flex-direction: column;
+  gap           : $gap-lg;
+  min-width     : 0;
+}
+
+.sideCol {
+  display       : flex;
+  flex-direction: column;
+  gap           : $gap-md;
+  min-width     : 0;
+}
+
+// ── Cards base ───────────────────────────────────────────────
+
+.card {
+  background   : $surface;
+  border-radius: $r-lg;
+  border       : 1px solid $border-soft;
+  box-shadow   : $shadow-sm;
+  overflow     : hidden;
+}
+
+// ── Card head ────────────────────────────────────────────────
+
+.cardHead {
+  display        : flex;
+  align-items    : center;
+  justify-content: space-between;
+  gap            : 12px;
+  padding        : 18px 20px 14px;
+  border-bottom  : 1px solid $border-soft;
+}
+
+.cardHeadLeft {
+  display    : flex;
+  align-items: center;
+  gap        : 8px;
+}
+
+.cardTitle {
+  display    : flex;
+  align-items: center;
+  gap        : 8px;
+  font-family: $font-secondary;
+  font-size  : 15px;
+  font-weight: 700;
+  color      : $ink;
+  letter-spacing: -0.02em;
+
+  i {
+    font-size: 17px;
+    color    : $orange-500;
+  }
+}
+
+.cardBadge {
+  padding      : 2px 8px;
+  border-radius: $r-pill;
+  background   : $orange-50;
+  color        : $orange-700;
+  font-size    : 11px;
+  font-weight  : 700;
+  border       : 1px solid $orange-100;
+}
+
+// ── Barra de status do dia ────────────────────────────────────
+
+.statusBar {
+  padding      : 14px 20px;
+  border-bottom: 1px solid $border-soft;
+  display      : flex;
+  flex-direction: column;
+  gap          : 10px;
+}
+
+.statusBarTrack {
+  height       : 8px;
+  border-radius: $r-pill;
+  background   : $border-soft;
+  overflow     : hidden;
+  display      : flex;
+}
+
+.statusBarSegment {
+  height    : 100%;
+  transition: width 0.6s ease;
+
+  &:first-child { border-radius: $r-pill 0 0 $r-pill; }
+  &:last-child  { border-radius: 0 $r-pill $r-pill 0; }
+  &:only-child  { border-radius: $r-pill; }
+}
+
+.statusBarLegend {
+  display : flex;
+  gap     : 12px;
+  flex-wrap: wrap;
+}
+
+.legendItem {
+  display    : flex;
+  align-items: center;
+  gap        : 5px;
+  font-size  : 11px;
+  color      : $muted;
+  font-weight: 500;
+}
+
+.legendDot {
+  width        : 8px;
+  height       : 8px;
+  border-radius: 50%;
+  flex-shrink  : 0;
+}
+
+// ── Lista de agendamentos ─────────────────────────────────────
+
+.agendList {
+  display       : flex;
+  flex-direction: column;
+  gap           : 8px;
+  padding       : 14px 16px;
+}
+
+.seeMore {
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+  gap          : 6px;
+  width        : 100%;
+  padding      : 10px;
+  border-radius: $r-md;
+  border       : 1px dashed $border-strong;
+  background   : transparent;
+  color        : $muted;
+  font-family  : $font-primary;
+  font-size    : 13px;
+  font-weight  : 500;
+  cursor       : pointer;
+  transition   : background $transition-fast, color $transition-fast,
+                 border-color $transition-fast;
+
+  i { font-size: 16px; transition: transform $transition-fast; }
+
+  &:hover {
+    background  : $surface-warm;
+    color       : $ink;
+    border-color: $brown-300;
+
+    i { transform: translateX(3px); }
+  }
+}
+
+// ── Ranking ───────────────────────────────────────────────────
+
+.rankList {
+  display       : flex;
+  flex-direction: column;
+}
+
+.rankItem {
+  display        : flex;
+  align-items    : center;
+  gap            : 12px;
+  padding        : 13px 20px;
+  border-bottom  : 1px solid $border-soft;
+  cursor         : pointer;
+  transition     : background $transition-fast;
+
+  &:last-child { border-bottom: none; }
+  &:hover      { background: $surface-warm; }
+
+  &:focus-visible {
+    outline       : 2px solid $orange-500;
+    outline-offset: -2px;
+  }
+}
+
+.rankItem--top {
+  background: linear-gradient(
+    135deg,
+    rgba(255,107,44,.04),
+    transparent 60%
+  );
+}
+
+.rankNumber {
+  width        : 28px;
+  height       : 28px;
+  border-radius: $r-xs;
+  background   : $surface-2;
+  border       : 1px solid $border;
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+  font-family  : $font-mono;
+  font-size    : 12px;
+  font-weight  : 700;
+  color        : $muted;
+  flex-shrink  : 0;
+
+  i { font-size: 13px; }
+}
+
+.rankNumber--top {
+  background: $orange-500;
+  border-color: $orange-600;
+  color      : #fff;
+  box-shadow : 0 3px 10px rgba(255,107,44,.3);
+}
+
+.rankAvatar {
+  width        : 36px;
+  height       : 36px;
+  border-radius: 50%;
+  flex-shrink  : 0;
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+}
+
+.rankInitials {
+  font-family: $font-secondary;
+  font-size  : 13px;
+  font-weight: 700;
+  color      : #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  line-height: 1;
+}
+
+.rankInfo {
+  flex     : 1;
+  min-width: 0;
+  display  : flex;
+  flex-direction: column;
+  gap      : 2px;
+}
+
+.rankName {
+  font-size    : 13px;
+  font-weight  : 600;
+  color        : $ink;
+  white-space  : nowrap;
+  overflow     : hidden;
+  text-overflow: ellipsis;
+}
+
+.rankAtend {
+  font-size: 11px;
+  color    : $muted;
+}
+
+.rankValor {
+  font-family: $font-mono;
+  font-size  : 14px;
+  font-weight: 700;
+  color      : $ink;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+// ════════════════════════════════════════════════════════════
+//  SIDE PANEL
+// ════════════════════════════════════════════════════════════
+
+// ── Card hero escuro (faturamento do mês) ─────────────────────
+
+.heroCard {
+  position     : relative;
+  background   : $brown-600;
+  border-radius: $r-lg;
+  overflow     : hidden;
+  box-shadow   : $shadow-lg;
+}
+
+// Overlay radial laranja — obrigatório Navalha 22 card dark
+.heroRadial {
+  position  : absolute;
+  inset     : 0;
+  background: radial-gradient(
+    circle at 110% -10%,
+    rgba(255,107,44,.38),
+    transparent 58%
+  );
+  pointer-events: none;
+  z-index   : 0;
+}
+
+.heroInner {
+  position      : relative;
+  z-index       : 1;
+  padding       : 22px 22px 20px;
+  display       : flex;
+  flex-direction: column;
+  gap           : 10px;
+}
+
+.heroEyebrow {
+  display       : flex;
+  align-items   : center;
+  gap           : 5px;
+  font-size     : 10px;
+  font-weight   : 600;
+  color         : $orange-300;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+
+  i { font-size: 13px; }
+}
+
+.heroValue {
+  font-family   : $font-mono;
+  font-size     : 36px;
+  font-weight   : 800;
+  color         : $brown-50;
+  letter-spacing: -0.03em;
+  line-height   : 1;
+}
+
+.heroValueSk {
+  height       : 40px;
+  border-radius: $r-sm;
+  background   : rgba($brown-50, .1);
+  animation    : shimmer 1.6s ease infinite;
+  background-size: 300% 100%;
+
+  @keyframes shimmer {
+    0%   { background-position: -300px 0; }
+    100% { background-position:  300px 0; }
+  }
+}
+
+.heroLabel {
+  font-size  : 12px;
+  color      : rgba($brown-50, .5);
+  margin-top : -4px;
+}
+
+.heroDivider {
+  height    : 1px;
+  background: rgba($brown-50, .1);
+  margin    : 4px 0;
+}
+
+.heroStats {
+  display        : flex;
+  align-items    : center;
+  justify-content: space-between;
+  gap            : 8px;
+}
+
+.heroStat {
+  display       : flex;
+  flex-direction: column;
+  align-items   : center;
+  gap           : 2px;
+  flex          : 1;
+}
+
+.heroStatVal {
+  font-family: $font-mono;
+  font-size  : 18px;
+  font-weight: 700;
+  color      : $brown-50;
+  line-height: 1;
+}
+
+.heroStatLabel {
+  font-size  : 10px;
+  color      : rgba($brown-50, .45);
+  text-align : center;
+  white-space: nowrap;
+}
+
+.heroStatDivider {
+  width     : 1px;
+  height    : 32px;
+  background: rgba($brown-50, .1);
+  flex-shrink: 0;
+}
+
+// ── Alertas ───────────────────────────────────────────────────
+
+.alertCard {
+  display      : flex;
+  align-items  : center;
+  gap          : 12px;
+  padding      : 14px 16px;
+  background   : $warn-bg;
+  border-radius: $r-lg;
+  border       : 1px solid rgba($warn, .2);
+}
+
+.alertCard--danger {
+  background  : $danger-bg;
+  border-color: rgba($danger, .2);
+}
+
+.alertIcon {
+  width        : 38px;
+  height       : 38px;
+  border-radius: $r-sm;
+  background   : rgba($warn, .15);
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+  flex-shrink  : 0;
+
+  i { font-size: 18px; color: $warn; }
+}
+
+.alertIcon--danger {
+  background: rgba($danger, .12);
+  i { color: $danger; }
+}
+
+.alertText {
+  flex     : 1;
+  min-width: 0;
+  display  : flex;
+  flex-direction: column;
+  gap      : 1px;
+
+  strong { font-size: 13px; color: $ink; font-weight: 600; }
+  span   { font-size: 11px; color: $muted; }
+}
+
+// ── Ações rápidas ─────────────────────────────────────────────
+
+.quickActions {
+  background   : $surface;
+  border-radius: $r-lg;
+  border       : 1px solid $border-soft;
+  box-shadow   : $shadow-sm;
+  padding      : 18px 18px 16px;
+}
+
+.quickTitle {
+  font-family   : $font-secondary;
+  font-size     : 13px;
+  font-weight   : 700;
+  color         : $ink;
+  letter-spacing: -0.01em;
+  margin-bottom : 12px;
+}
+
+.quickGrid {
+  display              : grid;
+  grid-template-columns: 1fr 1fr;
+  gap                  : 8px;
+}
+
+.quickBtn {
+  display       : flex;
+  flex-direction: column;
+  align-items   : center;
+  gap           : 6px;
+  padding       : 14px 8px;
+  border-radius : $r-md;
+  border        : 1px solid $border;
+  background    : $surface-warm;
+  color         : $ink-2;
+  font-family   : $font-primary;
+  font-size     : 11px;
+  font-weight   : 600;
+  cursor        : pointer;
+  text-align    : center;
+  transition    : background $transition-fast, border-color $transition-fast,
+                  color $transition-fast, transform 0.1s;
+  line-height   : 1.3;
+
+  i {
+    font-size: 22px;
+    color    : $brown-400;
+    transition: color $transition-fast;
+  }
+
+  &:hover {
+    background  : $brown-600;
+    border-color: $brown-600;
+    color       : $brown-50;
+    transform   : translateY(-1px);
+
+    i { color: $orange-300; }
+  }
+
+  &:active { transform: scale(0.97); }
+
+  &:focus-visible {
+    outline       : 2px solid $orange-500;
+    outline-offset: 2px;
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+//  RESPONSIVIDADE
+// ════════════════════════════════════════════════════════════
+
+// Tablet
+@media (max-width: 1100px) {
+  .kpiRow { grid-template-columns: repeat(2, 1fr); }
+  .grid   { grid-template-columns: 1fr; }
+  .sideCol {
+    // No tablet, side col vira linha horizontal de cards
+    display              : grid;
+    grid-template-columns: 1fr 1fr;
+    gap                  : $gap-md;
+  }
+  .heroCard { grid-column: 1 / -1; }
+  .quickActions { grid-column: 1 / -1; }
+  .quickGrid { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .body { padding: 20px 20px 36px; }
+  .kpiRow { gap: $gap-sm; }
+  .grid { gap: $gap-md; }
+}
+
+@media (max-width: 640px) {
+  .sideCol {
+    display       : flex;
+    flex-direction: column;
+  }
+  .quickGrid { grid-template-columns: 1fr 1fr; }
+}
+
+// Mobile
+@media (max-width: 480px) {
+  .body    { padding: 16px 16px 32px; gap: 14px; }
+  .kpiRow  { grid-template-columns: 1fr 1fr; gap: $gap-sm; }
+  .heroValue { font-size: 28px; }
+  .heroStatVal { font-size: 15px; }
+  .cardHead { padding: 14px 16px 12px; }
+  .agendList { padding: 10px 12px; gap: 6px; }
+  .rankItem  { padding: 11px 16px; gap: 10px; }
+}
+
+// Mobile pequeno
+@media (max-width: 360px) {
+  .body   { padding: 14px 12px 28px; gap: 12px; }
+  .kpiRow { grid-template-columns: 1fr; }
+  .heroValue { font-size: 26px; }
+  .quickBtn  { padding: 12px 6px; font-size: 10px; }
+  .quickBtn i { font-size: 20px; }
+}
+
+// 320px
+@media (max-width: 320px) {
+  .body { padding: 12px 10px 24px; gap: 10px; }
+  .cardTitle { font-size: 13px; }
+  .heroInner { padding: 16px; }
+  .heroValue { font-size: 24px; }
+  .statusBarLegend { gap: 8px; }
+  .legendItem { font-size: 10px; }
+}

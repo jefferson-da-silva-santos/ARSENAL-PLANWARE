@@ -1,0 +1,537 @@
+// ════════════════════════════════════════════════════════════
+//  Login.module.scss — Navalha 22
+//
+//  Layout: dois painéis lado a lado (assimétrico 55/45)
+//  Esquerdo: brown-600 escuro com textura de diagonais
+//  Direito : bg-cream creme com o formulário
+//
+//  Mobile: colapsa em coluna — topo escuro + form embaixo
+// ════════════════════════════════════════════════════════════
+
+// ── Página ────────────────────────────────────────────────────
+
+.page {
+  display   : flex;
+  min-height: 100dvh;
+  background: $brown-600;  // fallback enquanto carrega
+}
+
+// ════════════════════════════════════════════════════════════
+//  PAINEL ESQUERDO — dark, decorativo
+// ════════════════════════════════════════════════════════════
+
+.left {
+  position : relative;
+  width    : 55%;
+  flex-shrink: 0;
+  background: $brown-600;
+  overflow  : hidden;
+  display   : flex;
+  align-items: stretch;
+
+  // Oculto em mobile — vira header compacto
+  @media (max-width: 768px) { display: none; }
+}
+
+// ── Textura diagonal (navalha) ────────────────────────────────
+// Linhas finas a 45° que remetem à lâmina de navalha
+
+.diagonals {
+  position: absolute;
+  inset   : -60px;
+  display : flex;
+  gap     : 56px;
+  transform: rotate(-22deg);
+  pointer-events: none;
+  z-index : 0;
+}
+
+.diagonal {
+  width     : 1px;
+  height    : 200%;
+  background: rgba($orange-500, 0.06);
+  flex-shrink: 0;
+}
+
+// ── Overlay radial laranja — Navalha 22 card dark ─────────────
+
+.radial {
+  position : absolute;
+  inset    : 0;
+  background: radial-gradient(
+    ellipse at 85% 15%,
+    rgba(255, 107, 44, 0.22),
+    transparent 55%
+  );
+  pointer-events: none;
+  z-index  : 1;
+}
+
+// ── Conteúdo interno do painel esquerdo ───────────────────────
+
+.leftInner {
+  position      : relative;
+  z-index       : 2;
+  display       : flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding       : 44px 52px 36px;
+  width         : 100%;
+  animation     : fadeSlideLeft 0.5s cubic-bezier(0.22, 0.68, 0, 1.1) both;
+}
+
+@keyframes fadeSlideLeft {
+  from { opacity: 0; transform: translateX(-20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+// ── Logo ──────────────────────────────────────────────────────
+
+.logo {
+  display    : flex;
+  align-items: center;
+  gap        : 12px;
+}
+
+.logoMark {
+  width        : 44px;
+  height       : 44px;
+  border-radius: $r-md;
+  background   : $orange-500;
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+  box-shadow   : $shadow-orange;
+  flex-shrink  : 0;
+
+  i {
+    font-size: 22px;
+    color    : #fff;
+  }
+}
+
+.logoName {
+  font-family   : $font-secondary;
+  font-size     : 22px;
+  font-weight   : 800;
+  color         : #fff;
+  letter-spacing: -0.03em;
+}
+
+// ── Headline ──────────────────────────────────────────────────
+
+.headline {
+  display       : flex;
+  flex-direction: column;
+  gap           : 14px;
+  flex          : 1;
+  justify-content: center;
+  padding       : 40px 0;
+}
+
+.eyebrow {
+  font-size     : 11px;
+  font-weight   : 600;
+  color         : $orange-300;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+// Título gigante — essência do Navalha 22
+.headlineText {
+  font-family   : $font-secondary;
+  font-size     : clamp(44px, 5.5vw, 68px);
+  font-weight   : 800;
+  color         : $brown-50;
+  line-height   : 1.0;
+  letter-spacing: -0.03em;
+}
+
+// "move" em itálico laranja — destaque único
+.headlineAccent {
+  font-style: italic;
+  color     : $orange-500;
+  text-shadow: 0 0 48px rgba(255,107,44,.35);
+}
+
+.headlineSub {
+  font-size  : 15px;
+  color      : rgba($brown-50, 0.6);
+  line-height: 1.6;
+  max-width  : 360px;
+}
+
+// ── Features ──────────────────────────────────────────────────
+
+.features {
+  list-style    : none;
+  display       : flex;
+  flex-direction: column;
+  gap           : 16px;
+}
+
+.feature {
+  display   : flex;
+  align-items: flex-start;
+  gap        : 14px;
+  animation : featureIn 0.5s cubic-bezier(0.22, 0.68, 0, 1.1) both;
+
+  @keyframes featureIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+}
+
+.featureIcon {
+  width        : 38px;
+  height       : 38px;
+  border-radius: $r-sm;
+  background   : rgba($orange-500, 0.14);
+  border       : 1px solid rgba($orange-500, 0.22);
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+  flex-shrink  : 0;
+
+  i {
+    font-size: 18px;
+    color    : $orange-300;
+  }
+}
+
+.featureText {
+  display       : flex;
+  flex-direction: column;
+  gap           : 3px;
+
+  strong {
+    font-size  : 14px;
+    font-weight: 600;
+    color      : $brown-50;
+    line-height: 1.3;
+  }
+
+  span {
+    font-size  : 12px;
+    color      : rgba($brown-50, 0.52);
+    line-height: 1.5;
+  }
+}
+
+// ── Rodapé do painel esquerdo ─────────────────────────────────
+
+.leftFooter {
+  font-size: 11px;
+  color    : rgba($brown-50, 0.3);
+}
+
+// ════════════════════════════════════════════════════════════
+//  PAINEL DIREITO — creme, formulário
+// ════════════════════════════════════════════════════════════
+
+.right {
+  flex      : 1;
+  background: $bg-cream;
+  display   : flex;
+  align-items: center;
+  justify-content: center;
+  padding   : 32px 24px;
+  overflow-y: auto;
+
+  // Borda divisória sutil
+  border-left: 1px solid $border;
+}
+
+.formWrap {
+  width     : 100%;
+  max-width : 400px;
+  display   : flex;
+  flex-direction: column;
+  gap       : 28px;
+  animation : fadeSlideRight 0.5s cubic-bezier(0.22, 0.68, 0, 1.1) 0.1s both;
+
+  @keyframes fadeSlideRight {
+    from { opacity: 0; transform: translateX(16px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+}
+
+// ── Logo mobile (só aparece em telas pequenas) ────────────────
+
+.mobileLogoRow {
+  display    : none;
+  align-items: center;
+  gap        : 10px;
+  justify-content: center;
+  padding-bottom: 4px;
+}
+
+.mobileLogoMark {
+  width        : 38px;
+  height       : 38px;
+  border-radius: $r-md;
+  background   : $orange-500;
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+  box-shadow   : $shadow-orange;
+
+  i {
+    font-size: 20px;
+    color    : #fff;
+  }
+}
+
+.mobileLogoName {
+  font-family   : $font-secondary;
+  font-size     : 22px;
+  font-weight   : 800;
+  color         : $ink;
+  letter-spacing: -0.03em;
+}
+
+// ── Cabeçalho do formulário ───────────────────────────────────
+
+.formHeader {
+  display       : flex;
+  flex-direction: column;
+  gap           : 6px;
+}
+
+.formTitle {
+  font-family   : $font-secondary;
+  font-size     : 26px;
+  font-weight   : 700;
+  color         : $ink;
+  letter-spacing: -0.025em;
+  line-height   : 1.15;
+}
+
+.formSub {
+  font-size  : 14px;
+  color      : $muted;
+  line-height: 1.5;
+}
+
+// ── Formulário ────────────────────────────────────────────────
+
+.form {
+  display       : flex;
+  flex-direction: column;
+  gap           : 18px;
+}
+
+.field {
+  display       : flex;
+  flex-direction: column;
+  gap           : 6px;
+}
+
+.label {
+  font-size     : 12px;
+  font-weight   : 600;
+  color         : $ink-2;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+// Wrapper do input com ícone
+.inputWrap {
+  position: relative;
+  display : flex;
+  align-items: center;
+}
+
+.inputIcon {
+  position   : absolute;
+  left       : 14px;
+  font-size  : 17px;
+  color      : $muted-2;
+  pointer-events: none;
+  z-index    : 1;
+  transition : color $transition-fast;
+}
+
+.input {
+  width        : 100%;
+  padding      : 13px 14px 13px 42px;
+  background   : $surface;
+  border       : 1.5px solid $border;
+  border-radius: $r-md;
+  font-family  : $font-primary;
+  font-size    : 14px;
+  color        : $ink;
+  outline      : none;
+  transition   :
+    border-color $transition-fast,
+    box-shadow   $transition-fast;
+
+  &::placeholder { color: $muted-2; }
+
+  &:focus {
+    border-color: $brown-400;
+    box-shadow  : 0 0 0 3px rgba($brown-400, 0.12);
+
+    // Ícone ilumina junto com o foco
+    & ~ .inputIcon,
+    & + .inputIcon { color: $brown-400; }
+  }
+
+  // Foco no pai
+  .inputWrap:focus-within .inputIcon { color: $brown-400; }
+
+  &:disabled {
+    background: $surface-2;
+    cursor    : not-allowed;
+    color     : $muted;
+  }
+}
+
+// Input com padding direito para o botão de mostrar senha
+.inputPaddedRight { padding-right: 44px; }
+
+// Botão mostrar/ocultar senha
+.eyeBtn {
+  position     : absolute;
+  right        : 12px;
+  width        : 28px;
+  height       : 28px;
+  border-radius: $r-xs;
+  border       : none;
+  background   : transparent;
+  color        : $muted-2;
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+  cursor       : pointer;
+  transition   : color $transition-fast, background $transition-fast;
+
+  i { font-size: 17px; }
+
+  &:hover {
+    color     : $ink;
+    background: $surface-2;
+  }
+}
+
+// ── Botão submit ──────────────────────────────────────────────
+
+.submitBtn {
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+  gap          : 8px;
+  width        : 100%;
+  padding      : 14px 20px;
+  margin-top   : 4px;
+  background   : $brown-600;
+  color        : $brown-50;
+  border       : none;
+  border-radius: $r-md;
+  font-family  : $font-primary;
+  font-size    : 15px;
+  font-weight  : 600;
+  cursor       : pointer;
+  transition   :
+    background  $transition-fast,
+    box-shadow  $transition-fast,
+    transform   0.1s ease;
+  box-shadow   : $shadow-md;
+
+  i { font-size: 20px; transition: transform $transition-fast; }
+
+  &:hover:not(:disabled) {
+    background: $brown-500;
+    box-shadow: $shadow-lg;
+    transform : translateY(-1px);
+
+    i { transform: translateX(3px); }
+  }
+
+  &:active:not(:disabled) {
+    transform : scale(0.98);
+    box-shadow: $shadow-sm;
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    cursor : not-allowed;
+  }
+
+  &:focus-visible {
+    outline       : 2px solid $orange-500;
+    outline-offset: 3px;
+  }
+}
+
+// ── Spinner ───────────────────────────────────────────────────
+
+.spinner {
+  display      : block;
+  width        : 18px;
+  height       : 18px;
+  border       : 2px solid rgba($brown-50, 0.3);
+  border-top-color: $brown-50;
+  border-radius: 50%;
+  animation    : spin 0.65s linear infinite;
+  flex-shrink  : 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// ── Rodapé do form ────────────────────────────────────────────
+
+.formFooter {
+  font-size  : 12px;
+  color      : $muted;
+  text-align : center;
+  line-height: 1.5;
+}
+
+// ════════════════════════════════════════════════════════════
+//  RESPONSIVIDADE
+// ════════════════════════════════════════════════════════════
+
+// Tablet — painel esquerdo some
+@media (max-width: 768px) {
+  .page  { flex-direction: column; background: $bg-cream; }
+  .right { border-left: none; padding: 28px 20px 40px; }
+
+  .mobileLogoRow { display: flex; }
+}
+
+// Mobile grande
+@media (max-width: 480px) {
+  .formWrap { gap: 22px; }
+  .formTitle { font-size: 22px; }
+  .right  { padding: 24px 18px 36px; }
+}
+
+// Mobile pequeno
+@media (max-width: 400px) {
+  .formWrap { gap: 20px; max-width: 100%; }
+  .formTitle { font-size: 20px; }
+  .input  { padding: 12px 12px 12px 40px; font-size: 15px; }
+  .submitBtn { padding: 13px 18px; font-size: 14px; }
+}
+
+// 320px — layout mínimo funcional
+@media (max-width: 320px) {
+  .right  { padding: 20px 14px 32px; }
+  .formTitle { font-size: 18px; }
+  .formSub   { font-size: 13px; }
+  .label     { font-size: 11px; }
+  .input  {
+    padding  : 11px 11px 11px 38px;
+    font-size: 14px;
+  }
+  .inputIcon { left: 11px; font-size: 15px; }
+  .submitBtn {
+    padding  : 12px 16px;
+    font-size: 14px;
+  }
+  .mobileLogoMark { width: 34px; height: 34px; }
+  .mobileLogoName { font-size: 19px; }
+}

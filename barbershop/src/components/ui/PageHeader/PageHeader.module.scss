@@ -1,0 +1,98 @@
+// ════════════════════════════════════════════════════════════
+//  PageHeader.module.scss — Navalha 22
+//  Topbar da tela: [crumb + title] [actions]
+//  Navalha 22 §7.1: padding 22px 28px, borda inferior border-soft
+// ════════════════════════════════════════════════════════════
+
+.header {
+  display        : flex;
+  align-items    : center;
+  justify-content: space-between;
+  gap            : 16px;
+  padding        : $content-py $content-px 20px;
+  border-bottom  : 1px solid $border-soft;
+  flex-wrap      : wrap;
+}
+
+// ── Lado esquerdo ─────────────────────────────────────────────
+
+.left {
+  display       : flex;
+  flex-direction: column;
+  gap           : 2px;
+  min-width     : 0; // permite truncar em telas pequenas
+}
+
+// Breadcrumb — eyebrow uppercase Navalha 22
+.crumb {
+  font-size     : 11px;
+  font-weight   : 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color         : $muted;
+  line-height   : 1;
+  white-space   : nowrap;
+  overflow      : hidden;
+  text-overflow : ellipsis;
+}
+
+// Título — Bricolage Grotesque 700 28px
+.title {
+  font-family   : $font-secondary;
+  font-size     : 28px;
+  font-weight   : 700;
+  color         : $ink;
+  letter-spacing: -0.025em;
+  line-height   : 1.15;
+  white-space   : nowrap;
+  overflow      : hidden;
+  text-overflow : ellipsis;
+}
+
+// Subtítulo
+.subtitle {
+  font-size  : 13px;
+  color      : $muted;
+  margin-top : 2px;
+  line-height: 1.5;
+}
+
+// ── Ações ─────────────────────────────────────────────────────
+
+.actions {
+  display    : flex;
+  align-items: center;
+  gap        : 8px;
+  flex-shrink: 0;
+  flex-wrap  : wrap;
+  justify-content: flex-end;
+}
+
+// ── Responsividade ────────────────────────────────────────────
+
+@media (max-width: 640px) {
+  .header {
+    padding      : 18px 20px 16px;
+    flex-direction: column;
+    align-items  : flex-start;
+  }
+
+  .title { font-size: 22px; }
+
+  .actions {
+    width          : 100%;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 400px) {
+  .header  { padding: 16px; }
+  .title   { font-size: 20px; }
+  .crumb   { font-size: 10px; }
+  .subtitle{ font-size: 12px; }
+}
+
+@media (max-width: 320px) {
+  .title  { font-size: 18px; }
+  .actions { gap: 6px; }
+}

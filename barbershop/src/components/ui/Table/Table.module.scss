@@ -1,0 +1,110 @@
+// ════════════════════════════════════════════════════════════
+//  Table.module.scss — Navalha 22
+//  th: 11px uppercase tracking 0.08em muted | td: 13px | hover: surface-warm
+// ════════════════════════════════════════════════════════════
+
+// ── Wrapper ───────────────────────────────────────────────────
+
+.wrapper {
+  background   : $surface;
+  border-radius: $r-lg;
+  border       : 1px solid $border-soft;
+  box-shadow   : $shadow-sm;
+  overflow     : hidden;
+}
+
+// ── Scroll horizontal em telas pequenas ──────────────────────
+
+.scroll {
+  overflow-x: auto;
+  width     : 100%;
+
+  &::-webkit-scrollbar       { height: 4px; }
+  &::-webkit-scrollbar-thumb {
+    background   : $border-strong;
+    border-radius: $r-pill;
+  }
+}
+
+// ── Tabela ────────────────────────────────────────────────────
+
+.table {
+  width          : 100%;
+  border-collapse: collapse;
+  min-width      : 480px; // scroll horizontal antes de quebrar
+}
+
+// ── Header ────────────────────────────────────────────────────
+
+thead tr {
+  background   : $surface-warm;
+  border-bottom: 1px solid $border;
+}
+
+thead th {
+  padding       : 10px 14px;
+  font-size     : 11px;
+  font-weight   : 600;
+  color         : $muted;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  white-space   : nowrap;
+  // Alinhamentos via .align--*
+}
+
+// ── Rows ──────────────────────────────────────────────────────
+
+tbody .row {
+  border-bottom: 1px solid $border-soft;
+  transition   : background $transition-fast;
+
+  &:last-child { border-bottom: none; }
+
+  td {
+    padding    : 12px 14px;
+    font-size  : 13px;
+    color      : $ink-2;
+    vertical-align: middle;
+  }
+}
+
+// Linha clicável
+.row--clickable {
+  cursor: pointer;
+
+  &:hover td { background: $surface-warm; }
+
+  &:focus-visible {
+    outline       : 2px solid $orange-500;
+    outline-offset: -2px;
+  }
+}
+
+// ── Skeleton row (sem estilo de tabela) ───────────────────────
+
+.skeletonRow {
+  border: none !important;
+
+  td {
+    padding: 0 !important;
+    border : none !important;
+  }
+}
+
+// ── Alinhamentos ──────────────────────────────────────────────
+
+.align--left   { text-align: left;   }
+.align--center { text-align: center; }
+.align--right  { text-align: right;  }
+
+// ── Responsividade ────────────────────────────────────────────
+
+@media (max-width: 480px) {
+  thead th { padding: 8px 12px; font-size: 10px; }
+  tbody .row td { padding: 10px 12px; font-size: 12px; }
+}
+
+@media (max-width: 320px) {
+  thead th { padding: 7px 10px; }
+  tbody .row td { padding: 9px 10px; }
+}

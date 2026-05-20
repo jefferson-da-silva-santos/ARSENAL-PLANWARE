@@ -1,0 +1,353 @@
+// ════════════════════════════════════════════════════════════
+//  Sidebar.module.scss — Navalha 22
+//
+//  Desktop : posição fixed à esquerda, 248px
+//  Mobile  : drawer que desliza da esquerda (< 768px)
+//
+//  Cores obrigatórias (Navalha 22 §2.7):
+//   - bg: --brown-600 (#2A1810)
+//   - item ativo: --orange-500 com sombra laranja
+//   - texto normal: rgba(--brown-50, .78)
+//   - section labels: --brown-200, uppercase tracking 0.12em
+// ════════════════════════════════════════════════════════════
+
+// ── Sidebar base ──────────────────────────────────────────────
+
+.sidebar {
+  position      : fixed;
+  top           : 0;
+  left          : 0;
+  bottom        : 0;
+  width         : $sidebar-w;    // 248px
+  background    : $brown-600;
+  display       : flex;
+  flex-direction: column;
+  z-index       : 200;
+  overflow      : hidden;
+
+  // Scrollbar discreta no tom marrom
+  &::-webkit-scrollbar       { width: 3px; }
+  &::-webkit-scrollbar-thumb { background: rgba($brown-50, .12); }
+}
+
+// ── Overlay mobile (fundo escurecido) ─────────────────────────
+
+.overlay {
+  display   : none;
+  position  : fixed;
+  inset     : 0;
+  background: rgba(26, 14, 7, 0.65);
+  z-index   : 199;
+  backdrop-filter: blur(2px);
+  animation : fadeIn 0.2s ease both;
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+}
+
+// ── Brand ─────────────────────────────────────────────────────
+// Logo quadrado laranja + nome + sublinha marrom-200
+
+.brand {
+  display    : flex;
+  align-items: center;
+  gap        : 12px;
+  padding    : 22px 18px 18px;
+  border-bottom: 1px solid rgba($brown-50, .07);
+  flex-shrink: 0;
+}
+
+.brandLogo {
+  width        : 38px;
+  height       : 38px;
+  border-radius: $r-md;
+  background   : $orange-500;
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+  flex-shrink  : 0;
+  box-shadow   : 0 4px 12px rgba(255,107,44,.35);
+
+  i {
+    font-size: 20px;
+    color    : #fff;
+  }
+}
+
+.brandText {
+  display       : flex;
+  flex-direction: column;
+  gap           : 1px;
+  flex          : 1;
+  min-width     : 0;
+}
+
+.brandName {
+  font-family   : $font-secondary;
+  font-size     : 16px;
+  font-weight   : 800;
+  color         : #fff;
+  letter-spacing: -0.02em;
+  line-height   : 1;
+}
+
+.brandSub {
+  font-size     : 10px;
+  font-weight   : 600;
+  color         : $brown-200;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height   : 1;
+}
+
+// Botão fechar — só aparece no mobile
+.closeBtn {
+  display      : none;
+  width        : 28px;
+  height       : 28px;
+  border-radius: $r-sm;
+  border       : 1px solid rgba($brown-50, .12);
+  background   : transparent;
+  color        : rgba($brown-50, .6);
+  align-items  : center;
+  justify-content: center;
+  cursor       : pointer;
+  flex-shrink  : 0;
+  transition   : background $transition-fast, color $transition-fast;
+
+  i { font-size: 18px; }
+
+  &:hover {
+    background: rgba($brown-50, .1);
+    color     : #fff;
+  }
+}
+
+// ── Nav ───────────────────────────────────────────────────────
+
+.nav {
+  padding   : 12px 12px 0;
+  overflow-y: auto;
+  flex      : 1;
+
+  &::-webkit-scrollbar       { width: 3px; }
+  &::-webkit-scrollbar-thumb { background: rgba($brown-50, .1); }
+}
+
+// Section labels — eyebrow uppercase Navalha 22
+.sectionLabel {
+  display       : block;
+  font-size     : 10px;
+  font-weight   : 600;
+  color         : $brown-200;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding       : 16px 10px 4px;
+  line-height   : 1;
+
+  // Primeiro label sem padding top
+  &:first-child { padding-top: 4px; }
+}
+
+// ── Nav item ──────────────────────────────────────────────────
+
+.navItem {
+  position     : relative;
+  display      : flex;
+  align-items  : center;
+  gap          : 12px;
+  padding      : 10px 12px;
+  border-radius: $r-sm;
+  color        : rgba($brown-50, .78);
+  font-size    : 14px;
+  font-weight  : 500;
+  text-decoration: none;
+  transition   : background $transition-fast, color $transition-fast;
+  margin-bottom: 2px;
+  cursor       : pointer;
+
+  &:hover {
+    background: rgba($brown-50, .06);
+    color     : #fff;
+  }
+
+  &:focus-visible {
+    outline       : 2px solid $orange-500;
+    outline-offset: 2px;
+  }
+}
+
+// Item ativo — laranja sólido com sombra
+.navItem--active {
+  background: $orange-500 !important;
+  color     : #fff !important;
+  box-shadow: 0 4px 12px rgba(255, 107, 44, 0.28);
+  font-weight: 600;
+
+  .navIcon { color: #fff; }
+}
+
+.navIcon {
+  font-size : 18px;
+  flex-shrink: 0;
+  color     : inherit;
+  transition : color $transition-fast;
+}
+
+.navLabel {
+  flex         : 1;
+  white-space  : nowrap;
+  overflow     : hidden;
+  text-overflow: ellipsis;
+}
+
+// Indicador ativo — só visível quando ativo
+.activeIndicator {
+  display: none;
+
+  .navItem--active & {
+    display      : block;
+    width        : 6px;
+    height       : 6px;
+    border-radius: 50%;
+    background   : rgba(#fff, .7);
+    flex-shrink  : 0;
+  }
+}
+
+// ── Spacer ────────────────────────────────────────────────────
+
+.spacer { flex: 1; }
+
+// ── Footer do usuário ─────────────────────────────────────────
+// Card do usuário com avatar, nome e botão de logout
+// Navalha 22: "dentro de rgba(0,0,0,.15) raio 14px"
+
+.footer {
+  padding   : 12px;
+  border-top: 1px solid rgba($brown-50, .07);
+  flex-shrink: 0;
+}
+
+.userCard {
+  display      : flex;
+  align-items  : center;
+  gap          : 10px;
+  padding      : 10px 12px;
+  border-radius: $r-md;
+  background   : rgba(0, 0, 0, .18);
+  border       : 1px solid rgba($brown-50, .06);
+}
+
+.avatar {
+  width        : 34px;
+  height       : 34px;
+  border-radius: 50%;
+  flex-shrink  : 0;
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+}
+
+.initials {
+  font-family: $font-secondary;
+  font-size  : 13px;
+  font-weight: 700;
+  color      : #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.25);
+  line-height: 1;
+}
+
+.userInfo {
+  flex     : 1;
+  min-width: 0;
+  display  : flex;
+  flex-direction: column;
+  gap      : 1px;
+}
+
+.userName {
+  font-size    : 13px;
+  font-weight  : 600;
+  color        : rgba($brown-50, .9);
+  white-space  : nowrap;
+  overflow     : hidden;
+  text-overflow: ellipsis;
+  line-height  : 1.3;
+}
+
+.userRole {
+  font-size     : 10px;
+  color         : $brown-200;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  line-height   : 1;
+}
+
+.logoutBtn {
+  width        : 28px;
+  height       : 28px;
+  border-radius: $r-xs;
+  border       : 1px solid rgba($brown-50, .12);
+  background   : transparent;
+  color        : rgba($brown-50, .5);
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+  cursor       : pointer;
+  flex-shrink  : 0;
+  transition   : background $transition-fast, color $transition-fast;
+
+  i { font-size: 16px; }
+
+  &:hover {
+    background: rgba($danger, .2);
+    border-color: rgba($danger, .3);
+    color      : #ff9a9a;
+  }
+
+  &:focus-visible {
+    outline       : 2px solid $orange-500;
+    outline-offset: 2px;
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+//  RESPONSIVIDADE
+// ════════════════════════════════════════════════════════════
+
+// Mobile: sidebar some do fluxo e vira drawer deslizante
+@media (max-width: 768px) {
+  .overlay { display: block; }
+
+  .closeBtn { display: flex; }
+
+  .sidebar {
+    // Posição fora da tela por padrão
+    transform : translateX(-100%);
+    transition: transform 0.28s cubic-bezier(0.22, 0.68, 0, 1.2);
+    // Largura máxima no mobile
+    width     : min(#{$sidebar-w}, 85vw);
+    box-shadow: none;
+  }
+
+  // Quando aberto, desliza para dentro
+  .sidebar--open {
+    transform : translateX(0);
+    box-shadow: $shadow-lg;
+  }
+}
+
+// Telas muito pequenas — comprime padding interno
+@media (max-width: 360px) {
+  .brand  { padding: 18px 14px 14px; gap: 10px; }
+  .nav    { padding: 10px 10px 0; }
+  .footer { padding: 10px; }
+
+  .navItem { padding: 9px 10px; gap: 10px; }
+  .sectionLabel { padding: 14px 8px 3px; }
+  .brandLogo { width: 34px; height: 34px; }
+  .brandName { font-size: 15px; }
+}

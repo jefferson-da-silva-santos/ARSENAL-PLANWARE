@@ -1,0 +1,85 @@
+// ════════════════════════════════════════════════════════════
+//  EmptyState.module.scss — Navalha 22
+// ════════════════════════════════════════════════════════════
+
+.empty {
+  display       : flex;
+  flex-direction: column;
+  align-items   : center;
+  text-align    : center;
+  gap           : 16px;
+  width         : 100%;
+}
+
+// ── Tamanhos ──────────────────────────────────────────────────
+
+.empty--sm { padding: 32px 20px; }
+.empty--md { padding: 56px 24px; }
+.empty--lg { padding: 80px 24px; }
+
+// ── Ícone ─────────────────────────────────────────────────────
+
+.iconWrap {
+  width        : 72px;
+  height       : 72px;
+  border-radius: $r-xl;
+  background   : $surface-2;
+  border       : 1px solid $border;
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+  flex-shrink  : 0;
+}
+
+.icon {
+  font-size: 32px;
+  color    : $muted;
+}
+
+.empty--sm .iconWrap { width: 52px; height: 52px; }
+.empty--sm .icon     { font-size: 24px; }
+.empty--lg .iconWrap { width: 88px; height: 88px; }
+.empty--lg .icon     { font-size: 40px; }
+
+// ── Textos ────────────────────────────────────────────────────
+
+.text {
+  display       : flex;
+  flex-direction: column;
+  gap           : 6px;
+  max-width     : 320px;
+}
+
+.title {
+  font-family   : $font-secondary;
+  font-size     : 16px;
+  font-weight   : 700;
+  color         : $ink;
+  letter-spacing: -0.02em;
+
+  .empty--sm & { font-size: 14px; }
+  .empty--lg & { font-size: 20px; }
+}
+
+.description {
+  font-size  : 13px;
+  color      : $muted;
+  line-height: 1.6;
+
+  .empty--lg & { font-size: 14px; }
+}
+
+// ── Responsividade ────────────────────────────────────────────
+
+@media (max-width: 400px) {
+  .empty--md { padding: 40px 16px; }
+  .empty--lg { padding: 56px 16px; }
+  .text { max-width: 100%; }
+}
+
+@media (max-width: 320px) {
+  .iconWrap { width: 56px; height: 56px; }
+  .icon     { font-size: 26px; }
+  .title    { font-size: 14px; }
+  .description { font-size: 12px; }
+}
