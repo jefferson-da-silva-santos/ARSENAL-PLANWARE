@@ -1,0 +1,170 @@
+// ════════════════════════════════════════════════════════════
+//  AppLayout.module.scss — Navalha 22
+//
+//  Desktop (> 768px):
+//    Sidebar 248px fixa à esquerda + main ocupa o restante
+//
+//  Mobile (≤ 768px):
+//    Sidebar vira drawer deslizante
+//    Topbar com hamburguer + título + logo compacta
+//    Main ocupa 100vw
+//
+//  Fundo obrigatório: --bg-cream (#F3EAD9) — nunca branco
+// ════════════════════════════════════════════════════════════
+
+// ── Layout raiz ───────────────────────────────────────────────
+
+.layout {
+  display   : flex;
+  height    : 100dvh;          // dvh respeita barra do browser mobile
+  background: $bg-cream;
+  overflow  : hidden;
+}
+
+// ── Área principal (tudo que não é sidebar) ───────────────────
+
+.main {
+  display       : flex;
+  flex-direction: column;
+  flex          : 1;
+  min-width     : 0;           // evita overflow em flex containers
+
+  // Desktop: desloca para direita da sidebar
+  margin-left   : $sidebar-w; // 248px
+  overflow      : hidden;
+}
+
+// ── Topbar mobile ─────────────────────────────────────────────
+// Oculta no desktop — aparece só em telas ≤ 768px
+
+.topbarMobile {
+  display    : none;
+  align-items: center;
+  height     : $topbar-h;       // 64px
+  padding    : 0 18px;
+  background : $brown-600;
+  flex-shrink: 0;
+  gap        : 0;
+}
+
+// Botão hamburguer
+.hamburger {
+  display       : flex;
+  flex-direction: column;
+  justify-content: center;
+  gap           : 5px;
+  width         : 40px;
+  height        : 40px;
+  background    : transparent;
+  border        : none;
+  cursor        : pointer;
+  padding       : 0;
+  flex-shrink   : 0;
+  border-radius : $r-sm;
+  transition    : background $transition-fast;
+
+  &:hover { background: rgba($brown-50, .08); }
+  &:focus-visible { outline: 2px solid $orange-500; outline-offset: 2px; }
+}
+
+.hamburgerLine {
+  display      : block;
+  width        : 22px;
+  height       : 2px;
+  border-radius: $r-pill;
+  background   : rgba($brown-50, .85);
+  transition   : background $transition-fast;
+  margin       : 0 auto;
+}
+
+// Título da página
+.topbarTitle {
+  flex          : 1;
+  text-align    : center;
+  font-family   : $font-secondary;
+  font-size     : 17px;
+  font-weight   : 700;
+  color         : #fff;
+  letter-spacing: -0.02em;
+  white-space   : nowrap;
+  overflow      : hidden;
+  text-overflow : ellipsis;
+  padding       : 0 12px;
+}
+
+// Logo compacta (direita)
+.topbarLogo {
+  width        : 36px;
+  height       : 36px;
+  border-radius: $r-sm;
+  background   : $orange-500;
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+  flex-shrink  : 0;
+  box-shadow   : 0 2px 8px rgba(255,107,44,.3);
+
+  i {
+    font-size: 18px;
+    color    : #fff;
+  }
+}
+
+// ── Conteúdo das páginas ──────────────────────────────────────
+
+.content {
+  flex      : 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  // Fundo creme obrigatório
+  background: $bg-cream;
+
+  // Scrollbar no tom creme/marrom
+  &::-webkit-scrollbar       { width: 5px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb {
+    background   : $border-strong;
+    border-radius: $r-pill;
+  }
+  &::-webkit-scrollbar-thumb:hover { background: $brown-300; }
+}
+
+// ════════════════════════════════════════════════════════════
+//  RESPONSIVIDADE
+// ════════════════════════════════════════════════════════════
+
+// Tablet e mobile
+@media (max-width: 768px) {
+  .main {
+    margin-left: 0;          // sidebar não ocupa espaço no fluxo
+    height     : 100dvh;
+  }
+
+  .topbarMobile {
+    display: flex;           // aparece no mobile
+  }
+
+  // Conteúdo desconta a altura da topbar
+  .content {
+    height: calc(100dvh - #{$topbar-h});
+  }
+}
+
+// Telas muito pequenas
+@media (max-width: 400px) {
+  .topbarMobile { padding: 0 14px; }
+  .topbarTitle  { font-size: 15px; }
+}
+
+@media (max-width: 320px) {
+  .topbarMobile { padding: 0 12px; height: 56px; }
+  .topbarTitle  { font-size: 14px; }
+  .hamburger    { width: 36px; height: 36px; }
+  .topbarLogo   { width: 32px; height: 32px; }
+  .topbarLogo i { font-size: 16px; }
+
+  .content {
+    height: calc(100dvh - 56px);
+  }
+}
