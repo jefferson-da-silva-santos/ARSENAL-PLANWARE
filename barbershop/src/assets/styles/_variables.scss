@@ -1,0 +1,87 @@
+// ════════════════════════════════════════════════════════════
+//  _variables.scss — Navalha 22 Design System
+//  Importado via vite.config.ts > css.preprocessorOptions.scss.additionalData
+//  Disponível em TODOS os .module.scss sem import manual
+// ════════════════════════════════════════════════════════════
+
+// ── Fontes ───────────────────────────────────────────────────
+$font-primary : 'Plus Jakarta Sans', system-ui, sans-serif;
+$font-secondary: 'Bricolage Grotesque', system-ui, sans-serif;
+$font-mono    : 'JetBrains Mono', ui-monospace, monospace;
+
+// ── Superfícies ───────────────────────────────────────────────
+$bg-cream      : #F3EAD9;
+$bg-canvas     : #ECE1CC;
+$surface       : #FFFFFF;
+$surface-2     : #F8F1E4;
+$surface-warm  : #FBF5EB;
+
+// ── Marrom (ramp completo) ────────────────────────────────────
+$brown-50  : #F4E9D8;
+$brown-100 : #E4CFA9;
+$brown-200 : #C09866;
+$brown-300 : #8A6034;
+$brown-400 : #5A3A22;
+$brown-500 : #3D2517;
+$brown-600 : #2A1810;   // sidebar
+$brown-700 : #1B0F08;
+$espresso  : #14090A;
+
+// ── Laranja (ação — uso restrito) ─────────────────────────────
+$orange-50  : #FFEEDE;
+$orange-100 : #FFD3AC;
+$orange-200 : #FFA770;
+$orange-300 : #FF8A45;
+$orange-500 : #FF6B2C;  // primary
+$orange-600 : #E54D0F;  // hover
+$orange-700 : #B83D0A;  // texto em badge
+
+// ── Texto ─────────────────────────────────────────────────────
+$ink    : #1A0E07;
+$ink-2  : #3E2B1F;
+$muted  : #8C7A66;
+$muted-2: #B8A88F;
+
+// ── Bordas — SEMPRE creme/marrom, nunca cinza ─────────────────
+$border       : #E6D6BB;
+$border-soft  : #F0E4CB;
+$border-strong: #D4BE9A;
+
+// ── Semânticas ────────────────────────────────────────────────
+$success    : #2D7A4E;  $success-bg : #D6EDDA;
+$danger     : #C13838;  $danger-bg  : #F8D9D9;
+$warn       : #C58524;  $warn-bg    : #FBE9C7;
+$info       : #2F6E9A;  $info-bg    : #D5E5F0;
+
+// ── Border radius ─────────────────────────────────────────────
+$r-xs  : 6px;
+$r-sm  : 10px;
+$r-md  : 14px;
+$r-lg  : 18px;
+$r-xl  : 24px;
+$r-pill: 999px;
+
+// ── Sombras — SEMPRE rgba(26,14,7), nunca preto ───────────────
+$shadow-sm    : 0 1px 2px rgba(26,14,7,.04), 0 1px 0 rgba(26,14,7,.02);
+$shadow-md    : 0 4px 16px rgba(26,14,7,.06), 0 1px 2px rgba(26,14,7,.04);
+$shadow-lg    : 0 12px 36px rgba(26,14,7,.12), 0 2px 6px rgba(26,14,7,.06);
+$shadow-orange: 0 8px 24px rgba(255,107,44,.32);
+
+// ── Layout ────────────────────────────────────────────────────
+$sidebar-w : 248px;
+$topbar-h  : 64px;
+$content-px: 28px;
+$content-py: 22px;
+
+// ── Espaçamento ───────────────────────────────────────────────
+$space-xs : 6px;
+$space-sm : 10px;
+$space-md : 14px;
+$space-lg : 18px;
+$space-xl : 24px;
+$space-2xl: 32px;
+$space-3xl: 48px;
+
+// ── Transições ────────────────────────────────────────────────
+$transition-fast  : 0.15s ease;
+$transition-normal: 0.25s ease;

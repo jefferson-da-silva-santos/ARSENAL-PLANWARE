@@ -1,0 +1,76 @@
+// ════════════════════════════════════════════════════════════
+//  _theme.scss — CSS Custom Properties do Navalha 22
+//  Importado UMA VEZ no global.scss
+//  Permite uso de var(--token) no JSX style={{}} também
+// ════════════════════════════════════════════════════════════
+
+:root {
+  // Superfícies
+  --bg-cream     : #F3EAD9;
+  --bg-canvas    : #ECE1CC;
+  --surface      : #FFFFFF;
+  --surface-2    : #F8F1E4;
+  --surface-warm : #FBF5EB;
+
+  // Marrom
+  --brown-50  : #F4E9D8;
+  --brown-100 : #E4CFA9;
+  --brown-200 : #C09866;
+  --brown-300 : #8A6034;
+  --brown-400 : #5A3A22;
+  --brown-500 : #3D2517;
+  --brown-600 : #2A1810;
+  --brown-700 : #1B0F08;
+  --espresso  : #14090A;
+
+  // Laranja
+  --orange-50  : #FFEEDE;
+  --orange-100 : #FFD3AC;
+  --orange-200 : #FFA770;
+  --orange-300 : #FF8A45;
+  --orange-500 : #FF6B2C;
+  --orange-600 : #E54D0F;
+  --orange-700 : #B83D0A;
+
+  // Texto
+  --ink    : #1A0E07;
+  --ink-2  : #3E2B1F;
+  --muted  : #8C7A66;
+  --muted-2: #B8A88F;
+
+  // Bordas
+  --border       : #E6D6BB;
+  --border-soft  : #F0E4CB;
+  --border-strong: #D4BE9A;
+
+  // Semânticas
+  --success   : #2D7A4E;  --success-bg: #D6EDDA;
+  --danger    : #C13838;  --danger-bg : #F8D9D9;
+  --warn      : #C58524;  --warn-bg   : #FBE9C7;
+  --info      : #2F6E9A;  --info-bg   : #D5E5F0;
+
+  // Raios
+  --r-xs  : 6px;
+  --r-sm  : 10px;
+  --r-md  : 14px;
+  --r-lg  : 18px;
+  --r-xl  : 24px;
+  --r-pill: 999px;
+
+  // Sombras
+  --shadow-sm    : 0 1px 2px rgba(26,14,7,.04), 0 1px 0 rgba(26,14,7,.02);
+  --shadow-md    : 0 4px 16px rgba(26,14,7,.06), 0 1px 2px rgba(26,14,7,.04);
+  --shadow-lg    : 0 12px 36px rgba(26,14,7,.12), 0 2px 6px rgba(26,14,7,.06);
+  --shadow-orange: 0 8px 24px rgba(255,107,44,.32);
+
+  // Layout
+  --sidebar-w : 248px;
+  --topbar-h  : 64px;
+  --content-px: 28px;
+  --content-py: 22px;
+
+  // Fontes
+  --font-primary  : 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-secondary: 'Bricolage Grotesque', system-ui, sans-serif;
+  --font-mono     : 'JetBrains Mono', ui-monospace, monospace;
+}
