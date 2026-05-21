@@ -1,7 +1,14 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ]
+  "compilerOptions": {
+    "target": "ES2020",
+    // ... suas configurações existentes permanecem iguais
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": [
+    "src",
+    "src/@types/declarations.d.ts" // Força o TS a ler seus tipos do scss.module
+  ],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

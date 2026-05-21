@@ -1,0 +1,122 @@
+// ════════════════════════════════════════════════════════════
+//  Fila.module.scss — Navalha 22
+// ════════════════════════════════════════════════════════════
+
+.page { min-height: 100%; display: flex; flex-direction: column; }
+
+.body { padding: 20px $content-px 40px; display: flex; flex-direction: column; gap: 16px; flex: 1; }
+
+// ── Header actions ────────────────────────────────────────────
+.headerActions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+
+// ── Aviso modo fila off ───────────────────────────────────────
+.modoOff {
+  display: flex; align-items: flex-start; gap: 14px; padding: 18px 20px;
+  background: $info-bg; border: 1px solid rgba($info, .25); border-radius: $r-lg;
+
+  > i { font-size: 22px; color: $info; flex-shrink: 0; margin-top: 2px; }
+
+  div { display: flex; flex-direction: column; gap: 3px; }
+
+  strong { font-size: 14px; font-weight: 700; color: $ink; }
+  span   { font-size: 13px; color: $muted; line-height: 1.5; }
+}
+
+// ── KPI Row ───────────────────────────────────────────────────
+.kpiRow { display: grid; grid-template-columns: repeat(3, 1fr); gap: $gap-md; }
+
+// ── Fila card ─────────────────────────────────────────────────
+.filaCard {
+  background: $surface; border-radius: $r-lg;
+  border: 1px solid $border-soft; box-shadow: $shadow-sm; overflow: hidden;
+}
+
+// ── Seções da fila ────────────────────────────────────────────
+.secao { display: flex; flex-direction: column; }
+
+.secaoHeader {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  padding: 12px 18px 8px;
+  background: $surface-warm; border-bottom: 1px solid $border-soft;
+}
+
+.secaoLabel {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; font-weight: 700; color: $muted;
+  text-transform: uppercase; letter-spacing: 0.08em;
+}
+
+.liveDot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: $orange-500; flex-shrink: 0;
+  animation: pulse 1.8s ease-in-out infinite;
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.5; transform: scale(0.75); }
+  }
+}
+
+.secaoBadge {
+  padding: 2px 8px; border-radius: $r-pill; background: $brown-600;
+  color: $brown-50; font-size: 11px; font-weight: 700;
+}
+
+// ── Formulário ────────────────────────────────────────────────
+.form { display: flex; flex-direction: column; gap: 16px; }
+.formRow { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.modoToggle {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+  background: $surface-warm; border: 1px solid $border; border-radius: $r-md; padding: 4px;
+}
+
+.modoBtn {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 9px 12px; border-radius: $r-sm; border: none; background: transparent;
+  color: $muted; font-family: $font-primary; font-size: 13px; font-weight: 500;
+  cursor: pointer; transition: background $transition-fast, color $transition-fast;
+  i { font-size: 16px; }
+
+  &:hover { color: $ink; }
+}
+
+.modoBtn--active {
+  background: $brown-600; color: $brown-50; font-weight: 600;
+  box-shadow: $shadow-sm;
+}
+
+.field { display: flex; flex-direction: column; gap: 5px; }
+
+.label {
+  font-size: 11px; font-weight: 600; color: $ink-2;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+
+.req { color: $orange-500; }
+
+.input {
+  padding: 10px 12px; border: 1.5px solid $border; border-radius: $r-md;
+  background: $surface; font-family: $font-primary; font-size: 14px; color: $ink;
+  outline: none; width: 100%;
+  transition: border-color $transition-fast, box-shadow $transition-fast;
+
+  &::placeholder { color: $muted-2; }
+  &:focus { border-color: $brown-400; box-shadow: 0 0 0 3px rgba($brown-400, .1); }
+  &:disabled { background: $surface-2; cursor: not-allowed; }
+}
+
+.select { @extend .input; cursor: pointer; option { background: $surface; } }
+
+.formActions { display: flex; justify-content: flex-end; gap: 8px; padding-top: 4px; }
+
+// ── Responsividade ────────────────────────────────────────────
+@media (max-width: 768px) { .body { padding: 16px 16px 32px; } }
+@media (max-width: 600px) { .kpiRow { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 480px) {
+  .body { padding: 14px 14px 28px; gap: 12px; }
+  .formRow { grid-template-columns: 1fr; }
+  .headerActions { width: 100%; }
+}
+@media (max-width: 360px) { .kpiRow { grid-template-columns: 1fr; } .modoToggle { grid-template-columns: 1fr; } }
+@media (max-width: 320px) { .body { padding: 10px 10px 20px; } }

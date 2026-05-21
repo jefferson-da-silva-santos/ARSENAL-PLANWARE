@@ -1,0 +1,692 @@
+// ════════════════════════════════════════════════════════════
+//  Barbeiros.module.scss — Navalha 22
+//  Cobre Barbeiros.tsx e BarbeiroDetalhe.tsx
+// ════════════════════════════════════════════════════════════
+
+.page {
+  min-height    : 100%;
+  display       : flex;
+  flex-direction: column;
+}
+
+.body {
+  padding: 20px $content-px 40px;
+  display: flex;
+  flex-direction: column;
+  gap    : 16px;
+  flex   : 1;
+}
+
+// ── Toolbar ───────────────────────────────────────────────────
+
+.toolbar {
+  display    : flex;
+  align-items: center;
+  gap        : 10px;
+  flex-wrap  : wrap;
+}
+
+.searchWrap {
+  flex         : 1;
+  min-width    : 200px;
+  position     : relative;
+  display      : flex;
+  align-items  : center;
+
+  > i:first-child {
+    position   : absolute;
+    left       : 13px;
+    font-size  : 17px;
+    color      : $muted-2;
+    pointer-events: none;
+    z-index    : 1;
+  }
+}
+
+.searchInput {
+  width        : 100%;
+  padding      : 10px 36px 10px 40px;
+  border       : 1.5px solid $border;
+  border-radius: $r-md;
+  background   : $surface;
+  font-family  : $font-primary;
+  font-size    : 14px;
+  color        : $ink;
+  outline      : none;
+  transition   : border-color $transition-fast, box-shadow $transition-fast;
+
+  &::placeholder { color: $muted-2; }
+  &:focus {
+    border-color: $border-strong;
+    box-shadow  : 0 0 0 3px rgba($brown-400, .08);
+  }
+}
+
+.searchClear {
+  position  : absolute;
+  right     : 10px;
+  width     : 24px;
+  height    : 24px;
+  border-radius: $r-xs;
+  border    : none;
+  background: transparent;
+  color     : $muted-2;
+  display   : flex;
+  align-items: center;
+  justify-content: center;
+  cursor    : pointer;
+  font-size : 17px;
+  transition: color $transition-fast;
+
+  &:hover { color: $ink; }
+}
+
+.toolbarRight {
+  display: flex;
+  gap    : 6px;
+}
+
+.chip {
+  padding      : 7px 14px;
+  border-radius: $r-pill;
+  border       : 1px solid $border;
+  background   : $surface;
+  color        : $ink-2;
+  font-family  : $font-primary;
+  font-size    : 13px;
+  font-weight  : 500;
+  cursor       : pointer;
+  transition   : background $transition-fast, color $transition-fast, border-color $transition-fast;
+  white-space  : nowrap;
+
+  &:hover { background: $surface-warm; border-color: $border-strong; }
+}
+
+.chip--active {
+  background  : $brown-600;
+  border-color: $brown-600;
+  color       : $brown-50;
+  font-weight : 600;
+}
+
+// ── Lista de barbeiros ────────────────────────────────────────
+
+.list {
+  display       : flex;
+  flex-direction: column;
+  gap           : 10px;
+}
+
+.listItem {
+  position: relative;
+  display : flex;
+  align-items: center;
+  gap     : 0;
+
+  // BarbeiroCard ocupa todo o espaço
+  > *:first-child { flex: 1; }
+}
+
+.listActions {
+  display    : flex;
+  align-items: center;
+  gap        : 4px;
+  padding-left: 8px;
+  flex-shrink: 0;
+}
+
+.actionBtn {
+  width        : 32px;
+  height       : 32px;
+  border-radius: $r-sm;
+  border       : 1px solid $border;
+  background   : $surface;
+  color        : $muted;
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+  cursor       : pointer;
+  transition   : background $transition-fast, color $transition-fast, border-color $transition-fast;
+
+  i { font-size: 15px; }
+
+  &:hover { background: $surface-warm; color: $ink; border-color: $border-strong; }
+  &:focus-visible { outline: 2px solid $orange-500; outline-offset: 2px; }
+}
+
+.actionBtn--danger:hover {
+  background  : $danger-bg;
+  color       : $danger;
+  border-color: rgba($danger, .3);
+}
+
+// ── Formulário ────────────────────────────────────────────────
+
+.form {
+  display       : flex;
+  flex-direction: column;
+  gap           : 16px;
+}
+
+.formRow {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap    : 12px;
+}
+
+.field {
+  display       : flex;
+  flex-direction: column;
+  gap           : 5px;
+}
+
+.label {
+  font-size     : 11px;
+  font-weight   : 600;
+  color         : $ink-2;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.req { color: $orange-500; }
+
+.input {
+  padding      : 10px 12px;
+  border       : 1.5px solid $border;
+  border-radius: $r-md;
+  background   : $surface;
+  font-family  : $font-primary;
+  font-size    : 14px;
+  color        : $ink;
+  outline      : none;
+  width        : 100%;
+  transition   : border-color $transition-fast, box-shadow $transition-fast;
+
+  &::placeholder { color: $muted-2; }
+  &:focus {
+    border-color: $brown-400;
+    box-shadow  : 0 0 0 3px rgba($brown-400, .1);
+  }
+  &:disabled { background: $surface-2; cursor: not-allowed; }
+}
+
+.select {
+  @extend .input;
+  cursor: pointer;
+  option { background: $surface; }
+}
+
+.formActions {
+  display        : flex;
+  justify-content: flex-end;
+  gap            : 8px;
+  padding-top    : 4px;
+  flex-wrap      : wrap;
+}
+
+// ── Detalhe: hero do barbeiro ─────────────────────────────────
+
+.barbeiroHero {
+  background   : $surface;
+  border-radius: $r-lg;
+  border       : 1px solid $border-soft;
+  box-shadow   : $shadow-sm;
+  padding      : 20px 22px;
+}
+
+.barbeiroHeroLeft {
+  display    : flex;
+  align-items: center;
+  gap        : 18px;
+}
+
+.barbeiroAvatar {
+  width        : 64px;
+  height       : 64px;
+  border-radius: 50%;
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+  flex-shrink  : 0;
+  box-shadow   : $shadow-md;
+
+  span {
+    font-family: $font-secondary;
+    font-size  : 24px;
+    font-weight: 700;
+    color      : #fff;
+    text-shadow: 0 1px 3px rgba(0,0,0,.25);
+    line-height: 1;
+  }
+}
+
+.barbeiroInfo {
+  display       : flex;
+  flex-direction: column;
+  gap           : 6px;
+  min-width     : 0;
+}
+
+.barbeiroInfoRow {
+  display    : flex;
+  align-items: center;
+  gap        : 10px;
+  flex-wrap  : wrap;
+}
+
+.barbeiroNome {
+  font-family   : $font-secondary;
+  font-size     : 22px;
+  font-weight   : 700;
+  color         : $ink;
+  letter-spacing: -0.025em;
+}
+
+.barbeiroMeta {
+  display  : flex;
+  gap      : 14px;
+  flex-wrap: wrap;
+
+  span {
+    display    : flex;
+    align-items: center;
+    gap        : 4px;
+    font-size  : 13px;
+    color      : $muted;
+
+    i { font-size: 14px; }
+  }
+}
+
+// ── KPI Row ───────────────────────────────────────────────────
+
+.kpiRow {
+  display              : grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap                  : $gap-md;
+}
+
+// ── Cards ─────────────────────────────────────────────────────
+
+.card {
+  background   : $surface;
+  border-radius: $r-lg;
+  border       : 1px solid $border-soft;
+  box-shadow   : $shadow-sm;
+  overflow     : hidden;
+}
+
+.cardHead {
+  display        : flex;
+  align-items    : center;
+  justify-content: space-between;
+  gap            : 12px;
+  padding        : 16px 20px 12px;
+  border-bottom  : 1px solid $border-soft;
+  flex-wrap      : wrap;
+}
+
+.cardTitle {
+  display    : flex;
+  align-items: center;
+  gap        : 8px;
+  font-family: $font-secondary;
+  font-size  : 14px;
+  font-weight: 700;
+  color      : $ink;
+  letter-spacing: -0.02em;
+
+  i { font-size: 16px; color: $orange-500; }
+}
+
+.cardHeadRight {
+  display    : flex;
+  align-items: center;
+  gap        : 10px;
+}
+
+.cardBody {
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap    : 16px;
+}
+
+// ── Meta bar ──────────────────────────────────────────────────
+
+.metaBar {
+  display       : flex;
+  flex-direction: column;
+  gap           : 6px;
+}
+
+.metaBarHeader {
+  display        : flex;
+  align-items    : center;
+  justify-content: space-between;
+  gap            : 8px;
+}
+
+.metaBarLabel {
+  font-size  : 13px;
+  font-weight: 500;
+  color      : $ink-2;
+}
+
+.metaBarValues {
+  display    : flex;
+  align-items: center;
+  gap        : 4px;
+  font-size  : 13px;
+}
+
+.metaBarDivider { color: $muted-2; }
+.metaBarMeta    { color: $muted; }
+
+.metaBarTrack {
+  height       : 8px;
+  border-radius: $r-pill;
+  background   : $border-soft;
+  overflow     : hidden;
+}
+
+.metaBarFill {
+  height       : 100%;
+  border-radius: $r-pill;
+  transition   : width 0.7s ease;
+}
+
+.metaBarPct {
+  font-size  : 11px;
+  color      : $muted;
+  text-align : right;
+}
+
+// ── Tabs ──────────────────────────────────────────────────────
+
+.tabs {
+  display      : flex;
+  gap          : 2px;
+  border-bottom: 1px solid $border-soft;
+  padding-bottom: 0;
+}
+
+.tab {
+  display    : flex;
+  align-items: center;
+  gap        : 6px;
+  padding    : 10px 16px;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  font-family: $font-primary;
+  font-size  : 13px;
+  font-weight: 500;
+  color      : $muted;
+  cursor     : pointer;
+  background : transparent;
+  border-top : none;
+  border-left: none;
+  border-right: none;
+  transition : color $transition-fast, border-color $transition-fast;
+  white-space: nowrap;
+
+  i { font-size: 16px; }
+
+  &:hover { color: $ink; }
+}
+
+.tab--active {
+  color       : $ink;
+  border-bottom-color: $orange-500;
+  font-weight : 600;
+}
+
+// ── Rank list (serviços) ──────────────────────────────────────
+
+.rankList {
+  display       : flex;
+  flex-direction: column;
+}
+
+.rankItem {
+  display    : flex;
+  align-items: center;
+  gap        : 12px;
+  padding    : 12px 20px;
+  border-bottom: 1px solid $border-soft;
+
+  &:last-child { border-bottom: none; }
+}
+
+.rankPos {
+  width        : 24px;
+  height       : 24px;
+  border-radius: $r-xs;
+  background   : $surface-2;
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+  font-family  : $font-mono;
+  font-size    : 11px;
+  font-weight  : 700;
+  color        : $muted;
+  flex-shrink  : 0;
+}
+
+.rankInfo {
+  flex     : 1;
+  min-width: 0;
+  display  : flex;
+  flex-direction: column;
+  gap      : 2px;
+}
+
+.rankName {
+  font-size  : 13px;
+  font-weight: 600;
+  color      : $ink;
+}
+
+.rankSub {
+  font-size: 12px;
+  color    : $muted;
+}
+
+.rankVal {
+  font-family: $font-mono;
+  font-size  : 13px;
+  font-weight: 700;
+  color      : $ink;
+  flex-shrink: 0;
+}
+
+// ── Comissões ─────────────────────────────────────────────────
+
+.comissaoList {
+  display       : flex;
+  flex-direction: column;
+}
+
+.comissaoItem {
+  display    : flex;
+  align-items: center;
+  gap        : 12px;
+  padding    : 12px 20px;
+  border-bottom: 1px solid $border-soft;
+  cursor     : pointer;
+  transition : background $transition-fast;
+
+  &:last-child { border-bottom: none; }
+  &:hover      { background: $surface-warm; }
+  &:focus-visible { outline: 2px solid $orange-500; outline-offset: -2px; }
+}
+
+.comissaoItem--selected { background: rgba($orange-500, .05) !important; }
+
+.checkbox {
+  width        : 18px;
+  height       : 18px;
+  border-radius: $r-xs;
+  border       : 2px solid $border-strong;
+  background   : $surface;
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+  flex-shrink  : 0;
+  transition   : background $transition-fast, border-color $transition-fast;
+
+  i { font-size: 12px; color: #fff; }
+}
+
+.checkbox--checked {
+  background  : $orange-500;
+  border-color: $orange-500;
+}
+
+.comissaoInfo {
+  flex     : 1;
+  min-width: 0;
+  display  : flex;
+  flex-direction: column;
+  gap      : 2px;
+}
+
+.comissaoServico {
+  font-size  : 13px;
+  font-weight: 600;
+  color      : $ink;
+}
+
+.comissaoData {
+  font-size: 12px;
+  color    : $muted;
+}
+
+.comissaoValores {
+  display    : flex;
+  align-items: center;
+  gap        : 8px;
+  flex-shrink: 0;
+}
+
+.comissaoBase {
+  font-size: 12px;
+  color    : $muted;
+}
+
+.comissaoPct {
+  font-size    : 11px;
+  padding      : 2px 6px;
+  border-radius: $r-pill;
+  background   : $orange-50;
+  color        : $orange-700;
+  font-weight  : 600;
+}
+
+.comissaoTotal {
+  font-family: $font-mono;
+  font-size  : 14px;
+  font-weight: 700;
+  color      : $success;
+}
+
+.selectedTotal {
+  font-family: $font-mono;
+  font-size  : 13px;
+  font-weight: 700;
+  color      : $orange-700;
+}
+
+// ── Bloqueios ─────────────────────────────────────────────────
+
+.bloqueioList {
+  display       : flex;
+  flex-direction: column;
+}
+
+.bloqueioItem {
+  display    : flex;
+  align-items: center;
+  gap        : 12px;
+  padding    : 12px 20px;
+  border-bottom: 1px solid $border-soft;
+  flex-wrap  : wrap;
+
+  &:last-child { border-bottom: none; }
+}
+
+.bloqueioTipo {
+  display      : flex;
+  align-items  : center;
+  gap          : 6px;
+  padding      : 4px 10px;
+  border-radius: $r-pill;
+  background   : $surface-2;
+  border       : 1px solid $border;
+  font-size    : 12px;
+  font-weight  : 600;
+  color        : $ink-2;
+  white-space  : nowrap;
+  flex-shrink  : 0;
+
+  i { font-size: 14px; color: $orange-500; }
+}
+
+.bloqueioInfo {
+  display    : flex;
+  align-items: center;
+  gap        : 6px;
+  font-size  : 13px;
+  color      : $ink-2;
+  flex-wrap  : wrap;
+
+  i { font-size: 16px; color: $muted-2; }
+}
+
+.bloqueioMotivo {
+  font-size : 12px;
+  color     : $muted;
+  font-style: italic;
+}
+
+// ════════════════════════════════════════════════════════════
+//  RESPONSIVIDADE
+// ════════════════════════════════════════════════════════════
+
+@media (max-width: 900px) {
+  .kpiRow { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .body { padding: 16px 16px 32px; }
+}
+
+@media (max-width: 600px) {
+  .listActions { display: none; } // acesso via detalhe
+  .barbeiroHeroLeft { align-items: flex-start; }
+  .barbeiroAvatar   { width: 52px; height: 52px; span { font-size: 20px; } }
+  .comissaoValores  { flex-direction: column; gap: 4px; align-items: flex-end; }
+}
+
+@media (max-width: 480px) {
+  .body { padding: 14px 14px 28px; }
+  .kpiRow { grid-template-columns: 1fr 1fr; }
+  .barbeiroNome { font-size: 18px; }
+  .tabs { overflow-x: auto; }
+  .tab  { font-size: 12px; padding: 8px 12px; }
+}
+
+@media (max-width: 360px) {
+  .body { padding: 12px 12px 24px; }
+  .kpiRow { grid-template-columns: 1fr; }
+  .toolbar { flex-direction: column; align-items: stretch; }
+  .toolbarRight { justify-content: flex-end; }
+  .formRow { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 320px) {
+  .body { padding: 10px 10px 20px; gap: 12px; }
+  .barbeiroHeroLeft { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .comissaoItem { flex-wrap: wrap; }
+  .comissaoValores { width: 100%; justify-content: space-between; }
+}

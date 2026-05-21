@@ -1,0 +1,347 @@
+// ════════════════════════════════════════════════════════════
+//  Configuracoes.module.scss — Navalha 22
+// ════════════════════════════════════════════════════════════
+
+@use '../../assets/styles/variables' as *;
+
+.page { min-height: 100%; display: flex; flex-direction: column; }
+
+.body {
+  padding: 20px $content-px 40px;
+  display: flex; flex-direction: column; gap: 16px; flex: 1;
+  max-width: 760px; // largura máxima para formulários de config
+}
+
+.skeletonGrid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: $gap-md;
+}
+
+// ── Seção ─────────────────────────────────────────────────────
+
+.section {
+  background   : $surface;
+  border-radius: $r-lg;
+  border       : 1px solid $border-soft;
+  box-shadow   : $shadow-sm;
+  overflow     : hidden;
+}
+
+.sectionHeader {
+  display    : flex;
+  align-items: flex-start;
+  gap        : 14px;
+  padding    : 18px 22px 14px;
+  border-bottom: 1px solid $border-soft;
+}
+
+.sectionIcon {
+  width        : 40px;
+  height       : 40px;
+  border-radius: $r-md;
+  background   : $orange-50;
+  border       : 1px solid $orange-100;
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+  flex-shrink  : 0;
+
+  i { font-size: 20px; color: $orange-600; }
+}
+
+.sectionTitle {
+  font-family   : $font-secondary;
+  font-size     : 15px;
+  font-weight   : 700;
+  color         : $ink;
+  letter-spacing: -0.02em;
+  line-height   : 1.2;
+}
+
+.sectionSub {
+  font-size  : 12px;
+  color      : $muted;
+  margin-top : 3px;
+  line-height: 1.5;
+}
+
+.sectionBody {
+  padding: 18px 22px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+
+// ── Fields ────────────────────────────────────────────────────
+
+.fieldGrid {
+  display              : grid;
+  grid-template-columns: 1fr 1fr;
+  gap                  : 14px;
+}
+
+.fieldRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr auto;
+  gap  : 14px;
+  align-items: start;
+}
+
+.field { display: flex; flex-direction: column; gap: 6px; }
+
+.label {
+  font-size     : 11px;
+  font-weight   : 600;
+  color         : $ink-2;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.fieldHint { font-size: 11px; color: $muted; line-height: 1.5; }
+
+.input {
+  padding      : 10px 13px;
+  border       : 1.5px solid $border;
+  border-radius: $r-md;
+  background   : $surface;
+  font-family  : $font-primary;
+  font-size    : 14px;
+  color        : $ink;
+  outline      : none;
+  width        : 100%;
+  transition   : border-color $transition-fast, box-shadow $transition-fast;
+
+  &::placeholder { color: $muted-2; }
+  &:focus {
+    border-color: $brown-400;
+    box-shadow  : 0 0 0 3px rgba($brown-400, .1);
+  }
+}
+
+// ── Dias da semana ────────────────────────────────────────────
+
+.diasGrid { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.diaBtn {
+  width        : 46px;
+  height       : 46px;
+  border-radius: $r-sm;
+  border       : 1.5px solid $border;
+  background   : $surface;
+  color        : $muted;
+  font-family  : $font-primary;
+  font-size    : 12px;
+  font-weight  : 600;
+  cursor       : pointer;
+  transition   : background $transition-fast, color $transition-fast, border-color $transition-fast;
+
+  &:hover { background: $surface-warm; color: $ink; border-color: $border-strong; }
+  &:focus-visible { outline: 2px solid $orange-500; outline-offset: 2px; }
+}
+
+.diaBtn--active {
+  background  : $brown-600;
+  border-color: $brown-600;
+  color       : $brown-50;
+}
+
+// ── Slots ─────────────────────────────────────────────────────
+
+.slotGrid { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.slotBtn {
+  padding      : 8px 12px;
+  border-radius: $r-sm;
+  border       : 1.5px solid $border;
+  background   : $surface;
+  color        : $muted;
+  font-family  : $font-mono;
+  font-size    : 12px;
+  font-weight  : 600;
+  cursor       : pointer;
+  white-space  : nowrap;
+  transition   : background $transition-fast, color $transition-fast, border-color $transition-fast;
+
+  &:hover { background: $surface-warm; color: $ink; border-color: $border-strong; }
+}
+
+.slotBtn--active {
+  background  : $brown-600;
+  border-color: $brown-600;
+  color       : $brown-50;
+}
+
+// ── Toggle de fila ────────────────────────────────────────────
+
+.toggleRow {
+  display        : flex;
+  align-items    : center;
+  justify-content: space-between;
+  gap            : 16px;
+}
+
+.toggleInfo {
+  display       : flex;
+  flex-direction: column;
+  gap           : 4px;
+  flex          : 1;
+}
+
+.toggleLabel {
+  font-size  : 14px;
+  font-weight: 600;
+  color      : $ink;
+}
+
+.toggleSub {
+  font-size  : 12px;
+  color      : $muted;
+  line-height: 1.5;
+}
+
+.toggle {
+  position     : relative;
+  width        : 52px;
+  height       : 28px;
+  border-radius: $r-pill;
+  background   : $border-strong;
+  border       : none;
+  cursor       : pointer;
+  flex-shrink  : 0;
+  transition   : background $transition-normal;
+
+  &:focus-visible { outline: 2px solid $orange-500; outline-offset: 3px; }
+}
+
+.toggle--on { background: $orange-500; }
+
+.toggleThumb {
+  position     : absolute;
+  top          : 3px;
+  left         : 3px;
+  width        : 22px;
+  height       : 22px;
+  border-radius: 50%;
+  background   : #fff;
+  box-shadow   : $shadow-sm;
+  transition   : transform $transition-normal;
+
+  .toggle--on & { transform: translateX(24px); }
+}
+
+// ── Pontos de fidelidade ──────────────────────────────────────
+
+.pontosWrap {
+  display    : flex;
+  align-items: center;
+  gap        : 8px;
+
+  > i {
+    font-size : 20px;
+    color     : $orange-500;
+    flex-shrink: 0;
+  }
+}
+
+.inputPontos { width: 80px; flex-shrink: 0; }
+
+.pontosSuffix { font-size: 13px; color: $muted; white-space: nowrap; }
+
+// ── Info do sistema ───────────────────────────────────────────
+
+.infoGrid {
+  display  : flex;
+  flex-wrap: wrap;
+  gap      : 16px;
+}
+
+.infoItem {
+  display       : flex;
+  flex-direction: column;
+  gap           : 4px;
+}
+
+.infoLabel {
+  font-size     : 10px;
+  font-weight   : 600;
+  color         : $muted;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.infoVal {
+  font-family: $font-mono;
+  font-size  : 13px;
+  color      : $ink-2;
+  word-break : break-all;
+}
+
+// ── Sticky bar (mobile — alterações pendentes) ────────────────
+
+.stickyBar {
+  position     : sticky;
+  bottom       : 20px;
+  display      : flex;
+  align-items  : center;
+  justify-content: space-between;
+  gap          : 12px;
+  padding      : 14px 18px;
+  background   : $brown-600;
+  border-radius: $r-lg;
+  box-shadow   : $shadow-lg;
+  z-index      : 10;
+  animation    : slideUp 0.3s cubic-bezier(0.22, 0.68, 0, 1.2) both;
+
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+}
+
+.stickyMsg {
+  display    : flex;
+  align-items: center;
+  gap        : 8px;
+  font-size  : 13px;
+  font-weight: 500;
+  color      : rgba($brown-50, .85);
+
+  i { font-size: 17px; color: $orange-300; }
+}
+
+// ════════════════════════════════════════════════════════════
+//  RESPONSIVIDADE
+// ════════════════════════════════════════════════════════════
+
+@media (max-width: 768px) {
+  .body { padding: 16px 16px 32px; max-width: 100%; }
+  .sectionHeader { padding: 14px 16px 12px; }
+  .sectionBody   { padding: 14px 16px; }
+}
+
+@media (max-width: 600px) {
+  .fieldGrid { grid-template-columns: 1fr; }
+  .fieldRow  { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 480px) {
+  .body { padding: 14px 14px 28px; }
+  .fieldRow { grid-template-columns: 1fr; }
+  .toggleRow { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .stickyBar { flex-direction: column; align-items: stretch; text-align: center; bottom: 12px; }
+  .stickyMsg { justify-content: center; }
+  .diasGrid  { gap: 5px; }
+  .diaBtn    { width: 40px; height: 40px; font-size: 11px; }
+}
+
+@media (max-width: 360px) {
+  .body { padding: 12px 12px 24px; }
+  .sectionHeader { gap: 10px; }
+  .sectionIcon   { width: 34px; height: 34px; i { font-size: 17px; } }
+  .sectionTitle  { font-size: 14px; }
+}
+
+@media (max-width: 320px) {
+  .body { padding: 10px 10px 20px; gap: 12px; }
+  .sectionBody { padding: 12px 14px; }
+  .diasGrid { gap: 4px; }
+  .diaBtn   { width: 36px; height: 36px; font-size: 10px; }
+  .slotBtn  { padding: 7px 9px; font-size: 11px; }
+}

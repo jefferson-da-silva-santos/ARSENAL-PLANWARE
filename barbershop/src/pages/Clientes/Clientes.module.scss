@@ -1,0 +1,239 @@
+// ════════════════════════════════════════════════════════════
+//  Clientes.module.scss — Navalha 22
+//  Cobre Clientes.tsx e ClienteDetalhe.tsx
+// ════════════════════════════════════════════════════════════
+
+.page { min-height: 100%; display: flex; flex-direction: column; }
+
+.body { padding: 20px $content-px 40px; display: flex; flex-direction: column; gap: 16px; flex: 1; }
+
+// ── Busca ─────────────────────────────────────────────────────
+
+.searchWrap {
+  position: relative; display: flex; align-items: center;
+
+  > i:first-child {
+    position: absolute; left: 13px; font-size: 17px;
+    color: $muted-2; pointer-events: none; z-index: 1;
+  }
+}
+
+.searchInput {
+  width: 100%; padding: 11px 36px 11px 40px; border: 1.5px solid $border;
+  border-radius: $r-md; background: $surface; font-family: $font-primary;
+  font-size: 14px; color: $ink; outline: none;
+  transition: border-color $transition-fast, box-shadow $transition-fast;
+
+  &::placeholder { color: $muted-2; }
+  &:focus { border-color: $border-strong; box-shadow: 0 0 0 3px rgba($brown-400, .08); }
+}
+
+.searchClear {
+  position: absolute; right: 10px; width: 24px; height: 24px;
+  border-radius: $r-xs; border: none; background: transparent;
+  color: $muted-2; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 17px; transition: color $transition-fast;
+
+  &:hover { color: $ink; }
+}
+
+// ── Lista ─────────────────────────────────────────────────────
+
+.list { display: flex; flex-direction: column; gap: 8px; }
+
+.listItem {
+  position: relative; display: flex; align-items: center;
+  > *:first-child { flex: 1; }
+}
+
+.editBtn {
+  position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+  width: 30px; height: 30px; border-radius: $r-xs;
+  border: 1px solid $border; background: $surface; color: $muted;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background $transition-fast, color $transition-fast;
+  z-index: 1;
+
+  i { font-size: 14px; }
+  &:hover { background: $surface-warm; color: $ink; border-color: $border-strong; }
+}
+
+// ── Formulário ────────────────────────────────────────────────
+
+.form { display: flex; flex-direction: column; gap: 14px; }
+.formRow { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+.field { display: flex; flex-direction: column; gap: 5px; }
+
+.label {
+  font-size: 11px; font-weight: 600; color: $ink-2;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+
+.req { color: $orange-500; }
+
+.input {
+  padding: 10px 12px; border: 1.5px solid $border; border-radius: $r-md;
+  background: $surface; font-family: $font-primary; font-size: 14px;
+  color: $ink; outline: none; width: 100%;
+  transition: border-color $transition-fast, box-shadow $transition-fast;
+
+  &::placeholder { color: $muted-2; }
+  &:focus { border-color: $brown-400; box-shadow: 0 0 0 3px rgba($brown-400, .1); }
+  &:disabled { background: $surface-2; cursor: not-allowed; }
+}
+
+.textarea {
+  @extend .input;
+  resize: vertical; min-height: 80px; line-height: 1.6;
+}
+
+.formActions { display: flex; justify-content: flex-end; gap: 8px; padding-top: 4px; flex-wrap: wrap; }
+
+// ── Detalhe: hero ─────────────────────────────────────────────
+
+.clienteHero {
+  background: $surface; border-radius: $r-lg;
+  border: 1px solid $border-soft; box-shadow: $shadow-sm; padding: 20px 22px;
+}
+
+.heroLeft { display: flex; align-items: flex-start; gap: 18px; }
+
+.heroAvatar {
+  width: 64px; height: 64px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center; box-shadow: $shadow-md;
+
+  span { font-family: $font-secondary; font-size: 24px; font-weight: 700; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,.25); }
+}
+
+.heroInfo { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+
+.heroNameRow { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
+.heroNome { font-family: $font-secondary; font-size: 22px; font-weight: 700; color: $ink; letter-spacing: -0.025em; }
+
+.heroMeta {
+  display: flex; gap: 14px; flex-wrap: wrap;
+  span { display: flex; align-items: center; gap: 4px; font-size: 13px; color: $muted; i { font-size: 14px; } }
+}
+
+.heroObs { font-size: 13px; color: $muted; font-style: italic; line-height: 1.5; }
+
+// ── KPI Row ───────────────────────────────────────────────────
+
+.kpiRow { display: grid; grid-template-columns: repeat(3, 1fr); gap: $gap-md; }
+
+// ── Tabs ──────────────────────────────────────────────────────
+
+.tabs { display: flex; gap: 2px; border-bottom: 1px solid $border-soft; padding-bottom: 0; }
+
+.tab {
+  display: flex; align-items: center; gap: 6px;
+  padding: 10px 16px; border-bottom: 2px solid transparent; margin-bottom: -1px;
+  font-family: $font-primary; font-size: 13px; font-weight: 500; color: $muted;
+  cursor: pointer; background: transparent; border-top: none; border-left: none; border-right: none;
+  transition: color $transition-fast, border-color $transition-fast; white-space: nowrap;
+
+  i { font-size: 16px; }
+  &:hover { color: $ink; }
+}
+
+.tab--active { color: $ink; border-bottom-color: $orange-500; font-weight: 600; }
+
+// ── Histórico ─────────────────────────────────────────────────
+
+.histList { display: flex; flex-direction: column; gap: 8px; }
+
+// ── Fidelidade ────────────────────────────────────────────────
+
+.fidelidade { display: flex; flex-direction: column; gap: 14px; }
+
+.card {
+  background: $surface; border-radius: $r-lg;
+  border: 1px solid $border-soft; box-shadow: $shadow-sm; overflow: hidden;
+}
+
+.cardHead {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 16px 20px 12px; border-bottom: 1px solid $border-soft;
+}
+
+.cardTitle {
+  display: flex; align-items: center; gap: 8px;
+  font-family: $font-secondary; font-size: 14px; font-weight: 700;
+  color: $ink; letter-spacing: -0.02em;
+  i { font-size: 16px; color: $orange-500; }
+}
+
+.recompensaGrid { display: flex; flex-direction: column; }
+
+.recompensaCard {
+  display: flex; align-items: center; gap: 12px; padding: 13px 20px;
+  border-bottom: 1px solid $border-soft; opacity: 0.6;
+  &:last-child { border-bottom: none; }
+}
+
+.recompensaCard--ok { opacity: 1; }
+
+.recompensaIcon {
+  width: 36px; height: 36px; border-radius: $r-sm;
+  background: $surface-2; border: 1px solid $border;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  i { font-size: 17px; color: $orange-500; }
+}
+
+.recompensaInfo {
+  flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px;
+  strong { font-size: 13px; font-weight: 600; color: $ink; }
+  span   { font-size: 12px; color: $muted; }
+}
+
+.recompensaPontos {
+  display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0;
+  span:first-child { font-family: $font-mono; font-size: 13px; font-weight: 700; color: $ink; }
+}
+
+.recompensaOk { font-size: 11px; color: $success; font-weight: 600; }
+
+.resgateList { display: flex; flex-direction: column; }
+
+.resgateItem {
+  display: flex; align-items: center; gap: 12px; padding: 12px 20px;
+  border-bottom: 1px solid $border-soft;
+  &:last-child { border-bottom: none; }
+
+  > i { font-size: 18px; color: $orange-500; flex-shrink: 0; }
+}
+
+.resgateInfo { display: flex; flex-direction: column; gap: 2px; flex: 1;
+  span:first-child { font-size: 13px; font-weight: 600; color: $ink; }
+}
+
+.resgateData { font-size: 12px; color: $muted; }
+
+// ── Responsividade ────────────────────────────────────────────
+
+@media (max-width: 768px) { .body { padding: 16px 16px 32px; } }
+
+@media (max-width: 600px) {
+  .kpiRow { grid-template-columns: 1fr 1fr; }
+  .heroLeft { flex-direction: column; }
+  .editBtn  { display: none; }
+}
+
+@media (max-width: 480px) {
+  .body { padding: 14px 14px 28px; }
+  .formRow { grid-template-columns: 1fr; }
+  .heroNome { font-size: 18px; }
+}
+
+@media (max-width: 360px) {
+  .kpiRow { grid-template-columns: 1fr; }
+  .tabs { overflow-x: auto; }
+}
+
+@media (max-width: 320px) {
+  .body { padding: 10px 10px 20px; gap: 12px; }
+  .heroAvatar { width: 48px; height: 48px; span { font-size: 18px; } }
+  .heroNome { font-size: 16px; }
+}

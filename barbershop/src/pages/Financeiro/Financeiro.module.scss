@@ -1,0 +1,265 @@
+// ════════════════════════════════════════════════════════════
+//  Financeiro.module.scss — Navalha 22
+// ════════════════════════════════════════════════════════════
+
+.page { min-height: 100%; display: flex; flex-direction: column; }
+.body { padding: 20px $content-px 40px; display: flex; flex-direction: column; gap: 16px; flex: 1; }
+
+.headerActions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+// ── Período ───────────────────────────────────────────────────
+.periodoRow { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.chip {
+  padding: 7px 14px; border-radius: $r-pill; border: 1px solid $border;
+  background: $surface; color: $muted; font-family: $font-primary;
+  font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap;
+  transition: background $transition-fast, color $transition-fast, border-color $transition-fast;
+  &:hover { background: $surface-warm; color: $ink; }
+}
+.chip--active { background: $brown-600; border-color: $brown-600; color: $brown-50; font-weight: 600; }
+
+// ── KPI Row ───────────────────────────────────────────────────
+.kpiRow { display: grid; grid-template-columns: repeat(4, 1fr); gap: $gap-md; }
+
+// ── Tabs ──────────────────────────────────────────────────────
+.tabs {
+  display: flex; gap: 2px; border-bottom: 1px solid $border-soft;
+  overflow-x: auto;
+  &::-webkit-scrollbar { height: 0; }
+}
+
+.tab {
+  display: flex; align-items: center; gap: 6px; padding: 10px 16px;
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  font-family: $font-primary; font-size: 13px; font-weight: 500; color: $muted;
+  cursor: pointer; background: transparent; border-top: none; border-left: none; border-right: none;
+  transition: color $transition-fast, border-color $transition-fast; white-space: nowrap;
+  i { font-size: 16px; }
+  &:hover { color: $ink; }
+}
+.tab--active { color: $ink; border-bottom-color: $orange-500; font-weight: 600; }
+
+// ── Cards base ────────────────────────────────────────────────
+.card {
+  background: $surface; border-radius: $r-lg;
+  border: 1px solid $border-soft; box-shadow: $shadow-sm; overflow: hidden;
+}
+
+.cardHead {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 16px 20px 12px; border-bottom: 1px solid $border-soft; flex-wrap: wrap;
+}
+
+.cardTitle {
+  display: flex; align-items: center; gap: 8px;
+  font-family: $font-secondary; font-size: 14px; font-weight: 700; color: $ink; letter-spacing: -0.02em;
+  i { font-size: 16px; color: $orange-500; }
+}
+
+.cardBody { padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; }
+
+// ── Visão geral ───────────────────────────────────────────────
+.visaoGrid { display: grid; grid-template-columns: 1fr 1fr; gap: $gap-lg; }
+.cardFull  { grid-column: 1 / -1; }
+
+// ── Dist bar ──────────────────────────────────────────────────
+.distBar { display: flex; flex-direction: column; gap: 5px; }
+.distBarHeader { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.distBarLabel { font-size: 13px; color: $ink-2; }
+.distBarVal   { font-family: $font-mono; font-size: 13px; font-weight: 700; color: $ink; }
+.distBarTrack { height: 8px; border-radius: $r-pill; background: $border-soft; overflow: hidden; }
+.distBarFill  { height: 100%; border-radius: $r-pill; transition: width 0.6s ease; }
+.distBarPct   { font-size: 11px; color: $muted; text-align: right; }
+
+.lucroBox {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 14px; background: $surface-warm; border-radius: $r-md;
+  border: 1px solid $border; margin-top: 4px;
+  > span:first-child { font-size: 13px; font-weight: 600; color: $ink; }
+}
+
+.lucroVal { font-family: $font-mono; font-size: 18px; font-weight: 800; color: $success; }
+.lucroNeg { color: $danger; }
+
+// ── Ticket ────────────────────────────────────────────────────
+.ticketBox { padding: 20px; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.ticketHero { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.ticketVal { font-family: $font-mono; font-size: 36px; font-weight: 800; color: $ink; letter-spacing: -0.03em; }
+.ticketLabel { font-size: 12px; color: $muted; }
+.ticketSub {
+  display: flex; align-items: center; gap: 6px; font-size: 13px; color: $muted;
+  i { font-size: 15px; color: $orange-500; }
+}
+
+// ── Por barbeiro ──────────────────────────────────────────────
+.barberList { display: flex; flex-direction: column; }
+
+.barberItem {
+  display: flex; align-items: center; gap: 12px; padding: 12px 20px;
+  border-bottom: 1px solid $border-soft;
+  &:last-child { border-bottom: none; }
+}
+
+.barberRank {
+  width: 22px; text-align: center; font-family: $font-mono;
+  font-size: 11px; font-weight: 700; color: $muted; flex-shrink: 0;
+}
+
+.barberAvatar {
+  width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  span { font-family: $font-secondary; font-size: 12px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.2); }
+}
+
+.barberInfo { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.barberNome { font-size: 13px; font-weight: 600; color: $ink; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.barberBar  { height: 5px; border-radius: $r-pill; background: $border-soft; overflow: hidden; }
+.barberBarFill { height: 100%; border-radius: $r-pill; background: $orange-500; transition: width 0.6s ease; }
+
+.barberValores { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0; }
+.barberFat   { font-family: $font-mono; font-size: 14px; font-weight: 700; color: $ink; }
+.barberAtend { font-size: 11px; color: $muted; }
+
+// ── Despesas ──────────────────────────────────────────────────
+.despList { display: flex; flex-direction: column; }
+
+.despItem {
+  display: flex; align-items: center; gap: 12px; padding: 12px 20px;
+  border-bottom: 1px solid $border-soft; transition: background $transition-fast;
+  &:last-child { border-bottom: none; }
+  &:hover { background: $surface-warm; }
+}
+
+.despIcon {
+  width: 36px; height: 36px; border-radius: $r-sm; background: $danger-bg;
+  border: 1px solid rgba($danger, .2); display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  i { font-size: 18px; color: $danger; }
+}
+
+.despInfo { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.despDesc { font-size: 13px; font-weight: 600; color: $ink; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+.despMeta { display: flex; align-items: center; gap: 8px; font-size: 11px; color: $muted; flex-wrap: wrap; }
+
+.despCat {
+  padding: 1px 7px; border-radius: $r-pill; background: $surface-2;
+  border: 1px solid $border; font-size: 10px; font-weight: 600; color: $muted;
+}
+
+.despObs { font-style: italic; }
+
+.despValor { font-family: $font-mono; font-size: 14px; font-weight: 700; color: $danger; flex-shrink: 0; }
+
+.deleteBtn {
+  width: 28px; height: 28px; border-radius: $r-xs; border: 1px solid $border;
+  background: transparent; color: $muted-2; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; flex-shrink: 0; transition: background $transition-fast, color $transition-fast;
+  i { font-size: 14px; }
+  &:hover { background: $danger-bg; color: $danger; border-color: rgba($danger, .3); }
+}
+
+.despTotal {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 20px; background: $surface-warm; border-top: 1px solid $border;
+  font-size: 13px; font-weight: 600; color: $ink;
+}
+.despTotalVal { font-family: $font-mono; font-size: 16px; font-weight: 800; color: $danger; }
+
+// ── Comissões ─────────────────────────────────────────────────
+.comissaoResumList { display: flex; flex-direction: column; }
+
+.comissaoResumItem {
+  display: flex; align-items: center; gap: 12px; padding: 13px 20px;
+  border-bottom: 1px solid $border-soft;
+  &:last-child { border-bottom: none; }
+}
+
+.comissaoAvatar {
+  width: 38px; height: 38px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  span { font-family: $font-secondary; font-size: 14px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.2); }
+}
+
+.comissaoInfo { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+.comissaoNome { font-size: 14px; font-weight: 600; color: $ink; }
+.comissaoBase { font-size: 12px; color: $muted; }
+
+.comissaoRight { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0; }
+.comissaoTotal { font-family: $font-mono; font-size: 16px; font-weight: 800; color: $success; }
+.comissaoLabel { font-size: 10px; color: $muted; }
+
+// ── Fechamento ────────────────────────────────────────────────
+.fechList { display: flex; flex-direction: column; }
+
+.fechItem {
+  display: flex; align-items: center; gap: 16px; padding: 14px 20px;
+  border-bottom: 1px solid $border-soft;
+  &:last-child { border-bottom: none; }
+  &:hover { background: $surface-warm; }
+}
+
+.fechData { display: flex; flex-direction: column; gap: 2px; flex-shrink: 0; min-width: 60px; }
+.fechDia  { font-family: $font-secondary; font-size: 14px; font-weight: 700; color: $ink; }
+.fechAtend{ font-size: 11px; color: $muted; }
+
+.fechValores { display: flex; gap: 16px; flex: 1; flex-wrap: wrap; }
+
+.fechValItem {
+  display: flex; flex-direction: column; gap: 2px;
+  span:first-child { font-size: 10px; color: $muted; text-transform: uppercase; letter-spacing: 0.05em; }
+  span:last-child  { font-family: $font-mono; font-size: 13px; font-weight: 600; color: $ink; }
+}
+
+.fechWarn   { color: $warn   !important; }
+.fechDanger { color: $danger !important; }
+
+.fechLiquido { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; flex-shrink: 0; }
+.fechLiquidoVal   { font-family: $font-mono; font-size: 18px; font-weight: 800; color: $success; }
+.fechLiquidoLabel { font-size: 10px; color: $muted; }
+
+// ── Formulário ────────────────────────────────────────────────
+.form { display: flex; flex-direction: column; gap: 14px; }
+.formRow { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 5px; }
+.label { font-size: 11px; font-weight: 600; color: $ink-2; text-transform: uppercase; letter-spacing: 0.05em; }
+.req { color: $orange-500; }
+
+.input {
+  padding: 10px 12px; border: 1.5px solid $border; border-radius: $r-md;
+  background: $surface; font-family: $font-primary; font-size: 14px; color: $ink; outline: none; width: 100%;
+  transition: border-color $transition-fast, box-shadow $transition-fast;
+  &::placeholder { color: $muted-2; }
+  &:focus { border-color: $brown-400; box-shadow: 0 0 0 3px rgba($brown-400, .1); }
+  &:disabled { background: $surface-2; cursor: not-allowed; }
+}
+
+.textarea { @extend .input; resize: vertical; min-height: 70px; line-height: 1.6; }
+
+.categoriaGrid { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.catBtn {
+  padding: 6px 12px; border-radius: $r-pill; border: 1.5px solid $border;
+  background: $surface; color: $muted; font-family: $font-primary; font-size: 12px; font-weight: 500;
+  cursor: pointer; transition: background $transition-fast, color $transition-fast, border-color $transition-fast;
+  &:hover { background: $surface-warm; color: $ink; }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+.catBtn--active { background: $brown-600; border-color: $brown-600; color: $brown-50; font-weight: 600; }
+
+.formActions { display: flex; justify-content: flex-end; gap: 8px; padding-top: 4px; }
+
+// ── Responsividade ────────────────────────────────────────────
+@media (max-width: 1100px) { .kpiRow { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 900px)  { .visaoGrid { grid-template-columns: 1fr; } }
+@media (max-width: 768px)  { .body { padding: 16px 16px 32px; } }
+@media (max-width: 640px)  { .kpiRow { grid-template-columns: 1fr 1fr; } .fechValores { gap: 10px; } }
+@media (max-width: 480px)  {
+  .body { padding: 14px 14px 28px; } .kpiRow { grid-template-columns: 1fr; }
+  .fechItem { flex-wrap: wrap; gap: 10px; }
+  .fechLiquido { align-items: flex-start; }
+  .headerActions { width: 100%; }
+}
+@media (max-width: 360px)  { .formRow { grid-template-columns: 1fr; } }
+@media (max-width: 320px)  { .body { padding: 10px 10px 20px; } .ticketVal { font-size: 28px; } }

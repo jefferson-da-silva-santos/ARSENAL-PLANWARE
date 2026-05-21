@@ -1,0 +1,841 @@
+// ════════════════════════════════════════════════════════════
+//  Agenda.module.scss — Navalha 22
+//  Contém estilos da Agenda, AgendaCalendar,
+//  AgendaDrawer e SlotPicker (um módulo para a feature inteira)
+// ════════════════════════════════════════════════════════════
+
+.page {
+  min-height    : 100%;
+  display       : flex;
+  flex-direction: column;
+}
+
+// ── Body ──────────────────────────────────────────────────────
+
+.body {
+  padding: 20px $content-px 40px;
+  display: flex;
+  flex-direction: column;
+  gap    : 16px;
+  flex   : 1;
+}
+
+// ════════════════════════════════════════════════════════════
+//  NAVEGAÇÃO DE DATA
+// ════════════════════════════════════════════════════════════
+
+.dateNav {
+  display        : flex;
+  align-items    : center;
+  justify-content: center;
+  gap            : 12px;
+  background     : $surface;
+  border         : 1px solid $border-soft;
+  border-radius  : $r-lg;
+  padding        : 12px 16px;
+  box-shadow     : $shadow-sm;
+}
+
+.dateNavBtn {
+  width        : 36px;
+  height       : 36px;
+  border-radius: $r-sm;
+  border       : 1px solid $border;
+  background   : $surface-warm;
+  color        : $ink-2;
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+  cursor       : pointer;
+  flex-shrink  : 0;
+  transition   : background $transition-fast, border-color $transition-fast;
+
+  i { font-size: 20px; }
+
+  &:hover {
+    background  : $brown-600;
+    border-color: $brown-600;
+    color       : $brown-50;
+  }
+
+  &:focus-visible { outline: 2px solid $orange-500; outline-offset: 2px; }
+}
+
+.dateCenter {
+  flex        : 1;
+  display     : flex;
+  align-items : center;
+  justify-content: center;
+  gap         : 10px;
+  position    : relative;
+  min-width   : 0;
+}
+
+.dateLabel {
+  display    : flex;
+  align-items: center;
+  gap        : 8px;
+  font-family: $font-secondary;
+  font-size  : 16px;
+  font-weight: 700;
+  color      : $ink;
+  letter-spacing: -0.02em;
+  text-align : center;
+  white-space: nowrap;
+  overflow   : hidden;
+  text-overflow: ellipsis;
+}
+
+.todayPill {
+  padding      : 2px 8px;
+  border-radius: $r-pill;
+  background   : $orange-500;
+  color        : #fff;
+  font-size    : 10px;
+  font-weight  : 700;
+  flex-shrink  : 0;
+  letter-spacing: 0.04em;
+}
+
+.dateInput {
+  position : absolute;
+  opacity  : 0;
+  width    : 100%;
+  height   : 100%;
+  cursor   : pointer;
+  border   : none;
+  background: transparent;
+
+  // Em webkit mostra o picker ao clicar na área
+  &::-webkit-calendar-picker-indicator { 
+    width : 100%;
+    height: 100%;
+    cursor: pointer;
+    opacity: 0;
+    position: absolute;
+    inset : 0;
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+//  FILTROS
+// ════════════════════════════════════════════════════════════
+
+.filters {
+  display        : flex;
+  align-items    : center;
+  justify-content: space-between;
+  gap            : 12px;
+  flex-wrap      : wrap;
+}
+
+.filterChips {
+  display : flex;
+  gap     : 6px;
+  flex-wrap: wrap;
+}
+
+.chip {
+  padding      : 6px 12px;
+  border-radius: $r-pill;
+  border       : 1px solid $border;
+  background   : $surface;
+  color        : $ink-2;
+  font-family  : $font-primary;
+  font-size    : 12px;
+  font-weight  : 500;
+  cursor       : pointer;
+  white-space  : nowrap;
+  transition   : background $transition-fast, color $transition-fast,
+                 border-color $transition-fast;
+
+  &:hover { background: $surface-warm; border-color: $border-strong; }
+  &:focus-visible { outline: 2px solid $orange-500; outline-offset: 2px; }
+}
+
+.chip--active {
+  background  : $brown-600;
+  border-color: $brown-600;
+  color       : $brown-50;
+  font-weight : 600;
+}
+
+.filterRight {
+  display    : flex;
+  align-items: center;
+  gap        : 8px;
+  flex-shrink: 0;
+}
+
+.filterSelect {
+  padding      : 7px 12px;
+  border-radius: $r-md;
+  border       : 1px solid $border;
+  background   : $surface;
+  color        : $ink-2;
+  font-family  : $font-primary;
+  font-size    : 13px;
+  cursor       : pointer;
+  outline      : none;
+  transition   : border-color $transition-fast;
+  max-width    : 180px;
+
+  &:focus { border-color: $border-strong; }
+  option  { background: $surface; }
+}
+
+// Toggle de view
+.viewToggle {
+  display      : flex;
+  border       : 1px solid $border;
+  border-radius: $r-sm;
+  overflow     : hidden;
+  background   : $surface;
+}
+
+.viewBtn {
+  width       : 34px;
+  height      : 34px;
+  display     : flex;
+  align-items : center;
+  justify-content: center;
+  background  : transparent;
+  border      : none;
+  color       : $muted;
+  cursor      : pointer;
+  transition  : background $transition-fast, color $transition-fast;
+
+  i { font-size: 16px; }
+
+  &:hover { background: $surface-warm; color: $ink; }
+  &:focus-visible { outline: 2px solid $orange-500; outline-offset: -2px; }
+}
+
+.viewBtn--active {
+  background: $brown-600;
+  color     : $brown-50;
+}
+
+// ── Contador ──────────────────────────────────────────────────
+
+.counter {
+  font-size: 12px;
+  color    : $muted;
+
+  strong { color: $ink; font-weight: 600; }
+}
+
+// ════════════════════════════════════════════════════════════
+//  MODO LISTA
+// ════════════════════════════════════════════════════════════
+
+.lista {
+  display       : flex;
+  flex-direction: column;
+  gap           : 8px;
+}
+
+// ════════════════════════════════════════════════════════════
+//  MODO GRADE (AgendaCalendar)
+// ════════════════════════════════════════════════════════════
+
+.gradeWrap {
+  background   : $surface;
+  border-radius: $r-lg;
+  border       : 1px solid $border-soft;
+  box-shadow   : $shadow-sm;
+  overflow     : hidden;
+}
+
+.gradeLoading {
+  display        : flex;
+  align-items    : center;
+  justify-content: center;
+  gap            : 10px;
+  padding        : 60px;
+  color          : $muted;
+  font-size      : 14px;
+
+  i { font-size: 22px; }
+}
+
+// ── Calendar ──────────────────────────────────────────────────
+
+.calendar {
+  overflow-x: auto;
+  min-width : 100%;
+}
+
+// Header com avatares dos barbeiros
+.calHeader {
+  display     : flex;
+  border-bottom: 1px solid $border-soft;
+  position    : sticky;
+  top         : 0;
+  background  : $surface;
+  z-index     : 10;
+}
+
+.calCorner {
+  width     : 64px;
+  flex-shrink: 0;
+  border-right: 1px solid $border-soft;
+}
+
+.calBarbeiro {
+  flex           : 1;
+  min-width      : 140px;
+  display        : flex;
+  flex-direction : column;
+  align-items    : center;
+  gap            : 6px;
+  padding        : 12px 8px;
+  border-right   : 1px solid $border-soft;
+
+  &:last-child { border-right: none; }
+}
+
+.calBarbeiroAvatar {
+  width        : 36px;
+  height       : 36px;
+  border-radius: 50%;
+  display      : flex;
+  align-items  : center;
+  justify-content: center;
+  flex-shrink  : 0;
+
+  span {
+    font-family: $font-secondary;
+    font-size  : 13px;
+    font-weight: 700;
+    color      : #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    line-height: 1;
+  }
+}
+
+.calBarbeiroNome {
+  font-size  : 12px;
+  font-weight: 600;
+  color      : $ink-2;
+  text-align : center;
+}
+
+// Grade body
+.calBody {
+  display  : flex;
+  position : relative;
+}
+
+// Coluna de horas
+.calHours {
+  width      : 64px;
+  flex-shrink: 0;
+  border-right: 1px solid $border-soft;
+}
+
+.calHour {
+  display    : flex;
+  align-items: flex-start;
+  padding    : 6px 8px 0;
+  border-bottom: 1px solid $border-soft;
+
+  span {
+    font-family: $font-mono;
+    font-size  : 11px;
+    color      : $muted;
+    line-height: 1;
+  }
+}
+
+// Coluna de barbeiro
+.calCol {
+  flex    : 1;
+  min-width: 140px;
+  position: relative;
+  border-right: 1px solid $border-soft;
+
+  &:last-child { border-right: none; }
+}
+
+// Linha guia de hora (área clicável para novo agendamento)
+.calGuide {
+  position : absolute;
+  left     : 0;
+  right    : 0;
+  border-bottom: 1px solid $border-soft;
+  cursor   : pointer;
+  transition: background $transition-fast;
+
+  &:hover { background: rgba($orange-500, .04); }
+
+  // Linha de meia hora (tracejada)
+  &::after {
+    content : '';
+    position: absolute;
+    bottom  : 50%;
+    left    : 8px;
+    right   : 8px;
+    height  : 1px;
+    background: $border-soft;
+    border-style: dashed;
+  }
+}
+
+// Card de agendamento na grade
+.calCard {
+  position     : absolute;
+  left         : 3px;
+  right        : 3px;
+  border-radius: $r-sm;
+  border-left  : 3px solid transparent;
+  padding      : 4px 6px;
+  cursor       : pointer;
+  overflow     : hidden;
+  z-index      : 2;
+  transition   : opacity $transition-fast, box-shadow $transition-fast;
+  box-shadow   : $shadow-sm;
+
+  &:hover {
+    opacity   : 0.9;
+    box-shadow: $shadow-md;
+    z-index   : 3;
+  }
+
+  &:focus-visible { outline: 2px solid $orange-500; outline-offset: 2px; }
+}
+
+.calCardNome {
+  display      : block;
+  font-size    : 11px;
+  font-weight  : 700;
+  color        : inherit;
+  white-space  : nowrap;
+  overflow     : hidden;
+  text-overflow: ellipsis;
+  line-height  : 1.3;
+}
+
+.calCardServico {
+  display      : block;
+  font-size    : 10px;
+  color        : inherit;
+  opacity      : 0.75;
+  white-space  : nowrap;
+  overflow     : hidden;
+  text-overflow: ellipsis;
+}
+
+// Dot pulsante no card em atendimento
+.calCardPulse {
+  display      : block;
+  width        : 6px;
+  height       : 6px;
+  border-radius: 50%;
+  background   : #FF6B2C;
+  position     : absolute;
+  top          : 5px;
+  right        : 5px;
+  animation    : pulse 1.8s ease-in-out infinite;
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.45; transform: scale(0.7); }
+  }
+}
+
+// Linha do "agora"
+.nowLine {
+  position: absolute;
+  left    : 0;
+  right   : 0;
+  height  : 2px;
+  background: $orange-500;
+  z-index : 5;
+  pointer-events: none;
+  box-shadow: 0 0 6px rgba(255,107,44,.5);
+}
+
+.nowDot {
+  width        : 10px;
+  height       : 10px;
+  border-radius: 50%;
+  background   : $orange-500;
+  position     : absolute;
+  left         : -5px;
+  top          : 50%;
+  transform    : translateY(-50%);
+  box-shadow   : 0 0 8px rgba(255,107,44,.6);
+  animation    : nowPulse 2s ease-in-out infinite;
+
+  @keyframes nowPulse {
+    0%, 100% { box-shadow: 0 0 8px rgba(255,107,44,.6); }
+    50%       { box-shadow: 0 0 16px rgba(255,107,44,.9); }
+  }
+}
+
+// ════════════════════════════════════════════════════════════
+//  SLOT PICKER
+// ════════════════════════════════════════════════════════════
+
+.slotGrid {
+  display              : grid;
+  grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+  gap                  : 6px;
+  margin-top           : 4px;
+}
+
+.slot {
+  padding      : 9px 6px;
+  border-radius: $r-sm;
+  border       : 1.5px solid $border;
+  background   : $surface;
+  color        : $ink-2;
+  font-family  : $font-mono;
+  font-size    : 13px;
+  font-weight  : 600;
+  cursor       : pointer;
+  text-align   : center;
+  transition   : background $transition-fast, border-color $transition-fast,
+                 color $transition-fast, transform 0.1s;
+
+  &:hover {
+    background  : $surface-warm;
+    border-color: $border-strong;
+    color       : $ink;
+  }
+
+  &:active { transform: scale(0.96); }
+  &:focus-visible { outline: 2px solid $orange-500; outline-offset: 2px; }
+}
+
+.slot--selected {
+  background  : $brown-600 !important;
+  border-color: $brown-600 !important;
+  color       : $brown-50 !important;
+  box-shadow  : $shadow-sm;
+}
+
+.slotSkeleton {
+  height       : 38px;
+  border-radius: $r-sm;
+  background   : linear-gradient(
+    90deg, $surface-2 25%, $border-soft 50%, $surface-2 75%
+  );
+  background-size: 300% 100%;
+  animation      : shimmer 1.5s ease infinite;
+
+  @keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+}
+
+.slotEmpty {
+  display        : flex;
+  align-items    : center;
+  gap            : 8px;
+  padding        : 16px;
+  border-radius  : $r-md;
+  background     : $surface-2;
+  border         : 1px solid $border;
+  color          : $muted;
+  font-size      : 13px;
+
+  i { font-size: 18px; flex-shrink: 0; }
+}
+
+.slotConfirm {
+  display    : flex;
+  align-items: center;
+  gap        : 6px;
+  font-size  : 13px;
+  font-weight: 600;
+  color      : $success;
+  padding    : 8px 12px;
+  border-radius: $r-sm;
+  background : $success-bg;
+  border     : 1px solid rgba($success, .25);
+  margin-top : 4px;
+
+  i { font-size: 16px; }
+}
+
+.noSlots {
+  display    : flex;
+  align-items: center;
+  gap        : 6px;
+  font-size  : 13px;
+  color      : $warn;
+  margin-bottom: 4px;
+
+  i { font-size: 15px; }
+}
+
+// ════════════════════════════════════════════════════════════
+//  AGENDA DRAWER
+// ════════════════════════════════════════════════════════════
+
+.drawerForm {
+  display       : flex;
+  flex-direction: column;
+  gap           : 18px;
+}
+
+.drawerFooter {
+  display    : flex;
+  align-items: center;
+  gap        : 8px;
+  flex-wrap  : wrap;
+  justify-content: flex-end;
+  width      : 100%;
+}
+
+// ── Campo genérico ────────────────────────────────────────────
+
+.field {
+  display       : flex;
+  flex-direction: column;
+  gap           : 6px;
+}
+
+.fieldRow {
+  margin-top: 6px;
+}
+
+.fieldLabel {
+  font-size     : 12px;
+  font-weight   : 600;
+  color         : $ink-2;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.req {
+  color: $orange-500;
+}
+
+.input {
+  padding      : 11px 13px;
+  border       : 1.5px solid $border;
+  border-radius: $r-md;
+  background   : $surface;
+  color        : $ink;
+  font-family  : $font-primary;
+  font-size    : 14px;
+  outline      : none;
+  transition   : border-color $transition-fast, box-shadow $transition-fast;
+  width        : 100%;
+
+  &::placeholder { color: $muted-2; }
+  &:focus {
+    border-color: $brown-400;
+    box-shadow  : 0 0 0 3px rgba($brown-400, .1);
+  }
+  &:disabled { background: $surface-2; cursor: not-allowed; color: $muted; }
+}
+
+.select {
+  @extend .input;
+  cursor: pointer;
+
+  option { background: $surface; }
+}
+
+.textarea {
+  @extend .input;
+  resize    : vertical;
+  min-height: 80px;
+  line-height: 1.6;
+}
+
+// ── Origem ────────────────────────────────────────────────────
+
+.origemGrid {
+  display              : grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap                  : 6px;
+}
+
+.origemBtn {
+  padding      : 8px 6px;
+  border-radius: $r-sm;
+  border       : 1.5px solid $border;
+  background   : $surface;
+  color        : $ink-2;
+  font-family  : $font-primary;
+  font-size    : 12px;
+  font-weight  : 500;
+  cursor       : pointer;
+  text-align   : center;
+  transition   : background $transition-fast, border-color $transition-fast,
+                 color $transition-fast;
+
+  &:hover { background: $surface-warm; border-color: $border-strong; }
+  &:focus-visible { outline: 2px solid $orange-500; outline-offset: 2px; }
+}
+
+.origemBtn--active {
+  background  : $brown-600;
+  border-color: $brown-600;
+  color       : $brown-50;
+  font-weight : 600;
+}
+
+// ── Autocomplete de cliente ───────────────────────────────────
+
+.autocomplete {
+  position: relative;
+}
+
+.autocompleteLoading {
+  position   : absolute;
+  right      : 12px;
+  top        : 50%;
+  transform  : translateY(-50%);
+  color      : $muted;
+  font-size  : 16px;
+  pointer-events: none;
+}
+
+.autocompleteList {
+  position  : absolute;
+  top       : calc(100% + 4px);
+  left      : 0;
+  right     : 0;
+  z-index   : 50;
+  background: $surface;
+  border    : 1px solid $border-strong;
+  border-radius: $r-md;
+  box-shadow: $shadow-lg;
+  list-style: none;
+  overflow  : hidden;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.autocompleteItem {
+  display        : flex;
+  align-items    : center;
+  justify-content: space-between;
+  gap            : 8px;
+  padding        : 10px 14px;
+  cursor         : pointer;
+  border-bottom  : 1px solid $border-soft;
+  transition     : background $transition-fast;
+
+  &:last-child { border-bottom: none; }
+  &:hover, &[aria-selected="true"] { background: $surface-warm; }
+  &:focus-visible { outline: 2px solid $orange-500; outline-offset: -2px; }
+}
+
+.autoName {
+  font-size  : 13px;
+  font-weight: 600;
+  color      : $ink;
+}
+
+.autoPhone {
+  font-size : 12px;
+  color     : $muted;
+  white-space: nowrap;
+}
+
+// ── Bloco de detalhe (read-only) ──────────────────────────────
+
+.detailBlock {
+  display       : flex;
+  flex-direction: column;
+  gap           : 0;
+  border        : 1px solid $border-soft;
+  border-radius : $r-md;
+  overflow      : hidden;
+}
+
+.detailRow {
+  display        : flex;
+  align-items    : center;
+  justify-content: space-between;
+  gap            : 12px;
+  padding        : 11px 14px;
+  border-bottom  : 1px solid $border-soft;
+
+  &:last-child { border-bottom: none; }
+
+  &:nth-child(even) { background: $surface-warm; }
+}
+
+.detailLabel {
+  font-size     : 11px;
+  font-weight   : 600;
+  color         : $muted;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space   : nowrap;
+}
+
+.detailVal {
+  font-size : 13px;
+  color     : $ink;
+  text-align: right;
+  word-break: break-word;
+}
+
+.detailValor {
+  font-family: $font-mono;
+  font-weight: 700;
+  color      : $ink;
+}
+
+// ════════════════════════════════════════════════════════════
+//  RESPONSIVIDADE
+// ════════════════════════════════════════════════════════════
+
+@media (max-width: 768px) {
+  .body { padding: 16px 16px 32px; }
+
+  // Grade só em desktop — esconde toggle e força lista
+  .viewToggle { display: none; }
+
+  .filters { gap: 8px; }
+  .filterSelect { max-width: 140px; font-size: 12px; }
+
+  .dateLabel { font-size: 14px; }
+}
+
+@media (max-width: 600px) {
+  .origemGrid { grid-template-columns: repeat(2, 1fr); }
+  .filterChips { gap: 4px; }
+  .chip { padding: 5px 10px; font-size: 11px; }
+}
+
+@media (max-width: 480px) {
+  .body { padding: 14px 14px 28px; gap: 12px; }
+  .dateNav { padding: 10px 12px; gap: 8px; }
+  .dateNavBtn { width: 32px; height: 32px; }
+  .dateLabel { font-size: 13px; }
+
+  .slotGrid { grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); }
+  .slot { font-size: 12px; padding: 8px 4px; }
+}
+
+@media (max-width: 360px) {
+  .body { padding: 12px 12px 24px; }
+
+  .filterRight { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .filterSelect { max-width: 100%; width: 100%; }
+
+  .origemGrid { grid-template-columns: 1fr 1fr; }
+
+  .autocompleteList { max-height: 180px; }
+}
+
+@media (max-width: 320px) {
+  .body { padding: 10px 10px 20px; gap: 10px; }
+  .dateNav { padding: 8px 10px; }
+  .dateLabel { font-size: 12px; }
+  .filterChips { display: none; } // muitos chips — esconde em 320px
+  .chip { font-size: 10px; padding: 4px 8px; }
+  .slotGrid { grid-template-columns: repeat(3, 1fr); }
+  .drawerForm { gap: 14px; }
+}

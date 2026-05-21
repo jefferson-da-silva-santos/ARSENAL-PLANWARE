@@ -14,9 +14,11 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        // Injeta _variables.scss em TODOS os .module.scss
-        // sem precisar importar manualmente em cada arquivo
-        additionalData: `@use "@/assets/styles/variables" as *;`,
+        // 1. Aponta o caminho absoluto exato até o arquivo com underline
+        additionalData: `@use "${path.resolve(__dirname, 'src/assets/styles/_variables.scss').replace(/\\/g, '/')}" as *;`,
+        
+        // 2. Garante que o Sass saiba olhar para dentro da sua pasta de estilos em qualquer nível de importação
+        includePaths: [path.resolve(__dirname, 'src/assets/styles')],
       },
     },
   },

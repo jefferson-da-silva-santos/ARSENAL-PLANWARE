@@ -1,0 +1,157 @@
+// ════════════════════════════════════════════════════════════
+//  Fidelidade.module.scss — Navalha 22
+// ════════════════════════════════════════════════════════════
+
+.page { min-height: 100%; display: flex; flex-direction: column; }
+.body { padding: 20px $content-px 40px; display: flex; flex-direction: column; gap: 16px; flex: 1; }
+
+.headerActions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+
+.kpiRow { display: grid; grid-template-columns: repeat(3, 1fr); gap: $gap-md; }
+
+// ── Tabs ──────────────────────────────────────────────────────
+.tabs { display: flex; gap: 2px; border-bottom: 1px solid $border-soft; padding-bottom: 0; }
+
+.tab {
+  display: flex; align-items: center; gap: 6px; padding: 10px 16px;
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  font-family: $font-primary; font-size: 13px; font-weight: 500; color: $muted;
+  cursor: pointer; background: transparent; border-top: none; border-left: none; border-right: none;
+  transition: color $transition-fast, border-color $transition-fast; white-space: nowrap;
+  i { font-size: 16px; }
+  &:hover { color: $ink; }
+}
+
+.tab--active { color: $ink; border-bottom-color: $orange-500; font-weight: 600; }
+
+// ── Grid de recompensas ───────────────────────────────────────
+.recompensasGrid { display: flex; flex-direction: column; gap: 8px; }
+
+.recompCard {
+  display: flex; align-items: center; gap: 14px; padding: 16px 18px;
+  background: $surface; border-radius: $r-lg; border: 1px solid $border-soft;
+  box-shadow: $shadow-sm; transition: box-shadow $transition-fast;
+  &:hover { box-shadow: $shadow-md; }
+}
+
+.recompCard--inativa { opacity: 0.55; }
+
+.recompIcon {
+  width: 44px; height: 44px; border-radius: $r-md; background: $orange-50;
+  border: 1px solid $orange-100; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  i { font-size: 22px; color: $orange-600; }
+}
+
+.recompInfo { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px; }
+
+.recompNomeRow { display: flex; align-items: center; gap: 8px; }
+
+.recompNome { font-family: $font-secondary; font-size: 15px; font-weight: 700; color: $ink; letter-spacing: -0.02em; }
+
+.recompDesc { font-size: 12px; color: $muted; }
+
+.inativoTag {
+  padding: 2px 7px; border-radius: $r-pill; background: $danger-bg;
+  color: $danger; font-size: 10px; font-weight: 700; border: 1px solid rgba($danger, .2);
+}
+
+.recompPontos {
+  display: flex; flex-direction: column; align-items: flex-end; gap: 1px; flex-shrink: 0;
+}
+
+.pontosVal { font-family: $font-mono; font-size: 22px; font-weight: 800; color: $ink; line-height: 1; }
+.pontosLabel { font-size: 10px; color: $muted; text-transform: uppercase; letter-spacing: 0.06em; }
+
+.recompActions { display: flex; gap: 4px; flex-shrink: 0; }
+
+.actionBtn {
+  width: 30px; height: 30px; border-radius: $r-xs; border: 1px solid $border;
+  background: transparent; color: $muted; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background $transition-fast, color $transition-fast;
+  i { font-size: 15px; }
+  &:hover { background: $surface-warm; color: $ink; border-color: $border-strong; }
+}
+
+// ── Ranking ───────────────────────────────────────────────────
+.searchWrap {
+  position: relative; display: flex; align-items: center;
+  > i:first-child { position: absolute; left: 12px; font-size: 16px; color: $muted-2; pointer-events: none; }
+}
+
+.searchInput {
+  width: 100%; max-width: 360px; padding: 9px 14px 9px 36px;
+  border: 1.5px solid $border; border-radius: $r-md; background: $surface;
+  font-family: $font-primary; font-size: 13px; color: $ink; outline: none;
+  transition: border-color $transition-fast;
+  &::placeholder { color: $muted-2; }
+  &:focus { border-color: $border-strong; }
+}
+
+.rankingCard {
+  background: $surface; border-radius: $r-lg; border: 1px solid $border-soft;
+  box-shadow: $shadow-sm; overflow: hidden;
+}
+
+.rankItem {
+  display: flex; align-items: center; gap: 12px; padding: 13px 18px;
+  border-bottom: 1px solid $border-soft; transition: background $transition-fast;
+  &:last-child { border-bottom: none; }
+  &:hover { background: $surface-warm; }
+}
+
+.rankItem--top { background: linear-gradient(135deg, rgba(255,107,44,.03), transparent 60%); }
+
+.rankPos {
+  width: 28px; height: 28px; border-radius: $r-xs; background: $surface-2;
+  border: 1px solid $border; display: flex; align-items: center; justify-content: center;
+  font-family: $font-mono; font-size: 12px; font-weight: 700; color: $muted; flex-shrink: 0;
+  i { font-size: 13px; }
+}
+
+.rankPos--1 { background: #C58524; border-color: #C58524; color: #fff; }
+.rankPos--2 { background: $muted;  border-color: $muted;  color: #fff; }
+.rankPos--3 { background: $brown-400; border-color: $brown-400; color: #fff; }
+
+.rankAvatar {
+  width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  span { font-family: $font-secondary; font-size: 13px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.2); }
+}
+
+.rankInfo { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+
+.rankNome { font-size: 13px; font-weight: 600; color: $ink; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rankMeta { font-size: 11px; color: $muted; }
+
+.rankPontos { display: flex; flex-direction: column; align-items: flex-end; gap: 1px; flex-shrink: 0; }
+.rankPontosVal { font-family: $font-mono; font-size: 18px; font-weight: 800; color: $ink; line-height: 1; }
+.rankPontosLabel { font-size: 10px; color: $muted; text-transform: uppercase; letter-spacing: 0.05em; }
+
+// ── Formulários ───────────────────────────────────────────────
+.form { display: flex; flex-direction: column; gap: 14px; }
+.formRow { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 5px; }
+.label { font-size: 11px; font-weight: 600; color: $ink-2; text-transform: uppercase; letter-spacing: 0.05em; }
+.req { color: $orange-500; }
+
+.input {
+  padding: 10px 12px; border: 1.5px solid $border; border-radius: $r-md;
+  background: $surface; font-family: $font-primary; font-size: 14px; color: $ink; outline: none; width: 100%;
+  transition: border-color $transition-fast, box-shadow $transition-fast;
+  &::placeholder { color: $muted-2; }
+  &:focus { border-color: $brown-400; box-shadow: 0 0 0 3px rgba($brown-400, .1); }
+  &:disabled { background: $surface-2; cursor: not-allowed; }
+}
+
+.select { @extend .input; cursor: pointer; option { background: $surface; } }
+.formActions { display: flex; justify-content: flex-end; gap: 8px; padding-top: 4px; }
+
+// ── Responsividade ────────────────────────────────────────────
+@media (max-width: 768px) { .body { padding: 16px 16px 32px; } }
+@media (max-width: 640px) { .kpiRow { grid-template-columns: 1fr 1fr; } .headerActions { width: 100%; } }
+@media (max-width: 480px) {
+  .body { padding: 14px 14px 28px; } .kpiRow { grid-template-columns: 1fr; }
+  .recompCard { flex-wrap: wrap; } .recompActions { width: 100%; justify-content: flex-end; }
+}
+@media (max-width: 360px) { .formRow { grid-template-columns: 1fr; } }
+@media (max-width: 320px) { .body { padding: 10px 10px 20px; } .rankItem { gap: 8px; padding: 10px 12px; } }

@@ -1,0 +1,124 @@
+// ════════════════════════════════════════════════════════════
+//  Assinaturas.module.scss — Navalha 22
+// ════════════════════════════════════════════════════════════
+
+.page { min-height: 100%; display: flex; flex-direction: column; }
+.body { padding: 20px $content-px 40px; display: flex; flex-direction: column; gap: 16px; flex: 1; }
+
+.kpiRow { display: grid; grid-template-columns: repeat(3, 1fr); gap: $gap-md; }
+
+.toolbar { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.chip {
+  padding: 7px 14px; border-radius: $r-pill; border: 1px solid $border;
+  background: $surface; color: $muted; font-family: $font-primary;
+  font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap;
+  transition: background $transition-fast, color $transition-fast, border-color $transition-fast;
+  &:hover { background: $surface-warm; color: $ink; }
+}
+.chip--active { background: $brown-600; border-color: $brown-600; color: $brown-50; font-weight: 600; }
+
+// ── Grid de cards ─────────────────────────────────────────────
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: $gap-lg; }
+
+// ── Card de assinatura ────────────────────────────────────────
+.assinaturaCard {
+  background: $surface; border-radius: $r-lg; border: 1px solid $border-soft;
+  box-shadow: $shadow-sm; padding: 18px; display: flex; flex-direction: column; gap: 14px;
+  transition: box-shadow $transition-fast, transform $transition-fast;
+  &:hover { box-shadow: $shadow-md; transform: translateY(-1px); }
+}
+
+.assinaturaCard--inativa { opacity: 0.6; }
+
+.assinaturaHead { display: flex; align-items: center; gap: 12px; }
+
+.assinaturaAvatar {
+  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  span { font-family: $font-secondary; font-size: 15px; font-weight: 700; color: #fff; text-shadow: 0 1px 2px rgba(0,0,0,.2); }
+}
+
+.assinaturaInfo { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+
+.assinaturaCliente { font-size: 14px; font-weight: 700; color: $ink; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.assinaturaNome    { font-size: 12px; color: $muted; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+// ── Créditos ──────────────────────────────────────────────────
+.creditos { display: flex; flex-direction: column; gap: 6px; }
+
+.creditosHeader { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+
+.creditosLabel { font-size: 12px; color: $muted; }
+
+.creditosVal {
+  font-size: 13px; color: $muted;
+  b { font-family: $font-mono; font-size: 16px; font-weight: 800; color: $ink; }
+}
+
+.creditosBar {
+  height: 6px; border-radius: $r-pill; background: $border-soft; overflow: hidden;
+}
+
+.creditosFill { height: 100%; border-radius: $r-pill; transition: width 0.6s ease; }
+
+// ── Renovação ─────────────────────────────────────────────────
+.assinaturaRenova {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 10px 12px; background: $surface-warm; border-radius: $r-md; border: 1px solid $border;
+}
+
+.renovaLabel {
+  display: flex; align-items: center; gap: 5px; font-size: 12px; color: $muted;
+  i { font-size: 14px; color: $warn; }
+}
+
+.renovaLabelWarn { color: $warn; font-weight: 600; }
+
+.renovaValor { font-family: $font-mono; font-size: 13px; font-weight: 700; color: $ink; white-space: nowrap; flex-shrink: 0; }
+
+// ── Ações ─────────────────────────────────────────────────────
+.assinaturaActions { display: flex; gap: 6px; flex-wrap: wrap; }
+
+// ── Formulário ────────────────────────────────────────────────
+.form { display: flex; flex-direction: column; gap: 14px; }
+.formRow { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 5px; }
+.label { font-size: 11px; font-weight: 600; color: $ink-2; text-transform: uppercase; letter-spacing: 0.05em; }
+.req { color: $orange-500; }
+.fieldHint { font-size: 11px; color: $muted; margin-top: -2px; }
+
+.input {
+  padding: 10px 12px; border: 1.5px solid $border; border-radius: $r-md;
+  background: $surface; font-family: $font-primary; font-size: 14px; color: $ink; outline: none; width: 100%;
+  transition: border-color $transition-fast, box-shadow $transition-fast;
+  &::placeholder { color: $muted-2; }
+  &:focus { border-color: $brown-400; box-shadow: 0 0 0 3px rgba($brown-400, .1); }
+  &:disabled { background: $surface-2; cursor: not-allowed; }
+}
+
+.select { @extend .input; cursor: pointer; option { background: $surface; } }
+.textarea { @extend .input; resize: vertical; min-height: 70px; line-height: 1.6; }
+
+.servicosGrid { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.servicoBtn {
+  display: flex; align-items: center; gap: 6px; padding: 7px 12px;
+  border-radius: $r-pill; border: 1.5px solid $border; background: $surface;
+  color: $muted; font-family: $font-primary; font-size: 12px; font-weight: 500; cursor: pointer;
+  transition: background $transition-fast, color $transition-fast, border-color $transition-fast;
+  span { font-family: $font-mono; font-size: 11px; }
+  &:hover { background: $surface-warm; color: $ink; }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+.servicoBtn--active { background: $brown-600; border-color: $brown-600; color: $brown-50; font-weight: 600; }
+
+.formActions { display: flex; justify-content: flex-end; gap: 8px; padding-top: 4px; }
+
+// ── Responsividade ────────────────────────────────────────────
+@media (max-width: 768px) { .body { padding: 16px 16px 32px; } }
+@media (max-width: 640px) { .kpiRow { grid-template-columns: 1fr 1fr; } .grid { grid-template-columns: 1fr; } }
+@media (max-width: 480px) { .body { padding: 14px 14px 28px; } .kpiRow { grid-template-columns: 1fr; } }
+@media (max-width: 360px) { .assinaturaActions { flex-direction: column; } }
+@media (max-width: 320px) { .body { padding: 10px 10px 20px; } }

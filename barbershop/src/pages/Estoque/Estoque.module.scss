@@ -1,0 +1,178 @@
+// ════════════════════════════════════════════════════════════
+//  Estoque.module.scss — Navalha 22
+// ════════════════════════════════════════════════════════════
+@use '../../assets/styles/variables' as *;
+
+.page { min-height: 100%; display: flex; flex-direction: column; }
+.body { padding: 20px $content-px 40px; display: flex; flex-direction: column; gap: 16px; flex: 1; }
+
+.kpiRow { display: grid; grid-template-columns: repeat(3, 1fr); gap: $gap-md; }
+
+// ── Toolbar ───────────────────────────────────────────────────
+.toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+.tabs { display: flex; gap: 4px; }
+
+.tab {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 14px; border-radius: $r-pill; border: 1px solid $border;
+  background: $surface; color: $muted; font-family: $font-primary;
+  font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap;
+  transition: background $transition-fast, color $transition-fast, border-color $transition-fast;
+  &:hover { background: $surface-warm; color: $ink; }
+}
+
+.tab--active { background: $brown-600; border-color: $brown-600; color: $brown-50; font-weight: 600; }
+
+.alertBadge {
+  padding: 1px 6px; border-radius: $r-pill; background: $danger;
+  color: #fff; font-size: 10px; font-weight: 700;
+}
+
+.searchWrap {
+  position: relative; display: flex; align-items: center; flex: 1; max-width: 320px;
+  > i:first-child { position: absolute; left: 12px; font-size: 16px; color: $muted-2; pointer-events: none; }
+}
+
+.searchInput {
+  width: 100%; padding: 9px 32px 9px 36px; border: 1.5px solid $border; border-radius: $r-md;
+  background: $surface; font-family: $font-primary; font-size: 13px; color: $ink; outline: none;
+  transition: border-color $transition-fast;
+  &::placeholder { color: $muted-2; }
+  &:focus { border-color: $border-strong; }
+}
+
+.searchClear {
+  position: absolute; right: 8px; width: 22px; height: 22px; border-radius: $r-xs;
+  border: none; background: transparent; color: $muted-2; display: flex; align-items: center;
+  justify-content: center; cursor: pointer; font-size: 16px;
+  &:hover { color: $ink; }
+}
+
+// ── Tabela ────────────────────────────────────────────────────
+.tableCard {
+  background: $surface; border-radius: $r-lg;
+  border: 1px solid $border-soft; box-shadow: $shadow-sm; overflow: hidden;
+}
+
+.tableWrap { overflow-x: auto; }
+
+.skeletonList { display: flex; flex-direction: column; }
+
+.table {
+  width: 100%; border-collapse: collapse; min-width: 560px;
+
+  thead tr { background: $surface-warm; border-bottom: 1px solid $border; }
+
+  th {
+    padding: 10px 14px; font-size: 11px; font-weight: 600; color: $muted;
+    text-transform: uppercase; letter-spacing: 0.07em; white-space: nowrap;
+    text-align: left;
+  }
+
+  tbody tr {
+    border-bottom: 1px solid $border-soft; transition: background $transition-fast;
+    &:last-child { border-bottom: none; }
+    &:hover td { background: $surface-warm; }
+  }
+
+  td {
+    padding: 12px 14px; font-size: 13px; color: $ink-2; vertical-align: middle;
+  }
+}
+
+.alignCenter { text-align: center !important; }
+.alignRight  { text-align: right !important;  }
+
+// ── Status de linha ───────────────────────────────────────────
+.rowCritico { border-left: 3px solid $danger !important; }
+.rowBaixo   { border-left: 3px solid $warn !important; }
+
+// ── Células ───────────────────────────────────────────────────
+.prodNome { display: flex; flex-direction: column; gap: 2px; }
+.prodNome > span:first-child { font-weight: 600; color: $ink; }
+
+.validade { font-size: 11px; color: $warn; }
+
+.categoria {
+  padding: 2px 8px; border-radius: $r-pill; background: $surface-2;
+  border: 1px solid $border; font-size: 11px; color: $muted; white-space: nowrap;
+}
+
+.qtd { font-family: $font-mono; font-size: 14px; font-weight: 700; color: $ink; }
+.qtdCritico { color: $danger; }
+.qtdBaixo   { color: $warn; }
+.qtdMin     { font-family: $font-mono; font-size: 12px; color: $muted; }
+.preco      { font-family: $font-mono; font-size: 13px; font-weight: 600; color: $ink; }
+
+.rowActions { display: flex; align-items: center; gap: 4px; justify-content: flex-end; }
+
+.actionBtn {
+  width: 28px; height: 28px; border-radius: $r-xs; border: 1px solid $border;
+  background: transparent; color: $muted; display: flex; align-items: center;
+  justify-content: center; cursor: pointer; transition: background $transition-fast, color $transition-fast;
+  i { font-size: 14px; }
+  &:hover { background: $surface-warm; color: $ink; border-color: $border-strong; }
+}
+
+// ── Formulários ───────────────────────────────────────────────
+.form { display: flex; flex-direction: column; gap: 14px; }
+.formRow { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.field { display: flex; flex-direction: column; gap: 5px; }
+
+.label {
+  font-size: 11px; font-weight: 600; color: $ink-2;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+
+.req { color: $orange-500; }
+
+.input {
+  padding: 10px 12px; border: 1.5px solid $border; border-radius: $r-md;
+  background: $surface; font-family: $font-primary; font-size: 14px; color: $ink;
+  outline: none; width: 100%;
+  transition: border-color $transition-fast, box-shadow $transition-fast;
+  &::placeholder { color: $muted-2; }
+  &:focus { border-color: $brown-400; box-shadow: 0 0 0 3px rgba($brown-400, .1); }
+  &:disabled { background: $surface-2; cursor: not-allowed; }
+}
+
+.select { @extend .input; cursor: pointer; option { background: $surface; } }
+.formActions { display: flex; justify-content: flex-end; gap: 8px; padding-top: 4px; }
+
+// ── Mov form ──────────────────────────────────────────────────
+.movInfo {
+  display: flex; align-items: center; gap: 12px; padding: 14px 16px;
+  background: $surface-warm; border-radius: $r-md; border: 1px solid $border;
+  > i { font-size: 22px; color: $orange-500; flex-shrink: 0; }
+  div { display: flex; flex-direction: column; gap: 3px; }
+  strong { font-size: 14px; font-weight: 700; color: $ink; }
+  span { font-size: 12px; color: $muted; b { color: $ink; font-weight: 600; } }
+}
+
+.tipoGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+
+.tipoBtn {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 10px 8px; border-radius: $r-sm; border: 1.5px solid $border;
+  background: $surface; color: $muted; font-family: $font-primary;
+  font-size: 12px; font-weight: 500; cursor: pointer;
+  transition: background $transition-fast, color $transition-fast, border-color $transition-fast;
+  i { font-size: 20px; }
+  &:hover { background: $surface-warm; color: $ink; }
+}
+
+.tipoBtn--entrada  { background: $success-bg; border-color: rgba($success, .3); color: $success; font-weight: 700; }
+.tipoBtn--saida    { background: $danger-bg;  border-color: rgba($danger, .3);  color: $danger;  font-weight: 700; }
+.tipoBtn--ajuste   { background: $info-bg;    border-color: rgba($info, .3);    color: $info;    font-weight: 700; }
+
+// ── Responsividade ────────────────────────────────────────────
+@media (max-width: 768px) { .body { padding: 16px 16px 32px; } }
+@media (max-width: 640px) {
+  .kpiRow { grid-template-columns: 1fr 1fr; }
+  .toolbar { flex-direction: column; align-items: stretch; }
+  .searchWrap { max-width: 100%; }
+}
+@media (max-width: 480px) { .body { padding: 14px 14px 28px; } .kpiRow { grid-template-columns: 1fr; } }
+@media (max-width: 360px) { .formRow { grid-template-columns: 1fr; } .tipoGrid { grid-template-columns: 1fr; } }
+@media (max-width: 320px) { .body { padding: 10px 10px 20px; } }

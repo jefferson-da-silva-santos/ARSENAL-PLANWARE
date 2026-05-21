@@ -1,0 +1,171 @@
+// ════════════════════════════════════════════════════════════
+//  Servicos.module.scss — Navalha 22
+// ════════════════════════════════════════════════════════════
+
+.page { min-height: 100%; display: flex; flex-direction: column; }
+
+.body {
+  padding: 20px $content-px 40px;
+  display: flex; flex-direction: column; gap: 16px; flex: 1;
+}
+
+.toolbar { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.chip {
+  padding: 7px 14px; border-radius: $r-pill; border: 1px solid $border;
+  background: $surface; color: $ink-2; font-family: $font-primary;
+  font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap;
+  transition: background $transition-fast, color $transition-fast, border-color $transition-fast;
+
+  &:hover { background: $surface-warm; border-color: $border-strong; }
+}
+
+.chip--active {
+  background: $brown-600; border-color: $brown-600; color: $brown-50; font-weight: 600;
+}
+
+// ── Grid de cards ─────────────────────────────────────────────
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: $gap-lg;
+}
+
+// ── Card de serviço ───────────────────────────────────────────
+
+.card {
+  position: relative; overflow: hidden;
+  background: $surface; border-radius: $r-lg;
+  border: 1px solid $border-soft; box-shadow: $shadow-sm;
+  transition: box-shadow $transition-fast, transform $transition-fast, border-color $transition-fast;
+
+  &:hover {
+    box-shadow: $shadow-md; transform: translateY(-2px);
+    border-color: $border-strong;
+  }
+}
+
+.card--inativo { opacity: 0.55; }
+
+.cardRadial {
+  position: absolute; top: 0; right: 0; width: 120px; height: 120px;
+  background: radial-gradient(circle at 100% 0%, rgba(255,107,44,.06), transparent 70%);
+  pointer-events: none;
+}
+
+.cardInner { position: relative; z-index: 1; padding: 18px 18px 16px; display: flex; flex-direction: column; gap: 10px; }
+
+.cardTop { display: flex; align-items: flex-start; justify-content: space-between; }
+
+.cardIcon {
+  width: 42px; height: 42px; border-radius: $r-md;
+  background: $orange-50; border: 1px solid $orange-100;
+  display: flex; align-items: center; justify-content: center;
+  i { font-size: 20px; color: $orange-600; }
+}
+
+.cardActions { display: flex; gap: 4px; }
+
+.actionBtn {
+  width: 28px; height: 28px; border-radius: $r-xs;
+  border: 1px solid $border; background: transparent; color: $muted;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background $transition-fast, color $transition-fast;
+
+  i { font-size: 14px; }
+  &:hover { background: $surface-warm; color: $ink; border-color: $border-strong; }
+}
+
+.actionBtn--danger:hover {
+  background: $danger-bg; color: $danger; border-color: rgba($danger, .3);
+}
+
+.cardNome {
+  font-family: $font-secondary; font-size: 16px; font-weight: 700;
+  color: $ink; letter-spacing: -0.02em; line-height: 1.2;
+}
+
+.cardDesc { font-size: 12px; color: $muted; line-height: 1.5; }
+
+.cardDivider { height: 1px; background: $border-soft; }
+
+.cardMeta { display: flex; gap: 12px; flex-wrap: wrap; }
+
+.cardMetaItem { display: flex; flex-direction: column; gap: 2px; }
+
+.cardMetaLabel { font-size: 10px; color: $muted; text-transform: uppercase; letter-spacing: 0.06em; }
+
+.cardMetaVal { font-family: $font-mono; font-size: 14px; font-weight: 700; color: $ink; }
+
+.cardFooter { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+
+.inativoTag {
+  font-size: 10px; font-weight: 600; padding: 2px 8px;
+  border-radius: $r-pill; background: $danger-bg;
+  color: $danger; border: 1px solid rgba($danger, .2);
+}
+
+// ── Formulário ────────────────────────────────────────────────
+
+.form { display: flex; flex-direction: column; gap: 16px; }
+
+.formRow { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; }
+
+.field { display: flex; flex-direction: column; gap: 5px; }
+
+.label {
+  font-size: 11px; font-weight: 600; color: $ink-2;
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+
+.req { color: $orange-500; }
+
+.input {
+  padding: 10px 12px; border: 1.5px solid $border; border-radius: $r-md;
+  background: $surface; font-family: $font-primary; font-size: 14px;
+  color: $ink; outline: none; width: 100%;
+  transition: border-color $transition-fast, box-shadow $transition-fast;
+
+  &::placeholder { color: $muted-2; }
+  &:focus { border-color: $brown-400; box-shadow: 0 0 0 3px rgba($brown-400, .1); }
+  &:disabled { background: $surface-2; cursor: not-allowed; }
+}
+
+.nivelGrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+
+.nivelBtn {
+  padding: 8px 6px; border-radius: $r-sm; border: 1.5px solid $border;
+  background: $surface; color: $ink-2; font-family: $font-primary;
+  font-size: 12px; font-weight: 500; cursor: pointer; text-align: center;
+  transition: background $transition-fast, border-color $transition-fast, color $transition-fast;
+
+  &:hover { background: $surface-warm; border-color: $border-strong; }
+}
+
+.nivelBtn--active {
+  background: $brown-600; border-color: $brown-600; color: $brown-50; font-weight: 600;
+}
+
+.formActions {
+  display: flex; justify-content: flex-end; gap: 8px;
+  padding-top: 4px; flex-wrap: wrap;
+}
+
+// ── Responsividade ────────────────────────────────────────────
+
+@media (max-width: 768px) { .body { padding: 16px 16px 32px; } }
+
+@media (max-width: 480px) {
+  .body { padding: 14px 14px 28px; }
+  .grid { grid-template-columns: 1fr 1fr; }
+  .nivelGrid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 360px) { .grid { grid-template-columns: 1fr; } .formRow { grid-template-columns: 1fr; } }
+
+@media (max-width: 320px) {
+  .body { padding: 10px 10px 20px; }
+  .cardInner { padding: 14px; }
+  .cardNome { font-size: 14px; }
+}
