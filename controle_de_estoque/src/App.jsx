@@ -143,104 +143,340 @@ const fmtDate  = iso => {
 
 // ─────────────────────────────────────────────
 // LOGIN PAGE
-// ─────────────────────────────────────────────
-function LoginPage({ toast }) {
-  const [email, setEmail]     = useState("");
-  const [password, setPass]   = useState("");
-  const [showPass, setShowPass] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const { theme, toggle }     = useTheme();
+// ───────────────────
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    if (!email.trim() || !password) { toast("Preencha e-mail e senha", "error"); return; }
-    setLoading(true);
+// Ícone de olho — SVG inline (sem dependência de lib de ícones)
+function EyeOpen()  { return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> }
+function EyeSlash() { return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg> }
+function IconBox()  { return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="20" height="20"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg> }
+function IconMail() { return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg> }
+function IconLock() { return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> }
+function IconSend() { return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> }
+function IconSun()  { return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14" height="14"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg> }
+function IconMoon() { return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="14" height="14"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg> }
+
+export function LoginPage({ onLogin, onForgot, theme, onToggleTheme }) {
+  const [view,     setView]     = useState('login')   // 'login' | 'forgot'
+  const [email,    setEmail]    = useState('')
+  const [senha,    setSenha]    = useState('')
+  const [showPass, setShowPass] = useState(false)
+  const [loading,  setLoading]  = useState(false)
+  const [erro,     setErro]     = useState('')
+  const [sucesso,  setSucesso]  = useState('')
+
+  const emailRef  = useRef(null)
+  const forgotRef = useRef(null)
+
+  // Foca o campo correto e limpa mensagens ao trocar de view
+  useEffect(() => {
+    setErro('')
+    setSucesso('')
+    if (view === 'login')  setTimeout(() => emailRef.current?.focus(),  350)
+    if (view === 'forgot') setTimeout(() => forgotRef.current?.focus(), 350)
+  }, [view])
+
+  // ── Login ──────────────────────────────────────────────────
+  async function handleLogin(e) {
+    e.preventDefault()
+    setErro('')
+    if (!email.trim()) { setErro('Informe seu e-mail'); return }
+    if (!senha)         { setErro('Informe sua senha');  return }
+
+    setLoading(true)
     try {
-      const { accessToken, user } = await apiLogin(email.trim(), password);
-      const hasAccess = user.role === "SUPERADMIN" || user.permissions?.includes("STOCKPRO");
-      if (!hasAccess) { toast("Você não tem acesso ao StockPro", "error"); return; }
-      doLogin(accessToken, user);
-      toast(`Bem-vindo, ${user.name}!`);
+      await onLogin(email.trim().toLowerCase(), senha)
     } catch (err) {
-      toast(err.message, "error");
+      setErro(err.message || 'Credenciais inválidas')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
   }
 
+  // ── Recuperação de senha ───────────────────────────────────
+  async function handleForgot(e) {
+    e.preventDefault()
+    setErro('')
+    if (!email.trim()) { setErro('Informe seu e-mail'); return }
+
+    setLoading(true)
+    try {
+      if (onForgot) {
+        await onForgot(email.trim().toLowerCase())
+      } else {
+        // fallback: simula delay
+        await new Promise(r => setTimeout(r, 900))
+      }
+      setSucesso('Se o e-mail estiver cadastrado, você receberá as instruções em breve.')
+    } catch (err) {
+      setErro(err.message || 'Erro ao solicitar recuperação. Tente novamente.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const isForgot = view === 'forgot'
+
   return (
-    <div className="login-page">
-      <div className="login-bg">
-        <div className="login-blob login-blob-1" />
-        <div className="login-blob login-blob-2" />
+    <div className="sp-lp-root">
+      {/* Blobs de fundo — reutiliza variáveis do design system */}
+      <div className="sp-lp-blobs" aria-hidden="true">
+        <div className="sp-lp-blob sp-lp-blob--1" />
+        <div className="sp-lp-blob sp-lp-blob--2" />
+        <div className="sp-lp-blob sp-lp-blob--3" />
       </div>
 
-      <div className="login-card">
-        <div className="login-logo">
-          <div className="login-logo-icon"><Package /></div>
-          <div>
-            <div className="login-logo-name">StockPro</div>
-            <div className="login-logo-sub">Inventory Management</div>
-          </div>
-        </div>
+      <div className="sp-lp-group">
 
-        <h2 className="login-title">Entrar na conta</h2>
-        <p className="login-subtitle">Use suas credenciais Planware</p>
+        {/* ════════════════════════════════════════
+            BANNER — desliza conforme o view
+        ════════════════════════════════════════ */}
+        <aside className={`sp-lp-banner ${isForgot ? 'sp-lp-banner--right' : 'sp-lp-banner--left'}`}>
 
-        <form className="login-form" onSubmit={handleSubmit}>
-          <div className="login-field">
-            <label>E-mail</label>
-            <div className="login-input-wrap">
-              <svg className="login-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-              <input
-                type="email"
-                className="login-input"
-                placeholder="seu@email.com"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                required autoFocus autoComplete="email"
-              />
+          {/* Malha de pontos decorativos */}
+          <div className="sp-lp-banner-grid" aria-hidden="true" />
+
+          {/* Círculos de brilho */}
+          <div className="sp-lp-glow sp-lp-glow--tl" aria-hidden="true" />
+          <div className="sp-lp-glow sp-lp-glow--br" aria-hidden="true" />
+
+          <div className="sp-lp-banner-inner">
+            {/* Logo / marca */}
+            <div className="sp-lp-brand">
+              <div className="sp-lp-brand-icon">
+                <IconBox />
+              </div>
+              <div className="sp-lp-brand-text">
+                <span className="sp-lp-brand-name">StockPro</span>
+                <span className="sp-lp-brand-sub">Inventory Management</span>
+              </div>
             </div>
-          </div>
 
-          <div className="login-field">
-            <label>Senha</label>
-            <div className="login-input-wrap">
-              <svg className="login-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-              <input
-                type={showPass ? "text" : "password"}
-                className="login-input login-input--has-right"
-                placeholder="••••••••"
-                value={password}
-                onChange={e => setPass(e.target.value)}
-                required autoComplete="current-password"
-              />
-              <button type="button" className="login-eye-btn" onClick={() => setShowPass(s => !s)} tabIndex={-1}>
-                {showPass
-                  ? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
-                  : <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            {/* Conteúdo varia por view */}
+            {!isForgot ? (
+              <>
+                <h1 className="sp-lp-banner-title">
+                  Controle total do seu estoque.
+                </h1>
+                <p className="sp-lp-banner-text">
+                  Movimentações, alertas de reposição e relatórios em tempo real.
+                </p>
+                {/* Chips de feature */}
+                <div className="sp-lp-chips">
+                  {['Entrada & saída', 'Alertas de estoque', 'Histórico completo'].map(chip => (
+                    <span key={chip} className="sp-lp-chip">{chip}</span>
+                  ))}
+                </div>
+                <a
+                  href="mailto:suporte@planware.com.br?subject=Solicitar acesso StockPro"
+                  className="sp-lp-banner-btn"
+                  aria-label="Solicitar acesso ao StockPro"
+                >
+                  Solicitar acesso →
+                </a>
+              </>
+            ) : (
+              <>
+                <h1 className="sp-lp-banner-title">
+                  Recuperar<br />acesso.
+                </h1>
+                <p className="sp-lp-banner-text">
+                  Enviaremos as instruções de redefinição para o seu e-mail cadastrado.
+                </p>
+                <button
+                  className="sp-lp-banner-btn"
+                  onClick={() => setView('login')}
+                >
+                  ← Voltar ao login
+                </button>
+              </>
+            )}
+          </div>
+        </aside>
+
+        {/* ════════════════════════════════════════
+            FORMULÁRIO — lado oposto ao banner
+        ════════════════════════════════════════ */}
+        <div className={`sp-lp-form-panel ${isForgot ? 'sp-lp-form-panel--left' : 'sp-lp-form-panel--right'}`}>
+
+          {/* ── LOGIN ── */}
+          {!isForgot && (
+            <form
+              className="sp-lp-form"
+              onSubmit={handleLogin}
+              noValidate
+              aria-label="Formulário de login StockPro"
+            >
+              <div className="sp-lp-form-header">
+                <h2 className="sp-lp-form-title">Entrar na conta</h2>
+                <p className="sp-lp-form-sub">Use suas credenciais Planware</p>
+              </div>
+
+              {erro && (
+                <div className="sp-lp-alert sp-lp-alert--error" role="alert">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  <span>{erro}</span>
+                </div>
+              )}
+
+              {/* E-mail */}
+              <div className="sp-lp-field">
+                <label htmlFor="sp-email" className="sp-lp-label">E-mail</label>
+                <div className="sp-lp-input-wrap">
+                  <span className="sp-lp-input-icon" aria-hidden="true"><IconMail /></span>
+                  <input
+                    ref={emailRef}
+                    id="sp-email"
+                    type="email"
+                    className="sp-lp-input"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    placeholder="seu@email.com"
+                    autoComplete="email"
+                    required
+                    disabled={loading}
+                  />
+                </div>
+              </div>
+
+              {/* Senha */}
+              <div className="sp-lp-field">
+                <label htmlFor="sp-senha" className="sp-lp-label">Senha</label>
+                <div className="sp-lp-input-wrap">
+                  <span className="sp-lp-input-icon" aria-hidden="true"><IconLock /></span>
+                  <input
+                    id="sp-senha"
+                    type={showPass ? 'text' : 'password'}
+                    className="sp-lp-input sp-lp-input--padded-right"
+                    value={senha}
+                    onChange={e => setSenha(e.target.value)}
+                    placeholder="••••••••"
+                    autoComplete="current-password"
+                    required
+                    disabled={loading}
+                  />
+                  <button
+                    type="button"
+                    className="sp-lp-eye-btn"
+                    onClick={() => setShowPass(s => !s)}
+                    tabIndex={-1}
+                    aria-label={showPass ? 'Ocultar senha' : 'Mostrar senha'}
+                  >
+                    {showPass ? <EyeSlash /> : <EyeOpen />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Esqueceu */}
+              <button
+                type="button"
+                className="sp-lp-link-btn"
+                onClick={() => setView('forgot')}
+              >
+                Esqueceu sua senha?
+              </button>
+
+              {/* Submit */}
+              <button
+                type="submit"
+                className="sp-lp-submit-btn"
+                disabled={loading}
+                aria-busy={loading}
+              >
+                {loading
+                  ? <span className="sp-lp-spinner" aria-hidden="true" />
+                  : <><IconBox /> Entrar</>
                 }
               </button>
-            </div>
-          </div>
 
-          <button type="submit" className="login-submit-btn" disabled={loading}>
-            {loading
-              ? <Loader2 style={{ width: 18, height: 18, animation: "spin 1s linear infinite" }} />
-              : <><Package style={{ width: 16, height: 16 }} /> Entrar</>
-            }
-          </button>
-        </form>
+              {/* Toggle tema */}
+              {onToggleTheme && (
+                <button
+                  type="button"
+                  className="sp-lp-theme-btn"
+                  onClick={onToggleTheme}
+                >
+                  {theme === 'dark' ? <><IconSun /> Modo claro</> : <><IconMoon /> Modo escuro</>}
+                </button>
+              )}
+            </form>
+          )}
 
-        <button className="login-theme-btn" onClick={toggle}>
-          {theme === "dark"
-            ? <><Sun style={{ width: 14, height: 14 }} /> Modo claro</>
-            : <><Moon style={{ width: 14, height: 14 }} /> Modo escuro</>
-          }
-        </button>
+          {/* ── ESQUECEU SENHA ── */}
+          {isForgot && (
+            <form
+              className="sp-lp-form"
+              onSubmit={handleForgot}
+              noValidate
+              aria-label="Formulário de recuperação de senha"
+            >
+              <div className="sp-lp-form-header">
+                <h2 className="sp-lp-form-title">Recuperar senha</h2>
+                <p className="sp-lp-form-sub">
+                  Informe seu e-mail e enviaremos as instruções.
+                </p>
+              </div>
+
+              {erro && (
+                <div className="sp-lp-alert sp-lp-alert--error" role="alert">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                  <span>{erro}</span>
+                </div>
+              )}
+
+              {sucesso && (
+                <div className="sp-lp-alert sp-lp-alert--success" role="status">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" width="16" height="16" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  <span>{sucesso}</span>
+                </div>
+              )}
+
+              <div className="sp-lp-field">
+                <label htmlFor="sp-forgot-email" className="sp-lp-label">E-mail</label>
+                <div className="sp-lp-input-wrap">
+                  <span className="sp-lp-input-icon" aria-hidden="true"><IconMail /></span>
+                  <input
+                    ref={forgotRef}
+                    id="sp-forgot-email"
+                    type="email"
+                    className="sp-lp-input"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    placeholder="seu@email.com"
+                    autoComplete="email"
+                    required
+                    disabled={loading || !!sucesso}
+                  />
+                </div>
+              </div>
+
+              {!sucesso && (
+                <button
+                  type="submit"
+                  className="sp-lp-submit-btn"
+                  disabled={loading}
+                  aria-busy={loading}
+                >
+                  {loading
+                    ? <span className="sp-lp-spinner" aria-hidden="true" />
+                    : <><IconSend /> Enviar instruções</>
+                  }
+                </button>
+              )}
+
+              <button
+                type="button"
+                className="sp-lp-link-btn"
+                onClick={() => { setView('login'); setSucesso('') }}
+              >
+                ← Voltar ao login
+              </button>
+            </form>
+          )}
+        </div>
+
       </div>
     </div>
-  );
+  )
 }
 
 // ─────────────────────────────────────────────

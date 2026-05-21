@@ -30,6 +30,7 @@ export type System =
   | 'CLIENTPRO' | 'STOCKPRO' | 'FINVAULT'
   | 'FINFLOW'   | 'FINANCEFLOW' | 'KANBAN'
   | 'CLINICA'   | 'ORDEMTECH'   | 'FIADO'
+  | 'BARBERSHOP'
 
 export type Role = 'SUPERADMIN' | 'USER'
 

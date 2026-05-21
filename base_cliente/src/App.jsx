@@ -138,103 +138,296 @@ function Confirm({ msg, onConfirm, onCancel }) {
   )
 }
 
-// ─────────────────────────────────────────────
-// LOGIN PAGE
-// ─────────────────────────────────────────────
-function LoginPage() {
+export function LoginPage({ onLogin }) {
+  const [view,     setView]     = useState('login')   // 'login' | 'forgot'
   const [email,    setEmail]    = useState('')
   const [senha,    setSenha]    = useState('')
   const [showPass, setShowPass] = useState(false)
   const [loading,  setLoading]  = useState(false)
   const [erro,     setErro]     = useState('')
-  const [dark,     setDark]     = useState(() => localStorage.getItem('theme') === 'dark')
+  const [sucesso,  setSucesso]  = useState('')
 
+  // Refs para foco automático
+  const emailRef    = useRef(null)
+  const forgotRef   = useRef(null)
+
+  // Foca o campo correto ao trocar de view
   useEffect(() => {
-    document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light')
-    localStorage.setItem('theme', dark ? 'dark' : 'light')
-  }, [dark])
+    setErro('')
+    setSucesso('')
+    if (view === 'login')  setTimeout(() => emailRef.current?.focus(),  300)
+    if (view === 'forgot') setTimeout(() => forgotRef.current?.focus(), 300)
+  }, [view])
 
-  async function handleSubmit(e) {
+  // ── Submit login ───────────────────────────────────────────
+  async function handleLogin(e) {
     e.preventDefault()
     setErro('')
-    if (!email.trim() || !senha) { setErro('Preencha e-mail e senha'); return }
+
+    if (!email.trim()) { setErro('Informe seu e-mail');  return }
+    if (!senha)         { setErro('Informe sua senha');   return }
+
     setLoading(true)
     try {
-      const { accessToken, user } = await apiLogin(email.trim(), senha)
-      const hasAccess = user.role === 'SUPERADMIN' || user.permissions?.includes('CLIENTPRO')
-      if (!hasAccess) { setErro('Você não tem acesso ao módulo ClientPro'); return }
-      doLogin(accessToken, user)
+      await onLogin(email.trim().toLowerCase(), senha)
     } catch (err) {
-      setErro(err.message)
+      setErro(err.message || 'Credenciais inválidas')
     } finally {
       setLoading(false)
     }
   }
 
+  // ── Submit recuperação ────────────────────────────────────
+  async function handleForgot(e) {
+    e.preventDefault()
+    setErro('')
+    if (!email.trim()) { setErro('Informe seu e-mail'); return }
+
+    setLoading(true)
+    try {
+      // Aqui você chama a API de recuperação de senha
+      // await api('/auth/forgot', { method: 'POST', body: { email } })
+      await new Promise(r => setTimeout(r, 900)) // simulação
+      setSucesso('Se o e-mail estiver cadastrado, você receberá as instruções em breve.')
+    } catch {
+      setErro('Erro ao solicitar recuperação. Tente novamente.')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const isLogin  = view === 'login'
+  const isForgot = view === 'forgot'
+
   return (
-    <div className="login-page">
-      <div className="login-bg">
-        <div className="login-blob login-blob-1" />
-        <div className="login-blob login-blob-2" />
-      </div>
+    <div className="lp-root">
+      <div className="lp-group">
 
-      <div className="login-card">
-        <div className="login-logo">
-          <div className="brand-icon"><i className="bx bxs-briefcase-alt-2"></i></div>
-          <span>ClientPro</span>
-        </div>
-        <p className="login-subtitle">CRM & Gestão de Clientes — Planware</p>
+        {/* ═══════════════════════════════════════
+            BANNER — desliza de lado conforme o view
+        ═══════════════════════════════════════ */}
+        <aside className={`lp-banner ${isForgot ? 'lp-banner--right' : 'lp-banner--left'}`}>
 
-        <form className="login-form" onSubmit={handleSubmit}>
-          {erro && (
-            <div className="login-error">
-              <i className="bx bx-error-circle"></i>
-              <span>{erro}</span>
+          {/* Decoração: círculos de fundo */}
+          <div className="lp-banner-circle lp-banner-circle--lg" aria-hidden="true" />
+          <div className="lp-banner-circle lp-banner-circle--sm" aria-hidden="true" />
+
+          <div className="lp-banner-inner">
+            {/* Logo / marca */}
+            <div className="lp-banner-brand">
+              <div className="lp-banner-icon">
+                <i className="bx bxs-briefcase-alt-2" aria-hidden="true" />
+              </div>
+              <span>ClientPro</span>
             </div>
+
+            {/* Texto muda conforme o view */}
+            {isLogin && (
+              <>
+                <h1 className="lp-banner-title">Bem-vindo(a)! 👋</h1>
+                <p className="lp-banner-text">
+                  Gerencie seus clientes, agenda e relacionamentos em um só lugar.
+                </p>
+                <a
+                  href="mailto:suporte@planware.com.br?subject=Solicitar acesso ClientPro"
+                  className="lp-banner-link-btn"
+                  aria-label="Solicitar acesso ao sistema"
+                >
+                  Solicitar acesso
+                </a>
+              </>
+            )}
+
+            {isForgot && (
+              <>
+                <h1 className="lp-banner-title">Recuperar acesso</h1>
+                <p className="lp-banner-text">
+                  Não se preocupe — enviaremos as instruções para o seu e-mail.
+                </p>
+                <button
+                  className="lp-banner-link-btn"
+                  onClick={() => setView('login')}
+                >
+                  ← Voltar ao login
+                </button>
+              </>
+            )}
+          </div>
+        </aside>
+
+        {/* ═══════════════════════════════════════
+            FORMULÁRIO — desliza para o lado oposto
+        ═══════════════════════════════════════ */}
+        <div className={`lp-form-panel ${isForgot ? 'lp-form-panel--left' : 'lp-form-panel--right'}`}>
+
+          {/* ── LOGIN ── */}
+          {isLogin && (
+            <form
+              className="lp-form"
+              onSubmit={handleLogin}
+              noValidate
+              aria-label="Formulário de login"
+            >
+              <div className="lp-form-header">
+                <h2 className="lp-form-title">Entrar</h2>
+                <p className="lp-form-sub">Acesse sua conta ClientPro</p>
+              </div>
+
+              {erro && (
+                <div className="lp-alert lp-alert--error" role="alert">
+                  <i className="bx bx-error-circle" aria-hidden="true" />
+                  <span>{erro}</span>
+                </div>
+              )}
+
+              {/* E-mail */}
+              <div className="lp-field">
+                <label htmlFor="lp-email" className="lp-label">E-mail</label>
+                <div className="lp-input-wrap">
+                  <i className="bx bx-envelope lp-input-icon" aria-hidden="true" />
+                  <input
+                    ref={emailRef}
+                    id="lp-email"
+                    type="email"
+                    className="lp-input"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    placeholder="seu@email.com"
+                    autoComplete="email"
+                    required
+                    disabled={loading}
+                  />
+                </div>
+              </div>
+
+              {/* Senha */}
+              <div className="lp-field">
+                <label htmlFor="lp-senha" className="lp-label">Senha</label>
+                <div className="lp-input-wrap">
+                  <i className="bx bx-lock-alt lp-input-icon" aria-hidden="true" />
+                  <input
+                    id="lp-senha"
+                    type={showPass ? 'text' : 'password'}
+                    className="lp-input lp-input--padded-right"
+                    value={senha}
+                    onChange={e => setSenha(e.target.value)}
+                    placeholder="••••••••"
+                    autoComplete="current-password"
+                    required
+                    disabled={loading}
+                  />
+                  <button
+                    type="button"
+                    className="lp-eye-btn"
+                    onClick={() => setShowPass(s => !s)}
+                    tabIndex={-1}
+                    aria-label={showPass ? 'Ocultar senha' : 'Mostrar senha'}
+                  >
+                    <i className={`bx ${showPass ? 'bx-hide' : 'bx-show'}`} aria-hidden="true" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Esqueceu a senha */}
+              <button
+                type="button"
+                className="lp-link-btn"
+                onClick={() => setView('forgot')}
+              >
+                Esqueceu sua senha?
+              </button>
+
+              {/* Submit */}
+              <button
+                type="submit"
+                className="lp-submit-btn"
+                disabled={loading}
+                aria-busy={loading}
+              >
+                {loading
+                  ? <span className="lp-spinner" aria-hidden="true" />
+                  : <><i className="bx bx-log-in" aria-hidden="true" />Entrar</>
+                }
+              </button>
+            </form>
           )}
 
-          <div className="login-field">
-            <label>E-mail</label>
-            <div className="login-input-wrap">
-              <i className="bx bx-envelope login-input-icon"></i>
-              <input
-                type="email"
-                className="login-input"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="seu@email.com"
-                required autoFocus autoComplete="email"
-              />
-            </div>
-          </div>
+          {/* ── ESQUECEU SENHA ── */}
+          {isForgot && (
+            <form
+              className="lp-form"
+              onSubmit={handleForgot}
+              noValidate
+              aria-label="Formulário de recuperação de senha"
+            >
+              <div className="lp-form-header">
+                <h2 className="lp-form-title">Recuperar senha</h2>
+                <p className="lp-form-sub">
+                  Informe seu e-mail e enviaremos as instruções.
+                </p>
+              </div>
 
-          <div className="login-field">
-            <label>Senha</label>
-            <div className="login-input-wrap">
-              <i className="bx bx-lock-alt login-input-icon"></i>
-              <input
-                type={showPass ? 'text' : 'password'}
-                className="login-input login-input--has-right"
-                value={senha}
-                onChange={e => setSenha(e.target.value)}
-                placeholder="••••••••"
-                required autoComplete="current-password"
-              />
-              <button type="button" className="login-eye-btn" onClick={() => setShowPass(s => !s)} tabIndex={-1}>
-                <i className={`bx ${showPass ? 'bx-hide' : 'bx-show'}`}></i>
+              {erro && (
+                <div className="lp-alert lp-alert--error" role="alert">
+                  <i className="bx bx-error-circle" aria-hidden="true" />
+                  <span>{erro}</span>
+                </div>
+              )}
+
+              {sucesso && (
+                <div className="lp-alert lp-alert--success" role="status">
+                  <i className="bx bx-check-circle" aria-hidden="true" />
+                  <span>{sucesso}</span>
+                </div>
+              )}
+
+              {/* E-mail */}
+              <div className="lp-field">
+                <label htmlFor="lp-forgot-email" className="lp-label">E-mail</label>
+                <div className="lp-input-wrap">
+                  <i className="bx bx-envelope lp-input-icon" aria-hidden="true" />
+                  <input
+                    ref={forgotRef}
+                    id="lp-forgot-email"
+                    type="email"
+                    className="lp-input"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    placeholder="seu@email.com"
+                    autoComplete="email"
+                    required
+                    disabled={loading || !!sucesso}
+                  />
+                </div>
+              </div>
+
+              {/* Submit */}
+              {!sucesso && (
+                <button
+                  type="submit"
+                  className="lp-submit-btn"
+                  disabled={loading}
+                  aria-busy={loading}
+                >
+                  {loading
+                    ? <span className="lp-spinner" aria-hidden="true" />
+                    : <><i className="bx bx-send" aria-hidden="true" />Enviar instruções</>
+                  }
+                </button>
+              )}
+
+              {/* Voltar */}
+              <button
+                type="button"
+                className="lp-link-btn"
+                onClick={() => { setView('login'); setSucesso('') }}
+              >
+                ← Voltar ao login
               </button>
-            </div>
-          </div>
+            </form>
+          )}
+        </div>
 
-          <button type="submit" className="btn btn-primary login-submit-btn" disabled={loading}>
-            {loading ? <span className="spinner-sm"></span> : <><i className="bx bx-log-in"></i>Entrar</>}
-          </button>
-        </form>
-
-        <button className="login-theme-btn" onClick={() => setDark(d => !d)}>
-          <i className={`bx ${dark ? 'bx-sun' : 'bx-moon'}`}></i>
-          {dark ? 'Modo claro' : 'Modo escuro'}
-        </button>
       </div>
     </div>
   )
