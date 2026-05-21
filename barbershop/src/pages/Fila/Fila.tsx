@@ -183,13 +183,13 @@ export default function Fila() {
       if (b.status   === 'fulfilled') setBarbeiros(b.value.data.data)
       if (cfg.status === 'fulfilled') setConfig(cfg.value.data.data)
     })
-  }, [loadFila])
+  }, [])
 
   // ── Polling automático ────────────────────────────────────
   useEffect(() => {
     pollRef.current = setInterval(() => loadFila(true), POLL_INTERVAL)
     return () => clearInterval(pollRef.current)
-  }, [loadFila])
+  }, [])
 
   // ── Ações ─────────────────────────────────────────────────
   async function handleEntrar(data: Record<string, any>) {

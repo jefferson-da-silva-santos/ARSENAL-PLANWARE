@@ -178,7 +178,7 @@ export default function Fidelidade() {
     finally  { setLoading(false) }
   }, [toast])
 
-  useEffect(() => { load() }, [load])
+  useEffect(() => { load() }, [])
 
   async function handleSaveRecomp(data: Record<string, any>) {
     setSavingR(true)

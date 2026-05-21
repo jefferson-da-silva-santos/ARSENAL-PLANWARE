@@ -134,7 +134,7 @@ export default function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
         </nav>
 
         {/* ── Spacer ────────────────────────────────────── */}
-        <div className={styles.spacer} />
+        {/* <div className={styles.spacer} /> */}
 
         {/* ── Footer do usuário ─────────────────────────── */}
         <div className={styles.footer}>

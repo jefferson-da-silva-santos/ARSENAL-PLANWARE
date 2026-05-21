@@ -115,7 +115,7 @@ export default function Clientes() {
     finally  { setLoading(false) }
   }, [debounced, toast])
 
-  useEffect(() => { load() }, [load])
+  useEffect(() => { load() }, [])
 
   async function handleSave(data: Record<string, any>) {
     setSaving(true)

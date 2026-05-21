@@ -12,7 +12,7 @@ import StatCard from '../../components/ui/StatCard/StatCard'
 import EmptyState from '../../components/ui/EmptyState/EmptyState'
 import { SkeletonStatCard, SkeletonCard } from '../../components/ui/Skeleton/Skeleton'
 import { AssinaturaStatusBadge } from '../../components/ui/Badge/Badge'
-import { getAvatarGradient, getInitials } from '../../components/domain/avatarHelper'
+import { getAvatarGradient, getInitials } from '../../utils/avatarHelper'
 import type { Assinatura, Cliente, Servico } from '../../types'
 import styles from './Assinaturas.module.scss'
 
@@ -254,7 +254,7 @@ export default function Assinaturas() {
     finally  { setLoading(false) }
   }, [filtro, toast])
 
-  useEffect(() => { load() }, [load])
+  useEffect(() => { load() }, [])
 
   useEffect(() => {
     Promise.allSettled([clientesApi.list(), servicosApi.list(true)]).then(([c, s]) => {

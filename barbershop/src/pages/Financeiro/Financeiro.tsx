@@ -233,7 +233,7 @@ export default function Financeiro() {
     finally  { setLoadingD(false) }
   }, [periodo, toast])
 
-  useEffect(() => { loadDash() }, [loadDash])
+  useEffect(() => { loadDash() }, [])
 
   // ── Carrega despesas ──────────────────────────────────────
   const loadDespesas = useCallback(async () => {
@@ -260,7 +260,7 @@ export default function Financeiro() {
   useEffect(() => {
     if (tab === 'despesas')   loadDespesas()
     if (tab === 'fechamento') loadFechamentos()
-  }, [tab, loadDespesas, loadFechamentos])
+  }, [tab])
 
   // ── Ações ─────────────────────────────────────────────────
   async function handleDespesa(data: Record<string, any>) {

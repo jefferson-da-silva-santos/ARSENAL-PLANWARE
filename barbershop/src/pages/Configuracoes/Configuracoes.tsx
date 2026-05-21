@@ -104,7 +104,7 @@ export default function Configuracoes() {
     }
   }, [toast])
 
-  useEffect(() => { load() }, [load])
+  useEffect(() => { load() }, [])
 
   // ── Toggle dia de funcionamento ───────────────────────────
   function toggleDia(dia: number) {

@@ -150,7 +150,7 @@ export default function Barbeiros() {
     }
   }, [filterAtivos, toast])
 
-  useEffect(() => { load() }, [load])
+  useEffect(() => { load() }, [])
 
   // Filtra localmente pela busca
   const filtered = barbeiros.filter(b =>

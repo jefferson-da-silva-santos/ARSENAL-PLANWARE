@@ -1,13 +1,12 @@
 // ════════════════════════════════════════════════════════════
 //  Estoque.module.scss — Navalha 22
 // ════════════════════════════════════════════════════════════
-@use '../../assets/styles/variables' as *;
 
 .page { min-height: 100%; display: flex; flex-direction: column; }
 .body { padding: 20px $content-px 40px; display: flex; flex-direction: column; gap: 16px; flex: 1; }
 
 .kpiRow { display: grid; grid-template-columns: repeat(3, 1fr); gap: $gap-md; }
-
+ 
 // ── Toolbar ───────────────────────────────────────────────────
 .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 

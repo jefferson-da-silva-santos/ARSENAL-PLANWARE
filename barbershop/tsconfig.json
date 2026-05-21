@@ -1,14 +1,13 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    // ... suas configurações existentes permanecem iguais
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "composite": true,       // 1. Ative isso para permitir referências de projeto
+    "noEmit": false,          // 2. Garanta que isso NÃO esteja como true (ou remova a linha)
+    
+    // ... o restante das suas configurações do tsconfig.node.json
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true
   },
-  "include": [
-    "src",
-    "src/@types/declarations.d.ts" // Força o TS a ler seus tipos do scss.module
-  ],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "include": ["vite.config.ts"] // ou os arquivos de config que estiverem aí
 }

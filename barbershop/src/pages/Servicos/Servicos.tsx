@@ -215,7 +215,7 @@ export default function Servicos() {
     finally  { setLoading(false) }
   }, [apenasAtivos, toast])
 
-  useEffect(() => { load() }, [load])
+  useEffect(() => { load() }, [])
 
   async function handleSave(data: Record<string, any>) {
     setSaving(true)

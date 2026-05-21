@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { useToast } from '../../hooks/useToast'
 import { useAOSRefresh } from '../../hooks/useAOS'
@@ -10,8 +10,8 @@ import EmptyState from '../../components/ui/EmptyState/EmptyState'
 import { SkeletonStatCard, SkeletonRow } from '../../components/ui/Skeleton/Skeleton'
 import { NivelBadge } from '../../components/ui/Badge/Badge'
 import { ModalConfirm } from '../../components/ui/Modal/Modal'
-import { getAvatarGradient, getInitials } from '../../components/domain/avatarHelper'
-import type { Barbeiro, DesempenhoBarbeiro, Comissao, Bloqueio } from '../../types'
+import { getAvatarGradient, getInitials } from '../../utils/avatarHelper'
+import type { DesempenhoBarbeiro, Comissao, Bloqueio } from '../../types'
 import styles from './Barbeiros.module.scss'
 
 // ─────────────────────────────────────────────────────────────
@@ -20,12 +20,6 @@ import styles from './Barbeiros.module.scss'
 
 function fmt(v: number) {
   return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })
-}
-
-function fmtDate(iso: string) {
-  return new Date(iso).toLocaleDateString('pt-BR', {
-    day: '2-digit', month: 'short', year: 'numeric',
-  })
 }
 
 function fmtDateTime(iso: string) {
@@ -84,7 +78,7 @@ export default function BarbeiroDetalhe() {
   const navigate  = useNavigate()
   const toast     = useToast()
 
-  const [barbeiro,    setBarbeiro]    = useState<Barbeiro | null>(null)
+  const [barbeiro,    setBarbeiro]    = useState<any | null>(null)
   const [desempenho,  setDesempenho]  = useState<DesempenhoBarbeiro | null>(null)
   const [comissoes,   setComissoes]   = useState<Comissao[]>([])
   const [bloqueios,   setBloqueios]   = useState<Bloqueio[]>([])
@@ -97,7 +91,7 @@ export default function BarbeiroDetalhe() {
   const [tab,       setTab]       = useState<Tab>('desempenho')
 
   // Repassar comissões
-  const [selectedIds,   setSelectedIds]   = useState<string[]>([])
+  const [selectedIds,    setSelectedIds]   = useState<string[]>([])
   const [confirmRepasse, setConfirmRepasse] = useState(false)
   const [repasseLoading, setRepasseLoading] = useState(false)
 

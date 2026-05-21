@@ -205,7 +205,7 @@ export default function Dashboard() {
     setRefreshing(false)
   }, [toast])
 
-  useEffect(() => { loadAll() }, [loadAll])
+  useEffect(() => { loadAll() }, [])
 
   // ─────────────────────────────────────────────────────────
   //  Computed values

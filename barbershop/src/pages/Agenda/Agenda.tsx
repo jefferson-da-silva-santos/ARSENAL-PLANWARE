@@ -121,7 +121,7 @@ export default function Agenda() {
     }
   }, [selectedDate, filterBarbeiro, filterStatus, toast])
 
-  useEffect(() => { loadAgendamentos() }, [loadAgendamentos])
+  useEffect(() => { loadAgendamentos() }, [])
 
   // ── Ações ─────────────────────────────────────────────────
 
