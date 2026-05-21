@@ -1635,7 +1635,7 @@ export default function App() {
 
   if (!logged) return (
     <>
-      <LoginPage />
+      <LoginPage onLogin={() => setPage('dashboard')} />
       <ToastContainer toasts={toasts} />
     </>
   )
