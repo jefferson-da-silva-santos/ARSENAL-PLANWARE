@@ -1,0 +1,62 @@
+@use './variables' as *;
+@use './theme';
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: $font-primary;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  &::-webkit-scrollbar { width: 6px; }
+  &::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+  &::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: $radius-full; }
+}
+
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; border: none; background: none; font-family: inherit; }
+input, select, textarea { font-family: inherit; }
+img { max-width: 100%; display: block; }
+ul, ol { list-style: none; }
+
+// ── Utilitários globais ───────────────────────────────────────
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0,0,0,0); white-space: nowrap; border-width: 0;
+}
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// ── Notyf customização ────────────────────────────────────────
+.notyf {
+  &__toast {
+    border-radius: $radius-md !important;
+    font-family: $font-primary !important;
+    font-size: 14px !important;
+    padding: 12px 20px !important;
+    box-shadow: var(--shadow-lg) !important;
+  }
+  &__toast--success { background: #011e11 !important; border-left: 3px solid #00ff84; }
+  &__toast--error   { background: #1a0a0a !important; border-left: 3px solid #ff4d6d; }
+  &__icon { display: none !important; }
+  &__message { font-weight: 500 !important; }
+}

@@ -553,7 +553,7 @@ function FeedbackCard({ feedback, onDelete }) {
   );
 }
 
-function SuggestionsPage({ user, toast }) {
+function SuggestionsPage({ toast }) {
   const [tab,       setTab]       = useState("new");
   const [feedbacks, setFeedbacks] = useState([]);
   const [loading,   setLoading]   = useState(false);

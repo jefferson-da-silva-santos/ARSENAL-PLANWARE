@@ -1,0 +1,41 @@
+// ─── PageHeader.module.scss ───────────────────────────────────
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: $space-lg;
+  margin-bottom: $space-2xl;
+  min-width: 0;
+
+  @media (max-width: 640px) { flex-direction: column; }
+}
+
+.text { flex: 1; min-width: 0; }
+
+.title {
+  font-family: $font-secondary;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.subtitle {
+  margin-top: 6px;
+  font-size: 14px;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}

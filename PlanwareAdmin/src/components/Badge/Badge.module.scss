@@ -1,0 +1,48 @@
+// Badge.module.scss
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: $radius-full;
+  font-size: 11px;
+  font-weight: 600;
+  border: 1px solid transparent;
+  letter-spacing: 0.3px;
+  white-space: nowrap;
+  font-family: $font-secondary;
+  flex-shrink: 0;
+}
+
+.dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+
+.active {
+  background: var(--success-muted);
+  color: var(--success);
+  border-color: rgba(0, 255, 132, 0.25);
+}
+
+.inactive {
+  background: var(--danger-muted);
+  color: var(--danger);
+  border-color: rgba(255, 77, 109, 0.25);
+}
+
+.superadmin {
+  background: rgba(124, 58, 237, 0.12);
+  color: #a78bfa;
+  border-color: rgba(124, 58, 237, 0.3);
+}
+
+.user {
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  border-color: var(--border-color);
+}

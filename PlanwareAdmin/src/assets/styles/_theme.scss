@@ -1,0 +1,78 @@
+// ── Tema LIGHT — branco com detalhes laranja e preto ─────────
+:root,
+[data-theme="light"] {
+  --bg-app:        #ffffff;
+  --bg-surface:    #ffffff;
+  --bg-elevated:   #f5f5f5;
+  --bg-hover:      #f0f0f0;
+  --bg-active:     #e8e8e8;
+
+  --border-color:  rgba(0, 0, 0, 0.08);
+  --border-strong: rgba(0, 0, 0, 0.15);
+
+  --text-primary:   #0a0a0a;
+  --text-secondary: #3a3a3a;
+  --text-muted:     #888888;
+  --text-inverse:   #ffffff;
+
+  --accent:         #f97316;
+  --accent-dim:     #fb923c;
+  --accent-muted:   rgba(249, 115, 22, 0.08);
+  --accent-border:  rgba(249, 115, 22, 0.25);
+
+  --danger:         #ef4444;
+  --danger-muted:   rgba(239, 68, 68, 0.08);
+  --warning:        #eab308;
+  --warning-muted:  rgba(234, 179, 8, 0.08);
+  --info:           #3b82f6;
+  --info-muted:     rgba(59, 130, 246, 0.08);
+  --success:        #f97316;
+  --success-muted:  rgba(249, 115, 22, 0.08);
+
+  --shadow-sm:   0 1px 3px rgba(0, 0, 0, 0.08);
+  --shadow-md:   0 4px 12px rgba(0, 0, 0, 0.10);
+  --shadow-lg:   0 10px 30px rgba(0, 0, 0, 0.14);
+  --shadow-glow: 0 0 24px rgba(249, 115, 22, 0.2);
+
+  --scrollbar-thumb: #d4d4d4;
+  --scrollbar-track: #f5f5f5;
+}
+
+// ── Tema DARK — preto com detalhes laranja e branco ───────────
+[data-theme="dark"] {
+  --bg-app:        #0a0a0a;
+  --bg-surface:    #111111;
+  --bg-elevated:   #1a1a1a;
+  --bg-hover:      #222222;
+  --bg-active:     #2a2a2a;
+
+  --border-color:  rgba(255, 255, 255, 0.07);
+  --border-strong: rgba(255, 255, 255, 0.12);
+
+  --text-primary:   #f5f5f5;
+  --text-secondary: #a3a3a3;
+  --text-muted:     #525252;
+  --text-inverse:   #0a0a0a;
+
+  --accent:         #f97316;
+  --accent-dim:     #fb923c;
+  --accent-muted:   rgba(249, 115, 22, 0.12);
+  --accent-border:  rgba(249, 115, 22, 0.3);
+
+  --danger:         #ef4444;
+  --danger-muted:   rgba(239, 68, 68, 0.12);
+  --warning:        #eab308;
+  --warning-muted:  rgba(234, 179, 8, 0.12);
+  --info:           #3b82f6;
+  --info-muted:     rgba(59, 130, 246, 0.12);
+  --success:        #f97316;
+  --success-muted:  rgba(249, 115, 22, 0.12);
+
+  --shadow-sm:   0 1px 3px rgba(0, 0, 0, 0.5);
+  --shadow-md:   0 4px 12px rgba(0, 0, 0, 0.6);
+  --shadow-lg:   0 10px 30px rgba(0, 0, 0, 0.7);
+  --shadow-glow: 0 0 24px rgba(249, 115, 22, 0.25);
+
+  --scrollbar-thumb: #2a2a2a;
+  --scrollbar-track: #111111;
+}

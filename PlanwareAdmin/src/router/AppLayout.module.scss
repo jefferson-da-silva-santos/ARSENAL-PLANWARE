@@ -1,0 +1,27 @@
+.layout {
+  min-height: 100vh;
+  background: var(--bg-app);
+}
+
+.main {
+  margin-left: $sidebar-width;
+  min-height: 100vh;
+  width: calc(100% - #{$sidebar-width});
+  background: var(--bg-app);
+  transition: background-color 0.3s ease;
+}
+
+.content {
+  padding: $space-2xl;
+  width: 100%;
+  max-width: 1600px;
+  margin: 0 auto;
+
+  @media (max-width: 1200px) {
+    padding: $space-xl;
+  }
+
+  @media (max-width: 768px) {
+    padding: $space-lg;
+  }
+}

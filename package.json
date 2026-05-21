@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "server": "cd planware-server && npm run dev",
-    "admin": "wait-on tcp:3000 && cd planware-admin && npm run dev",
+    "admin": "wait-on tcp:3000 && cd PlanwareAdmin && npm run dev",
     "hub": "wait-on tcp:5173 && cd planware-hub && npm run dev",
     "base_cliente": "wait-on tcp:5174 && cd base_cliente && npm run dev",
     "controle_estoque": "wait-on tcp:5175 && cd controle_de_estoque && npm run dev",
@@ -17,7 +17,7 @@
     "sistema_contas": "wait-on tcp:5182 && cd sistema_contas && npm run dev",
     "barbershop": "wait-on tcp:5183 && cd barbershop && npm run dev",
     "dev": "concurrently \"npm run server\" \"npm run admin\" \"npm run hub\" \"npm run base_cliente\" \"npm run controle_estoque\" \"npm run controle_financeiro\" \"npm run financas_503020\" \"npm run financeiro_personalizavel\" \"npm run ordem_servicos\" \"npm run projeto_tarefas\" \"npm run sistema_clinica\" \"npm run sistema_contas\" \"npm run barbershop\"",
-    "install:all": "concurrently \"cd planware-server && npm install\" \"cd planware-admin && npm install\" \"cd planware-hub && npm install\" \"cd base_cliente && npm install\" \"cd controle_de_estoque && npm install\" \"cd controle_financeiro && npm install\" \"cd finanancas_503020 && npm install\" \"cd financeiro_personalizavel && npm install\" \"cd ordem_servicos && npm install\" \"cd projeto_tarefas && npm install\" \"cd sistema_clinica && npm install\" \"cd sistema_contas && npm install\""
+    "install:all": "concurrently \"cd planware-server && npm install\" \"cd PlanwareAdmin && npm install\" \"cd planware-hub && npm install\" \"cd base_cliente && npm install\" \"cd controle_de_estoque && npm install\" \"cd controle_financeiro && npm install\" \"cd finanancas_503020 && npm install\" \"cd financeiro_personalizavel && npm install\" \"cd ordem_servicos && npm install\" \"cd projeto_tarefas && npm install\" \"cd sistema_clinica && npm install\" \"cd sistema_contas && npm install\""
   },
   "keywords": [],
   "author": "",

@@ -1,0 +1,195 @@
+// ═══════════════════════════════════════════════════════════════
+// Dashboard.module.scss
+// ═══════════════════════════════════════════════════════════════
+
+.page {
+  animation: fadeUp 0.3s ease;
+  width: 100%;
+  min-width: 0;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: $space-lg;
+  margin-bottom: $space-2xl;
+
+  @media (max-width: 1100px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 600px)  { grid-template-columns: 1fr; }
+}
+
+.grid2col {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $space-lg;
+  min-width: 0;
+
+  @media (max-width: 900px) { grid-template-columns: 1fr; }
+}
+
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: $radius-lg;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $space-lg $space-xl;
+  border-bottom: 1px solid var(--border-color);
+  flex-wrap: wrap;
+  gap: $space-sm;
+}
+
+.cardTitle {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+  font-family: $font-secondary;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+
+  i { font-size: 18px; color: var(--accent); }
+}
+
+.cardLink {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent);
+  transition: $transition-fast;
+  white-space: nowrap;
+  background: none;
+  border: none;
+  cursor: pointer;
+
+  i { font-size: 16px; }
+  &:hover { gap: 8px; }
+}
+
+.list { padding: $space-sm 0; }
+
+.listItem {
+  display: flex;
+  align-items: center;
+  gap: $space-md;
+  padding: $space-md $space-xl;
+  transition: $transition-fast;
+  min-width: 0;
+
+  &:hover { background: var(--bg-hover); }
+}
+
+.tenantIcon, .userAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: $radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+  font-family: $font-secondary;
+}
+
+.tenantIcon {
+  background: var(--accent-muted);
+  color: var(--accent);
+  border: 1px solid var(--accent-border);
+}
+
+.userAvatar {
+  background: rgba(76, 201, 240, 0.1);
+  color: #4cc9f0;
+  border: 1px solid rgba(76, 201, 240, 0.2);
+}
+
+.listInfo {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.listName {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.listSub {
+  font-size: 12px;
+  color: var(--text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.listMeta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.listCount {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 11px;
+  color: var(--text-muted);
+  white-space: nowrap;
+
+  i { font-size: 12px; }
+}
+
+.empty {
+  padding: $space-2xl;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.loadingRows {
+  padding: $space-md $space-xl;
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+}
+
+.skeleton {
+  height: 36px;
+  border-radius: $radius-md;
+  background: linear-gradient(
+    90deg,
+    var(--bg-elevated) 25%,
+    var(--bg-hover) 50%,
+    var(--bg-elevated) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
