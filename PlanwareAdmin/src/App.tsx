@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from '@/contexts/AuthContext'
 import { ThemeProvider } from '@/contexts/ThemeContext'
-import AppLayout from './router/AppLayout'     
+import AppLayout from './router/AppLayout'
 import Login from '@/pages/Login/Login'
 import Dashboard from '@/pages/Dashboard/Dashboard'
 import Tenants from '@/pages/Tenants/Tenants'
@@ -9,6 +9,7 @@ import Users from '@/pages/Users/Users'
 import Permissions from '@/pages/Permissions/Permissions'
 import Errors from './pages/Erros/Erros'
 import Feedbacks from '@/pages/Feedbacks/Feedbacks'
+import Financial from '@/pages/Financial/Financial'
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { user } = useAuth()
@@ -48,6 +49,7 @@ function AppRoutes() {
         <Route path="permissions" element={<Permissions />} />
         <Route path="errors" element={<Errors />} />
         <Route path="feedbacks" element={<Feedbacks />} />
+        <Route path="financial" element={<Financial />} />
       </Route>
 
       <Route path="*" element={<Navigate to="/" replace />} />

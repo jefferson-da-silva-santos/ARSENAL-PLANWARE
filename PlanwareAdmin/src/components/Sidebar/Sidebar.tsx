@@ -10,6 +10,7 @@ const NAV_ITEMS = [
   { to: '/permissions', icon: 'bx-shield-alt-2', label: 'Permissões' },
   { to: '/errors', icon: 'bx-bug', label: 'Erros' },
   { to: '/feedbacks', icon: 'bx-message-square-detail', label: 'Feedbacks' },
+  { to: '/financial', icon: 'bx-wallet-alt', label: 'Financeiro' },
 ]
 
 export default function Sidebar() {
