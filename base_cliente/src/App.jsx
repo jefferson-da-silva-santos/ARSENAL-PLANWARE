@@ -30,12 +30,13 @@ let _authState = { user: auth.getUser(), logged: auth.isLogged() }
 function getAuthState() { return _authState }
 function setAuthState(next) { _authState = next; _listeners.forEach(fn => fn(next)) }
 function useAuthState() {
-  const [s, setS] = useState(getAuthState)
+  const [, forceRender] = useState(0)
   useEffect(() => {
-    _listeners.push(setS)
-    return () => { _listeners = _listeners.filter(fn => fn !== setS) }
+    const listener = () => forceRender(n => n + 1)
+    _listeners.push(listener)
+    return () => { _listeners = _listeners.filter(fn => fn !== listener) }
   }, [])
-  return s
+  return getAuthState()
 }
 function doLogin(token, user) { auth.save(token, user); setAuthState({ user, logged: true }) }
 function doLogout()           { auth.clear();           setAuthState({ user: null, logged: false }) }
@@ -1633,13 +1634,19 @@ export default function App() {
     lembretes: <Lembretes />,
   }
 
-  if (!logged) return (
-    <>
-      <LoginPage onLogin={() => setPage('dashboard')} />
-      <ToastContainer toasts={toasts} />
-    </>
-  )
-
+ if (!logged)
+   return (
+     <>
+       <LoginPage
+         onLogin={async (email, senha) => {
+           const data = await apiLogin(email, senha);
+           doLogin(data.accessToken, data.user);
+           toast("Login realizado com sucesso!");
+         }}
+       />
+       <ToastContainer toasts={toasts} />
+     </>
+   );
   return (
     <>
       <ToastContainer toasts={toasts} />

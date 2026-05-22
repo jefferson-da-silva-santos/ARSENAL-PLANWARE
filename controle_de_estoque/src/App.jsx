@@ -70,16 +70,19 @@ function setState(next) {
   _state = next;
   _listeners.forEach((fn) => fn(next));
 }
+
 function useAuthState() {
-  const [s, setS] = useState(getState);
+  const [, forceRender] = useState(0);
   useEffect(() => {
-    _listeners.push(setS);
+    const listener = () => forceRender((n) => n + 1);
+    _listeners.push(listener);
     return () => {
-      _listeners = _listeners.filter((fn) => fn !== setS);
+      _listeners = _listeners.filter((fn) => fn !== listener);
     };
   }, []);
-  return s;
+  return getState();
 }
+
 function doLogin(token, user) {
   auth.save(token, user);
   setState({ user, logged: true });
@@ -102,11 +105,10 @@ const api = async (url, options = {}) => {
     ...options,
   });
 
- if (res.status === 401) { 
-  console.log("TOKEN INVALIDO");
-  doLogout(); 
-  return; 
-}
+  if (res.status === 401) {
+    doLogout();
+    throw new Error("Sessão expirada. Faça login novamente.");
+  }
 
   const data = await res.json();
   if (!res.ok) throw new Error(data.error || "Erro na requisição");
@@ -478,17 +480,7 @@ export function LoginPage({ onLogin, onForgot, theme, onToggleTheme }) {
                   real.
                 </p>
                 {/* Chips de feature */}
-                <div className="sp-lp-chips">
-                  {[
-                    "Entrada & saída",
-                    "Alertas de estoque",
-                    "Histórico completo",
-                  ].map((chip) => (
-                    <span key={chip} className="sp-lp-chip">
-                      {chip}
-                    </span>
-                  ))}
-                </div>
+
                 <a
                   href="mailto:suporte@planware.com.br?subject=Solicitar acesso StockPro"
                   className="sp-lp-banner-btn"
@@ -1829,11 +1821,8 @@ export default function App() {
           onLogin={async (email, senha) => {
             try {
               const data = await apiLogin(email, senha);
-              console.log(data);
-              doLogin(data.token, data.user);
-
+              doLogin(data.accessToken, data.user);
               toast("Login realizado com sucesso!");
-              navigate("dashboard");
             } catch (err) {
               toast(err.message, "error");
               throw err;
