@@ -7,9 +7,14 @@ import Button from '@/components/Button/Button'
 import { SystemBadge, StatusBadge } from '@/components/Badge/Badge'
 import styles from './Permissions.module.scss'
 
+// ─────────────────────────────────────────────────────────────
+//  Catálogo completo de sistemas — inclui BARBERSHOP
+// ─────────────────────────────────────────────────────────────
+
 const ALL_SYSTEMS: System[] = [
   'CLIENTPRO', 'STOCKPRO', 'FINVAULT', 'FINFLOW',
   'FINANCEFLOW', 'KANBAN', 'CLINICA', 'ORDEMTECH', 'FIADO',
+  'BARBERSHOP',
 ]
 
 const SYSTEM_LABELS: Record<System, string> = {
@@ -22,7 +27,46 @@ const SYSTEM_LABELS: Record<System, string> = {
   CLINICA: 'Clínica',
   ORDEMTECH: 'Ordem de Serviço',
   FIADO: 'Contas a Receber',
+  BARBERSHOP: 'Barbearia (Navalha)',  // ← novo
 }
+
+// Ícone visual por sistema (Boxicons) para o card de permissão
+const SYSTEM_ICONS: Record<System, string> = {
+  CLIENTPRO: 'bx bx-group',
+  STOCKPRO: 'bx bx-package',
+  FINVAULT: 'bx bx-wallet-alt',
+  FINFLOW: 'bx bx-pie-chart-alt-2',
+  FINANCEFLOW: 'bx bx-bar-chart-alt-2',
+  KANBAN: 'bx bx-layout',
+  CLINICA: 'bx bx-plus-medical',
+  ORDEMTECH: 'bx bx-wrench',
+  FIADO: 'bx bx-receipt',
+  BARBERSHOP: 'bx bxs-scissors',   // ← novo
+}
+
+// Agrupa sistemas por categoria para o painel de permissões
+const SYSTEM_GROUPS: { label: string; systems: System[] }[] = [
+  {
+    label: 'Barbearia',
+    systems: ['BARBERSHOP'],
+  },
+  {
+    label: 'Gestão de Clientes',
+    systems: ['CLIENTPRO', 'CLINICA', 'ORDEMTECH'],
+  },
+  {
+    label: 'Financeiro',
+    systems: ['FINVAULT', 'FINFLOW', 'FINANCEFLOW', 'FIADO'],
+  },
+  {
+    label: 'Operacional',
+    systems: ['STOCKPRO', 'KANBAN'],
+  },
+]
+
+// ─────────────────────────────────────────────────────────────
+//  Componente
+// ─────────────────────────────────────────────────────────────
 
 export default function Permissions() {
   const [users, setUsers] = useState<User[]>([])
@@ -92,7 +136,7 @@ export default function Permissions() {
       />
 
       <div className={styles.layout}>
-        {/* Lista de usuários */}
+        {/* ── Lista de usuários ─────────────────── */}
         <div className={styles.userPanel}>
           <div className={styles.panelHeader}>
             <h2 className={styles.panelTitle}>Usuários</h2>
@@ -154,7 +198,7 @@ export default function Permissions() {
           </div>
         </div>
 
-        {/* Painel de permissões */}
+        {/* ── Painel de permissões ──────────────── */}
         <div className={styles.permPanel}>
           {!selected ? (
             <div className={styles.emptyPermPanel}>
@@ -183,31 +227,58 @@ export default function Permissions() {
                 </div>
               </div>
 
-              <div className={styles.permGrid}>
-                {ALL_SYSTEMS.map((sys) => {
-                  const granted = perms.includes(sys)
-                  return (
-                    <button
-                      key={sys}
-                      className={`${styles.permCard} ${granted ? styles.permCardActive : ''}`}
-                      onClick={() => toggle(sys)}
-                    >
-                      <div className={styles.permCardCheck}>
-                        <i className={`bx ${granted ? 'bxs-check-circle' : 'bx-circle'}`} />
-                      </div>
-                      <div className={styles.permCardInfo}>
-                        <SystemBadge system={sys} />
-                        <span className={styles.permCardLabel}>{SYSTEM_LABELS[sys]}</span>
-                      </div>
-                    </button>
-                  )
-                })}
+              {/* Sistemas agrupados por categoria */}
+              <div className={styles.permGroups}>
+                {SYSTEM_GROUPS.map((group) => (
+                  <div key={group.label} className={styles.permGroup}>
+                    <div className={styles.permGroupHeader}>
+                      <span className={styles.permGroupLabel}>{group.label}</span>
+                      {/* Badge especial para Barbearia */}
+                      {group.label === 'Barbearia' && (
+                        <span className={styles.newBadge}>Novo</span>
+                      )}
+                    </div>
+                    <div className={styles.permGrid}>
+                      {group.systems.map((sys) => {
+                        const granted = perms.includes(sys)
+                        const isBarbershop = sys === 'BARBERSHOP'
+                        return (
+                          <button
+                            key={sys}
+                            className={`
+                              ${styles.permCard}
+                              ${granted ? styles.permCardActive : ''}
+                              ${isBarbershop ? styles.permCardBarbershop : ''}
+                            `}
+                            onClick={() => toggle(sys)}
+                          >
+                            <div className={styles.permCardCheck}>
+                              <i className={`bx ${granted ? 'bxs-check-circle' : 'bx-circle'}`} />
+                            </div>
+                            <div className={styles.permCardInfo}>
+                              <div className={styles.permCardTopRow}>
+                                <i className={`${SYSTEM_ICONS[sys]} ${styles.permCardIcon}`} />
+                                <SystemBadge system={sys} />
+                              </div>
+                              <span className={styles.permCardLabel}>{SYSTEM_LABELS[sys]}</span>
+                            </div>
+                          </button>
+                        )
+                      })}
+                    </div>
+                  </div>
+                ))}
               </div>
 
               <div className={styles.permSummary}>
                 <span className={styles.permSummaryText}>
                   <i className="bx bx-shield-alt-2" />
                   {perms.length} de {ALL_SYSTEMS.length} sistemas liberados
+                  {perms.includes('BARBERSHOP') && (
+                    <span className={styles.summaryBarbershop}>
+                      · ✂ BarberShop ativo
+                    </span>
+                  )}
                 </span>
               </div>
             </>

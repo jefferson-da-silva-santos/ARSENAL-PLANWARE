@@ -7,9 +7,16 @@ interface BadgeProps {
 }
 
 const SYSTEM_COLORS: Record<string, string> = {
-  CLIENTPRO: '#7c3aed', STOCKPRO: '#0891b2', FINVAULT: '#d97706',
-  FINFLOW: '#059669', FINANCEFLOW: '#db2777', KANBAN: '#2563eb',
-  CLINICA: '#dc2626', ORDEMTECH: '#7c2d12', FIADO: '#4f46e5',
+  CLIENTPRO: '#7c3aed',
+  STOCKPRO: '#0891b2',
+  FINVAULT: '#d97706',
+  FINFLOW: '#059669',
+  FINANCEFLOW: '#db2777',
+  KANBAN: '#2563eb',
+  CLINICA: '#dc2626',
+  ORDEMTECH: '#7c2d12',
+  FIADO: '#4f46e5',
+  BARBERSHOP: '#FF6B2C', 
 }
 
 export function SystemBadge({ system }: { system: string }) {

@@ -53,16 +53,11 @@ const PAYMENT_METHOD: Record<PaymentMethod, string> = {
   OTHER:       'Outro',
 }
 
-const BILLING_TYPE: Record<BillingType, string> = {
-  MONTHLY:  'Mensal',
-  ANNUAL:   'Anual',
-  LIFETIME: 'Vitalício',
-  CUSTOM:   'Personalizado',
-}
 
 const SYSTEMS_ALL = [
-  'CLIENTPRO','STOCKPRO','FINVAULT','FINFLOW',
-  'FINANCEFLOW','KANBAN','CLINICA','ORDEMTECH','FIADO',
+  'CLIENTPRO', 'STOCKPRO', 'FINVAULT', 'FINFLOW',
+  'FINANCEFLOW', 'KANBAN', 'CLINICA', 'ORDEMTECH', 'FIADO',
+  'BARBERSHOP',
 ]
 
 function ChargeStatusBadge({ status }: { status: ChargeStatus }) {
@@ -426,8 +421,9 @@ export default function Financial() {
 
   // Carrega tenants para os selects
   useEffect(() => {
-    import('@/services/api').then(({ default: api }) => {
-      api.get('/admin/tenants').then(r => setTenants(r.data.data ?? []))
+    import('@/services/api').then(m => {
+      const api = (m as any).default ?? (m as any).api ?? m
+      api.get('/admin/tenants').then((r: any) => setTenants(r.data.data ?? []))
     })
   }, [])
 

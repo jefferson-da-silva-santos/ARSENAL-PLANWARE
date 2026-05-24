@@ -377,3 +377,101 @@
   0%   { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
+
+// ════════════════════════════════════════════════════════════
+//  Permissions.module.scss — adições para BARBERSHOP
+//  Cole no final do seu Permissions.module.scss existente
+// ════════════════════════════════════════════════════════════
+
+// ── Grupos de sistemas ────────────────────────────────────────
+
+.permGroups {
+  padding: $space-xl;
+  display: flex;
+  flex-direction: column;
+  gap: $space-xl;
+}
+
+.permGroup {
+  display: flex;
+  flex-direction: column;
+  gap: $space-md;
+}
+
+.permGroupHeader {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+}
+
+.permGroupLabel {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+// Badge "Novo" ao lado da categoria Barbearia
+.newBadge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(255, 107, 44, 0.15);
+  border: 1px solid rgba(255, 107, 44, 0.3);
+  color: #FF6B2C;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+// ── Grid de cards (mantém o existente e acrescenta) ───────────
+
+.permGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $space-md;
+
+  @media (max-width: 1200px) { grid-template-columns: repeat(2, 1fr); }
+  @media (max-width: 600px)  { grid-template-columns: 1fr; }
+}
+
+// Linha do ícone + badge dentro do card
+.permCardTopRow {
+  display: flex;
+  align-items: center;
+  gap: $space-sm;
+  margin-bottom: 3px;
+}
+
+.permCardIcon {
+  font-size: 16px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+// Card especial do BarberShop — destaque laranja quando ativo
+.permCardBarbershop {
+  border-color: rgba(255, 107, 44, 0.2) !important;
+
+  &:hover {
+    border-color: rgba(255, 107, 44, 0.4) !important;
+    background: rgba(255, 107, 44, 0.04) !important;
+  }
+
+  &.permCardActive {
+    background: rgba(255, 107, 44, 0.08) !important;
+    border-color: rgba(255, 107, 44, 0.35) !important;
+
+    .permCardCheck i { color: #FF6B2C !important; }
+    .permCardIcon   { color: #FF6B2C !important; }
+  }
+}
+
+// ── Resumo no rodapé ──────────────────────────────────────────
+
+.summaryBarbershop {
+  color: #FF6B2C;
+  font-weight: 600;
+  margin-left: 4px;
+}

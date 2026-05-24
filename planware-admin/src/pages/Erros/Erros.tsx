@@ -12,6 +12,7 @@ import styles from './Errors.module.scss'
 const MODULES = [
   'AUTH', 'ADMIN', 'CLIENTPRO', 'STOCKPRO', 'FINVAULT',
   'FINFLOW', 'FINANCEFLOW', 'KANBAN', 'CLINICA', 'ORDEMTECH', 'FIADO', 'FEEDBACK',
+  'BARBERSHOP',
 ]
 
 function fmtDate(iso: string | null | undefined) {

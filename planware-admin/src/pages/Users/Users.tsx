@@ -11,6 +11,7 @@ import styles from './Users.module.scss'
 const ALL_SYSTEMS: System[] = [
   'CLIENTPRO', 'STOCKPRO', 'FINVAULT', 'FINFLOW',
   'FINANCEFLOW', 'KANBAN', 'CLINICA', 'ORDEMTECH', 'FIADO',
+  'BARBERSHOP',
 ]
 
 export default function Users() {
