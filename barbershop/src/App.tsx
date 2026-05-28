@@ -21,33 +21,22 @@ import Fidelidade from './pages/Fidelidade/Fidelidade'
 import Financeiro from './pages/Financeiro/Financeiro'
 import Configuracoes from './pages/Configuracoes/Configuracoes'
 
-// ─────────────────────────────────────────────────────────────
-//  Guard — redireciona para /login se não autenticado
-// ─────────────────────────────────────────────────────────────
 
 function PrivateRoute({ children }: { children: React.ReactNode }) {
   const { logged, loading } = useAuth()
 
-  // Enquanto restaura sessão do localStorage, não redireciona
   if (loading) return null
 
   return logged ? <>{children}</> : <Navigate to="/login" replace />
 }
 
-// ─────────────────────────────────────────────────────────────
-//  App
-// ─────────────────────────────────────────────────────────────
 
 export default function App() {
-  // Inicializa AOS uma vez na raiz da aplicação
   useAOS({ duration: 400, once: true, offset: 40 })
 
   return (
     <Routes>
-      {/* Rota pública */}
       <Route path="/login" element={<Login />} />
-
-      {/* Rotas protegidas — todas dentro do AppLayout */}
       <Route
         path="/"
         element={
@@ -70,8 +59,6 @@ export default function App() {
         <Route path="fidelidade" element={<Fidelidade />} />
         <Route path="financeiro" element={<Financeiro />} />
         <Route path="configuracoes" element={<Configuracoes />} />
-
-        {/* Fallback */}
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Route>
     </Routes>

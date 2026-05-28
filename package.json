@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "server": "cd planware-server && npm run dev",
-    "admin": "wait-on tcp:3000 && cd PlanwareAdmin && npm run dev",
+    "admin": "wait-on tcp:3000 && cd planware-admin && npm run dev",
     "hub": "wait-on tcp:5173 && cd planware-hub && npm run dev",
     "base_cliente": "wait-on tcp:5174 && cd base_cliente && npm run dev",
     "controle_estoque": "wait-on tcp:5175 && cd controle_de_estoque && npm run dev",

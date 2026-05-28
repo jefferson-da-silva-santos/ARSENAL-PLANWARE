@@ -1,26 +1,29 @@
-// ════════════════════════════════════════════════════════════
-//  global.scss — Reset, base e utilitários Navalha 22
-//  Importado em main.tsx ANTES de qualquer componente
-// ════════════════════════════════════════════════════════════
+@use "./variables" as *;
+@use "./theme" as *;
 
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
-@import 'boxicons/css/boxicons.min.css';
-@import 'aos/dist/aos.css';
-@import 'notyf/notyf.min.css';
-@import './theme';
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap");
+
+@import "boxicons/css/boxicons.min.css";
+@import "aos/dist/aos.css";
+@import "notyf/notyf.min.css";
 
 // ── Reset ─────────────────────────────────────────────────────
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-html { font-size: 15px; height: 100%; }
+html {
+  font-size: 15px;
+  height: 100%;
+}
 
 body {
   font-family: var(--font-primary);
-  background: var(--bg-cream);   // NUNCA branco puro
+  background: var(--bg-cream); // NUNCA branco puro
   color: var(--ink);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
@@ -29,12 +32,30 @@ body {
   overflow-x: hidden;
 }
 
-#root { height: 100%; }
+#root {
+  height: 100%;
+}
 
-button  { font-family: inherit; cursor: pointer; border: none; background: none; }
-input, select, textarea { font-family: inherit; outline: none; }
-a { text-decoration: none; color: inherit; }
-img { display: block; max-width: 100%; }
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+input,
+select,
+textarea {
+  font-family: inherit;
+  outline: none;
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+img {
+  display: block;
+  max-width: 100%;
+}
 
 // ── Tipografia utilitária ─────────────────────────────────────
 
@@ -56,13 +77,20 @@ img { display: block; max-width: 100%; }
 }
 
 // ── Scrollbar ─────────────────────────────────────────────────
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
 ::-webkit-scrollbar-thumb {
   background: var(--border-strong);
   border-radius: var(--r-pill);
 }
-::-webkit-scrollbar-thumb:hover { background: var(--brown-300); }
+::-webkit-scrollbar-thumb:hover {
+  background: var(--brown-300);
+}
 
 // ── Notyf — tema Navalha 22 ───────────────────────────────────
 .notyf {
@@ -73,41 +101,83 @@ img { display: block; max-width: 100%; }
     font-weight: 500 !important;
     box-shadow: var(--shadow-lg) !important;
   }
-  .notyf__toast--success { background: var(--brown-600) !important; }
-  .notyf__toast--error   { background: var(--danger) !important; }
-  .notyf__toast--warning { background: var(--warn) !important; }
+  .notyf__toast--success {
+    background: var(--brown-600) !important;
+  }
+  .notyf__toast--error {
+    background: var(--danger) !important;
+  }
+  .notyf__toast--warning {
+    background: var(--warn) !important;
+  }
 }
 
 // ── AOS — override de duração ─────────────────────────────────
 [data-aos] {
   transition-duration: 400ms !important;
-  transition-timing-function: cubic-bezier(.22,.68,0,1.2) !important;
+  transition-timing-function: cubic-bezier(0.22, 0.68, 0, 1.2) !important;
 }
 
 // ── Utilitários de display ────────────────────────────────────
-.flex     { display: flex; }
-.flex-col { display: flex; flex-direction: column; }
-.items-center { align-items: center; }
-.justify-between { justify-content: space-between; }
-.gap-sm { gap: 10px; }
-.gap-md { gap: 14px; }
-.gap-lg { gap: 18px; }
-.gap-xl { gap: 24px; }
+.flex {
+  display: flex;
+}
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+.items-center {
+  align-items: center;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.gap-sm {
+  gap: 10px;
+}
+.gap-md {
+  gap: 14px;
+}
+.gap-lg {
+  gap: 18px;
+}
+.gap-xl {
+  gap: 24px;
+}
 
 // ── Animação pulse (status "ao vivo") ─────────────────────────
 @keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: 0.55; transform: scale(0.85); }
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(0.85);
+  }
 }
 
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-.pulse { animation: pulse 1.8s ease-in-out infinite; }
-.spin  { animation: spin  0.7s linear infinite; }
+.pulse {
+  animation: pulse 1.8s ease-in-out infinite;
+}
+.spin {
+  animation: spin 0.7s linear infinite;
+}

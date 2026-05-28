@@ -1,24 +1,8 @@
-// ════════════════════════════════════════════════════════════
-//  Login.module.scss — Navalha 22
-//
-//  Layout: dois painéis lado a lado (assimétrico 55/45)
-//  Esquerdo: brown-600 escuro com textura de diagonais
-//  Direito : bg-cream creme com o formulário
-//
-//  Mobile: colapsa em coluna — topo escuro + form embaixo
-// ════════════════════════════════════════════════════════════
-
-// ── Página ────────────────────────────────────────────────────
-
 .page {
   display   : flex;
   min-height: 100dvh;
-  background: $brown-600;  // fallback enquanto carrega
+  background: $brown-600;  
 }
-
-// ════════════════════════════════════════════════════════════
-//  PAINEL ESQUERDO — dark, decorativo
-// ════════════════════════════════════════════════════════════
 
 .left {
   position : relative;
@@ -33,8 +17,6 @@
   @media (max-width: 768px) { display: none; }
 }
 
-// ── Textura diagonal (navalha) ────────────────────────────────
-// Linhas finas a 45° que remetem à lâmina de navalha
 
 .diagonals {
   position: absolute;
@@ -94,7 +76,7 @@
 }
 
 .logoMark {
-  width        : 44px;
+  width        : 44px;  
   height       : 44px;
   border-radius: $r-md;
   background   : $orange-500;
