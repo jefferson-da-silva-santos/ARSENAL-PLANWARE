@@ -29,8 +29,9 @@ const barbershopRoutes = require('./modules/barbershop/BarbershopRoutes');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ── Middlewares globais ──────────────────────────────────────
-app.use(cors());
+
+// cors liberado para todas as origens — ajuste conforme necessário para produção
+app.use(cors('*'));
 app.use(express.json());
 
 // Logger de requisições

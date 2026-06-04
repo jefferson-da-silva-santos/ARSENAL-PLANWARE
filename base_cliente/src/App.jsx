@@ -4,8 +4,8 @@ import './App.css'
 // ─────────────────────────────────────────────
 // CONFIG
 // ─────────────────────────────────────────────
-const API_BASE      = 'http://localhost:3000/clientpro/api'
-const AUTH_BASE     = 'http://localhost:3000/auth'
+const API_BASE      = 'https://planware-server.vercel.app/clientpro/api'
+const AUTH_BASE     = 'https://planware-server.vercel.app/auth'
 const STORAGE_TOKEN = 'planware_token'
 const STORAGE_USER  = 'planware_user'
 
